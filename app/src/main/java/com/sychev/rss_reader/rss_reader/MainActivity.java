@@ -6,22 +6,23 @@ import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 
 public class MainActivity extends AppCompatActivity {
-    String[] names = {"First", "Second", "Third"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        ListView lvMain = (ListView) findViewById(R.id.lvMain);
+        ArrayList<NewsModelItem> list = new ArrayList<>();
+        list.add(new NewsModelItem("Title 1", "Decr 1"));
+        list.add(new NewsModelItem("Title 2", "Decr 2"));
+        ListView lvMain = findViewById(R.id.lvMain);
 
         // создаем адаптер
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_list_item_1, names);
+        NewsAdapter adapter = new NewsAdapter(this, list);
 
         // присваиваем адаптер списку
         lvMain.setAdapter(adapter);

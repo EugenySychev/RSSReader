@@ -10,6 +10,11 @@ public class NewsModelItem {
     private String mUrl;
     private int mId;
 
+    public NewsModelItem(String title, String description) {
+        mTitle = title;
+        mDescription = description;
+    }
+
     public String getTitle() {
         return mTitle;
     }
