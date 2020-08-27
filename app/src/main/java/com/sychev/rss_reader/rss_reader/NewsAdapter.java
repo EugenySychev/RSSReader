@@ -16,7 +16,7 @@ import java.util.List;
 
 public class NewsAdapter extends ArrayAdapter<NewsModelItem> {
     private Context mContext;
-    private List<NewsModelItem> mList = new ArrayList<>();
+    private List<NewsModelItem> mList;
 
     public NewsAdapter(@NonNull Context context, @LayoutRes ArrayList<NewsModelItem> list) {
         super(context, 0, list);
@@ -33,7 +33,7 @@ public class NewsAdapter extends ArrayAdapter<NewsModelItem> {
 
         NewsModelItem item = mList.get(position);
         ImageView image = listItem.findViewById(R.id.pix);
-        image.setImageResource(item.getIcon());
+        image.setImageBitmap(item.getIcon());
 
         TextView title = listItem.findViewById(R.id.news_title);
         title.setText(item.getTitle());

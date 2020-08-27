@@ -1,11 +1,11 @@
 package com.sychev.rss_reader.rss_reader;
 
-import android.media.Image;
+import android.graphics.Bitmap;
 
 public class NewsModelItem {
     private String mTitle;
     private String mDescription;
-    private int mIcon;
+    private Bitmap mIcon;
     private String mText;
     private String mUrl;
     private int mId;
@@ -31,11 +31,11 @@ public class NewsModelItem {
         this.mDescription = mDescription;
     }
 
-    public int getIcon() {
+    public Bitmap getIcon() {
         return mIcon;
     }
 
-    public void setIcon(int icon) {
+    public void setIcon(Bitmap icon) {
         mIcon = icon;
     }
 

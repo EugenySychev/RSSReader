@@ -2,6 +2,9 @@ package com.sychev.rss_reader.rss_reader;
 
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -27,6 +30,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+
 import javax.xml.parsers.DocumentBuilder;
 
 
@@ -35,69 +40,40 @@ import javax.xml.parsers.ParserConfigurationException;
 
 public class MainActivity extends AppCompatActivity {
 
+    private NewsDataLoader loader;
+    Handler mHandler;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // создаем адаптер
-        int SDK_INT = android.os.Build.VERSION.SDK_INT;
-        if (SDK_INT > 8) {
-            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
-                    .permitAll().build();
-            StrictMode.setThreadPolicy(policy);
-        }
-
-        loadData();
-    }
-
-    protected void loadData() {
+        URL url = null;
         try {
-            //set the download URL, a url that points to a file on the internet
-            //this is the file to be downloaded
-            URL url = new URL("https://www.gazeta.ru/export/rss/first.xml");
-
-            DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-            DocumentBuilder db = dbf.newDocumentBuilder();
-            Document doc = db.parse(new InputSource(url.openStream()));
-            doc.getDocumentElement().normalize();
-
-            NodeList nodeList = doc.getElementsByTagName("item");
-            System.out.printf("Readed %d elements", nodeList.getLength());
-
-            ArrayList<NewsModelItem> list = new ArrayList<>();
-            ListView lvMain = findViewById(R.id.lvMain);
-
-
-            for (int i = 0; i < nodeList.getLength(); i++) {
-
-                Node node = nodeList.item(i);
-
-                Element fstElmnt = (Element) node;
-                NodeList nameList = fstElmnt.getElementsByTagName("title");
-                Element nameElement = (Element) nameList.item(0);
-                nameList = nameElement.getChildNodes();
-
-                NodeList descrList = fstElmnt.getElementsByTagName("description");
-                Element descrListElement = (Element) descrList.item(0);
-                descrList = descrListElement.getChildNodes();
-                System.out.printf("Website = %s", ((Node) descrList.item(0)).getNodeValue());
-                list.add(new NewsModelItem(((Node) nameList.item(0)).getNodeValue(), ((Node) descrList.item(0)).getNodeValue()));
-
-
-            }
-            NewsAdapter adapter = new NewsAdapter(this, list);
-            lvMain.setAdapter(adapter);
-
+            url = new URL("https://www.gazeta.ru/export/rss/first.xml");
         } catch (MalformedURLException e) {
             e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ParserConfigurationException e) {
-            e.printStackTrace();
-        } catch (SAXException e) {
-            e.printStackTrace();
         }
+
+        loader = new NewsDataLoader(url, 100);
+
+        mHandler = new Handler(Looper.getMainLooper()) {
+            @Override
+            public void handleMessage(Message msg) {
+                NewsDataLoader loader = (NewsDataLoader) msg.obj;
+                List<NewsModelItem> list = loader.loadedList;
+                updateList(list);
+                super.handleMessage(msg);
+            }
+        };
+
+        loader.setHandler(mHandler);
+        loader.start();
+
     }
 
+    private void updateList(List<NewsModelItem> list) {
+        ListView lvMain = findViewById(R.id.lvMain);
+        NewsAdapter adapter = new NewsAdapter(this, (ArrayList<NewsModelItem>) list);
+        lvMain.setAdapter(adapter);
+    }
 }

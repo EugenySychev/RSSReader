@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">RSS_Reader</string>
+    <string name="textview">TextView</string>
 </resources>
