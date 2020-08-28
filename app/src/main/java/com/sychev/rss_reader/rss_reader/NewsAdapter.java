@@ -18,6 +18,8 @@ public class NewsAdapter extends ArrayAdapter<NewsModelItem> {
     private Context mContext;
     private List<NewsModelItem> mList;
 
+    private final int MAX_LINE_LENTGTH = 70;
+
     public NewsAdapter(@NonNull Context context, @LayoutRes ArrayList<NewsModelItem> list) {
         super(context, 0, list);
         mContext = context;
@@ -36,11 +38,24 @@ public class NewsAdapter extends ArrayAdapter<NewsModelItem> {
         image.setImageBitmap(item.getIcon());
 
         TextView title = listItem.findViewById(R.id.news_title);
-        title.setText(item.getTitle());
+        title.setText(cropTextWithPoints(item.getTitle(), MAX_LINE_LENTGTH));
 
         TextView descr = listItem.findViewById(R.id.news_description);
-        descr.setText(item.getDescription());
+        String descrText = item.getDescription();
+        descr.setText(cropTextWithPoints(item.getDescription(), MAX_LINE_LENTGTH));
+
 
         return listItem;
+    }
+
+    private String cropTextWithPoints(String source, int length) {
+        if (source.length() > length)
+        {
+            int len = length;
+            while(len > 0 && !source.substring(len - 1, len).equals(" ")) len--;
+
+            return source.substring(0, len) + "...";
+        }
+        return source;
     }
 }

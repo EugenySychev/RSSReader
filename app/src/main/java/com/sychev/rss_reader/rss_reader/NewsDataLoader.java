@@ -5,6 +5,7 @@ import android.graphics.BitmapFactory;
 import android.net.UrlQuerySanitizer;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.NonNull;
 import android.widget.ListView;
 
 import org.w3c.dom.Document;
@@ -15,6 +16,7 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +31,11 @@ public class NewsDataLoader extends Thread {
     public List<NewsModelItem> loadedList;
 
     Handler handler;
+    interface LoadState {
+        int LOAD_ERROR = -1;
+        int LOAD_OK = 0;
+        int LOAD_PROCESSING = 1;
+    }
 
     NewsDataLoader(URL source, int timeout) {
         this.source = source;
@@ -36,7 +43,12 @@ public class NewsDataLoader extends Thread {
         loadedList = new ArrayList<>();
     }
 
+    @Override
     public void run() {
+        Message startLoadMsg = handler.obtainMessage();
+        startLoadMsg.obj = this;
+        startLoadMsg.what = LoadState.LOAD_PROCESSING;
+        handler.sendMessage(startLoadMsg);
 
         try {
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -50,39 +62,45 @@ public class NewsDataLoader extends Thread {
             ArrayList<NewsModelItem> list = new ArrayList<>();
 
             for (int i = 0; i < nodeList.getLength(); i++) {
-
-                Node node = nodeList.item(i);
-
-                Element fstElmnt = (Element) node;
-                NodeList nameList = fstElmnt.getElementsByTagName("title");
-                Element nameElement = (Element) nameList.item(0);
-                nameList = nameElement.getChildNodes();
-
-                NodeList descrList = fstElmnt.getElementsByTagName("description");
-                Element descrListElement = (Element) descrList.item(0);
-                descrList = descrListElement.getChildNodes();
-                System.out.printf("Website = %s", ((Node) descrList.item(0)).getNodeValue());
-                NewsModelItem item = new NewsModelItem(((Node) nameList.item(0)).getNodeValue(), ((Node) descrList.item(0)).getNodeValue());
-
-                NodeList iconList = fstElmnt.getElementsByTagName("enclosure");
-                String urlStr = iconList.item(0).getAttributes().getNamedItem("url").getNodeValue();
-                URL urlBitmap = new URL(urlStr);
-                Bitmap loadedBitmap = BitmapFactory.decodeStream(urlBitmap.openConnection().getInputStream());
-
-                item.setIcon(loadedBitmap);
+                NewsModelItem item = getItemFromXmlNode(nodeList.item(i));
                 loadedList.add(item);
             }
-
-            Message msg = handler.obtainMessage();
-            msg.obj = this;
-            handler.sendMessage(msg);
+            Message completeLoadMsg = handler.obtainMessage();
+            completeLoadMsg.obj = this;
+            completeLoadMsg.what = LoadState.LOAD_OK;
+            handler.sendMessage(completeLoadMsg);
         } catch (ParserConfigurationException | IOException | SAXException e) {
             e.printStackTrace();
+            Message errorLoadMsg = handler.obtainMessage();
+            errorLoadMsg.what = LoadState.LOAD_ERROR;
+            handler.sendMessage(errorLoadMsg);
         }
     }
 
+    @NonNull
+    private NewsModelItem getItemFromXmlNode(Node node) throws IOException {
 
-    public void setHandler(Handler mHandler) {
-        handler = mHandler;
+        Element fstElmnt = (Element) node;
+        NodeList nameList = fstElmnt.getElementsByTagName("title");
+        Element nameElement = (Element) nameList.item(0);
+        nameList = nameElement.getChildNodes();
+
+        NodeList descrList = fstElmnt.getElementsByTagName("description");
+        Element descrListElement = (Element) descrList.item(0);
+        descrList = descrListElement.getChildNodes();
+
+        NodeList iconList = fstElmnt.getElementsByTagName("enclosure");
+        String urlStr = iconList.item(0).getAttributes().getNamedItem("url").getNodeValue();
+        URL urlBitmap = new URL(urlStr);
+        Bitmap loadedBitmap = BitmapFactory.decodeStream(urlBitmap.openConnection().getInputStream());
+
+        NewsModelItem item = new NewsModelItem(((Node) nameList.item(0)).getNodeValue(), ((Node) descrList.item(0)).getNodeValue());
+
+        item.setIcon(loadedBitmap);
+        return item;
+    }
+
+    public void setHandler(Handler handler) {
+        this.handler = handler;
     }
 }

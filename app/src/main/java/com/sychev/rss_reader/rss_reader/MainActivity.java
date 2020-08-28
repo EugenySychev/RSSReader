@@ -8,8 +8,10 @@ import android.os.Message;
 import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.w3c.dom.Document;
@@ -59,9 +61,12 @@ public class MainActivity extends AppCompatActivity {
         mHandler = new Handler(Looper.getMainLooper()) {
             @Override
             public void handleMessage(Message msg) {
-                NewsDataLoader loader = (NewsDataLoader) msg.obj;
-                List<NewsModelItem> list = loader.loadedList;
-                updateList(list);
+                updateUiVisability(msg.what);
+                    if (msg.what == NewsDataLoader.LoadState.LOAD_OK) {
+                        NewsDataLoader loader = (NewsDataLoader) msg.obj;
+                        List<NewsModelItem> list = loader.loadedList;
+                        updateList(list);
+                    }
                 super.handleMessage(msg);
             }
         };
@@ -69,6 +74,31 @@ public class MainActivity extends AppCompatActivity {
         loader.setHandler(mHandler);
         loader.start();
 
+    }
+
+    private void updateUiVisability(int what) {
+        ListView listView = findViewById(R.id.lvMain);
+        ProgressBar progressBar = findViewById(R.id.progressBar);
+        TextView errorText = findViewById(R.id.textView);
+        if (what == NewsDataLoader.LoadState.LOAD_OK)
+        {
+            listView.setVisibility(View.VISIBLE);
+            progressBar.setVisibility(View.GONE);
+            errorText.setVisibility(View.GONE);
+
+            System.out.println("Set visible LIST");
+        } else if (what == NewsDataLoader.LoadState.LOAD_PROCESSING) {
+            listView.setVisibility(View.GONE);
+            progressBar.setVisibility(View.VISIBLE);
+            errorText.setVisibility(View.GONE);
+
+            System.out.println("Set visible LOAD");
+        } else {
+            listView.setVisibility(View.GONE);
+            progressBar.setVisibility(View.GONE);
+            errorText.setVisibility(View.VISIBLE);
+            System.out.println("Set visible ERROR");
+        }
     }
 
     private void updateList(List<NewsModelItem> list) {
