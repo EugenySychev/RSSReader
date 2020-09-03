@@ -1,9 +1,6 @@
 package com.sychev.rss_reader.rss_reader;
 
 import android.content.Context;
-import android.support.annotation.LayoutRes;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,20 +12,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class NewsAdapter extends ArrayAdapter<NewsModelItem> {
+    private final int MAX_LINE_LENTGTH = 70;
     private Context mContext;
     private List<NewsModelItem> mList;
 
-    private final int MAX_LINE_LENTGTH = 70;
-
-    public NewsAdapter(@NonNull Context context, @LayoutRes ArrayList<NewsModelItem> list) {
+    public NewsAdapter(Context context,  ArrayList<NewsModelItem> list) {
         super(context, 0, list);
         mContext = context;
         mList = list;
     }
 
-    @NonNull
     @Override
-    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+    public View getView(int position, View convertView, ViewGroup parent) {
         View listItem = convertView;
         if (listItem == null)
             listItem = LayoutInflater.from(mContext).inflate(R.layout.newsviewitem, parent, false);
@@ -49,10 +44,9 @@ public class NewsAdapter extends ArrayAdapter<NewsModelItem> {
     }
 
     private String cropTextWithPoints(String source, int length) {
-        if (source.length() > length)
-        {
+        if (source.length() > length) {
             int len = length;
-            while(len > 0 && !source.substring(len - 1, len).equals(" ")) len--;
+            while (len > 0 && !source.substring(len - 1, len).equals(" ")) len--;
 
             return source.substring(0, len) + "...";
         }

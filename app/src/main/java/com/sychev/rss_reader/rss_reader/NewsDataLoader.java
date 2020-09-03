@@ -2,11 +2,8 @@ package com.sychev.rss_reader.rss_reader;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.UrlQuerySanitizer;
 import android.os.Handler;
 import android.os.Message;
-import android.support.annotation.NonNull;
-import android.widget.ListView;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -16,7 +13,6 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,16 +22,10 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 public class NewsDataLoader extends Thread {
+    public List<NewsModelItem> loadedList;
     int timeout;
     URL source;
-    public List<NewsModelItem> loadedList;
-
     Handler handler;
-    interface LoadState {
-        int LOAD_ERROR = -1;
-        int LOAD_OK = 0;
-        int LOAD_PROCESSING = 1;
-    }
 
     NewsDataLoader(URL source, int timeout) {
         this.source = source;
@@ -77,7 +67,6 @@ public class NewsDataLoader extends Thread {
         }
     }
 
-    @NonNull
     private NewsModelItem getItemFromXmlNode(Node node) throws IOException {
 
         Element fstElmnt = (Element) node;
@@ -102,5 +91,11 @@ public class NewsDataLoader extends Thread {
 
     public void setHandler(Handler handler) {
         this.handler = handler;
+    }
+
+    interface LoadState {
+        int LOAD_ERROR = -1;
+        int LOAD_OK = 0;
+        int LOAD_PROCESSING = 1;
     }
 }

@@ -1,13 +1,5 @@
 package com.sychev.rss_reader.rss_reader;
 
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
-import android.provider.BaseColumns;
-
-import java.sql.Array;
-import java.util.List;
-import java.util.Map;
-
 //
 //public class NewsReaderDBContract {
 //    private  NewsReaderDBContract() {}

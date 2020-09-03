@@ -1,109 +1,73 @@
 package com.sychev.rss_reader.rss_reader;
 
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.os.StrictMode;
-import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
+import android.view.Menu;
 import android.view.View;
-import android.widget.ArrayAdapter;
+import android.widget.ExpandableListAdapter;
+import android.widget.ExpandableListView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.navigation.ui.AppBarConfiguration;
+import androidx.navigation.ui.NavigationUI;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.lang.reflect.Array;
-import java.net.HttpURLConnection;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.snackbar.Snackbar;
+
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
-
-import javax.xml.parsers.DocumentBuilder;
-
-
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
+import java.util.ListIterator;
 
 public class MainActivity extends AppCompatActivity {
 
-    private NewsDataLoader loader;
-    Handler mHandler;
+    private AppBarConfiguration mAppBarConfiguration;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.main_activity);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
-        URL url = null;
-        try {
-            url = new URL("https://www.gazeta.ru/export/rss/first.xml");
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        NavigationView navigationView = findViewById(R.id.nav_view);
 
-        loader = new NewsDataLoader(url, 100);
-
-        mHandler = new Handler(Looper.getMainLooper()) {
-            @Override
-            public void handleMessage(Message msg) {
-                updateUiVisability(msg.what);
-                    if (msg.what == NewsDataLoader.LoadState.LOAD_OK) {
-                        NewsDataLoader loader = (NewsDataLoader) msg.obj;
-                        List<NewsModelItem> list = loader.loadedList;
-                        updateList(list);
-                    }
-                super.handleMessage(msg);
-            }
-        };
-
-        loader.setHandler(mHandler);
-        loader.start();
+        mAppBarConfiguration = new AppBarConfiguration.Builder(
+                R.id.nav_home)
+                .setDrawerLayout(drawer)
+                .build();
+        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+        NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
+        NavigationUI.setupWithNavController(navigationView, navController);
 
     }
 
-    private void updateUiVisability(int what) {
-        ListView listView = findViewById(R.id.lvMain);
-        ProgressBar progressBar = findViewById(R.id.progressBar);
-        TextView errorText = findViewById(R.id.textView);
-        if (what == NewsDataLoader.LoadState.LOAD_OK)
-        {
-            listView.setVisibility(View.VISIBLE);
-            progressBar.setVisibility(View.GONE);
-            errorText.setVisibility(View.GONE);
-
-            System.out.println("Set visible LIST");
-        } else if (what == NewsDataLoader.LoadState.LOAD_PROCESSING) {
-            listView.setVisibility(View.GONE);
-            progressBar.setVisibility(View.VISIBLE);
-            errorText.setVisibility(View.GONE);
-
-            System.out.println("Set visible LOAD");
-        } else {
-            listView.setVisibility(View.GONE);
-            progressBar.setVisibility(View.GONE);
-            errorText.setVisibility(View.VISIBLE);
-            System.out.println("Set visible ERROR");
-        }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.main2, menu);
+        return true;
     }
 
-    private void updateList(List<NewsModelItem> list) {
-        ListView lvMain = findViewById(R.id.lvMain);
-        NewsAdapter adapter = new NewsAdapter(this, (ArrayList<NewsModelItem>) list);
-        lvMain.setAdapter(adapter);
+    @Override
+    public boolean onSupportNavigateUp() {
+        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+        return NavigationUI.navigateUp(navController, mAppBarConfiguration)
+                || super.onSupportNavigateUp();
     }
+
 }

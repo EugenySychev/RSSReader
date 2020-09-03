@@ -1,5 +1,13 @@
 <resources>
-    <string name="app_name">RSS_Reader</string>
+    <string name="app_name">RSS Reader</string>
     <string name="textview">TextView</string>
     <string name="loadError">Load Error!!!</string>
+    <string name="action_settings">Settings</string>
+    <string name="action_favorite">Favs</string>
+    <string name="menu_home">Home</string>
+    <string name="nav_header_desc">image</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="NewsCatTitle">News</string>
+    <string name="FilmsCatTitle">Films</string>
 </resources>
