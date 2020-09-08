@@ -23,9 +23,9 @@ import javax.xml.parsers.ParserConfigurationException;
 
 public class NewsDataLoader extends Thread {
     public List<NewsModelItem> loadedList;
-    int timeout;
-    URL source;
-    Handler handler;
+    private int timeout;
+    private URL source;
+    private Handler handler;
 
     NewsDataLoader(URL source, int timeout) {
         this.source = source;
@@ -78,15 +78,23 @@ public class NewsDataLoader extends Thread {
         Element descrListElement = (Element) descrList.item(0);
         descrList = descrListElement.getChildNodes();
 
-        NodeList iconList = fstElmnt.getElementsByTagName("enclosure");
-        String urlStr = iconList.item(0).getAttributes().getNamedItem("url").getNodeValue();
-        URL urlBitmap = new URL(urlStr);
-        Bitmap loadedBitmap = BitmapFactory.decodeStream(urlBitmap.openConnection().getInputStream());
-
         NodeList urlDescr = fstElmnt.getElementsByTagName("guid");
         Element urlDescrElement = (Element) urlDescr.item(0);
         urlDescr = urlDescrElement.getChildNodes();
+        String urlString = urlDescr.item(0).getNodeValue();
 
+        Bitmap loadedBitmap;
+
+        if (ImageCache.getInstance().retrieveBitmapFromCache(urlString) == null) {
+            NodeList iconList = fstElmnt.getElementsByTagName("enclosure");
+            String urlStr = iconList.item(0).getAttributes().getNamedItem("url").getNodeValue();
+            URL urlBitmap = new URL(urlStr);
+            loadedBitmap = BitmapFactory.decodeStream(urlBitmap.openConnection().getInputStream());
+            ImageCache.getInstance().saveBitmapToCahche(urlString, loadedBitmap);
+        } else {
+            loadedBitmap = ImageCache.getInstance().retrieveBitmapFromCache(urlString);
+            System.out.println("Loaded image " + loadedBitmap.getByteCount() + " bytes size from cache");
+        }
         NewsModelItem item = new NewsModelItem(((Node) nameList.item(0)).getNodeValue(), ((Node) descrList.item(0)).getNodeValue());
         item.setUrl(urlDescr.item(0).getNodeValue());
         item.setIcon(loadedBitmap);

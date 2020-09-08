@@ -11,6 +11,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.collection.LruCache;
+
 import org.w3c.dom.Text;
 
 import java.net.MalformedURLException;
@@ -33,17 +35,17 @@ public class NewsViewActivity extends Activity {
         urlString = getIntent().getStringExtra("url");
         title = getIntent().getStringExtra("title");
 
+        Bitmap bmp = ImageCache.getInstance().retrieveBitmapFromCache(urlString);
 
-        Bitmap bmp = intent.getParcelableExtra("BitmapImage");
+        TextView contentTextView = findViewById(R.id.news_text_content);
+        contentTextView.setText(content);
 
-       TextView contentTextView = findViewById(R.id.news_text_content);
-       contentTextView.setText(content);
+        ImageView imageView = findViewById(R.id.imageNewView);
+        if (bmp != null)
+            imageView.setImageBitmap(bmp);
 
-       ImageView imageView = findViewById(R.id.imageView);
-       imageView.setImageBitmap(bmp);
-
-       TextView titleTextView = findViewById(R.id.news_text_title);
-       titleTextView.setText(title);
+        TextView titleTextView = findViewById(R.id.news_text_title);
+        titleTextView.setText(title);
 
         findViewById(R.id.open_site_button).setOnClickListener(new View.OnClickListener() {
             @Override

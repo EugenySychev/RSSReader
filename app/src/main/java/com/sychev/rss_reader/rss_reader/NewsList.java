@@ -97,8 +97,6 @@ public class NewsList extends Fragment {
                 bundle.putString("url", item.getUrl());
                 bundle.putString("title", item.getTitle());
 
-                intent.putExtra("BitmapImage", item.getIcon());
-
                 intent.putExtras(bundle);
                 startActivity(intent);
             }
