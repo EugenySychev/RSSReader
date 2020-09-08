@@ -83,8 +83,12 @@ public class NewsDataLoader extends Thread {
         URL urlBitmap = new URL(urlStr);
         Bitmap loadedBitmap = BitmapFactory.decodeStream(urlBitmap.openConnection().getInputStream());
 
-        NewsModelItem item = new NewsModelItem(((Node) nameList.item(0)).getNodeValue(), ((Node) descrList.item(0)).getNodeValue());
+        NodeList urlDescr = fstElmnt.getElementsByTagName("guid");
+        Element urlDescrElement = (Element) urlDescr.item(0);
+        urlDescr = urlDescrElement.getChildNodes();
 
+        NewsModelItem item = new NewsModelItem(((Node) nameList.item(0)).getNodeValue(), ((Node) descrList.item(0)).getNodeValue());
+        item.setUrl(urlDescr.item(0).getNodeValue());
         item.setIcon(loadedBitmap);
         return item;
     }

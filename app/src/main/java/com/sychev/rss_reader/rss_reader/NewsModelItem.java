@@ -2,7 +2,9 @@ package com.sychev.rss_reader.rss_reader;
 
 import android.graphics.Bitmap;
 
-public class NewsModelItem {
+import java.io.Serializable;
+
+public class NewsModelItem implements Serializable {
     private String mTitle;
     private String mDescription;
     private Bitmap mIcon;
