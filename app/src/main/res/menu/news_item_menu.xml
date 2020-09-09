@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".NewsViewActivity">
+
+    <item
+        android:id="@+id/action_decrease_size"
+        android:orderInCategory="300"
+        android:icon="@drawable/format_font_size_decrease_icon"
+        app:showAsAction="ifRoom"
+        android:title="@string/decrease" />
+    <item
+        android:id="@+id/action_increase_size"
+        android:orderInCategory="300"
+        android:icon="@drawable/format_font_size_increase_icon"
+        app:showAsAction="ifRoom"
+        android:title="@string/increase" />
+</menu>
