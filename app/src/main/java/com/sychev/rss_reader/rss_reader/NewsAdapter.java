@@ -1,6 +1,8 @@
 package com.sychev.rss_reader.rss_reader;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,6 +41,14 @@ public class NewsAdapter extends ArrayAdapter<NewsModelItem> {
         String descrText = item.getDescription();
         descr.setText(cropTextWithPoints(item.getDescription(), MAX_LINE_LENTGTH));
 
+        if (!item.getIsRead()) {
+            title.setTypeface(null, Typeface.BOLD);
+            descr.setTypeface(null, Typeface.BOLD);
+        } else {
+
+            title.setTypeface(null, Typeface.ITALIC);
+            descr.setTypeface(null, Typeface.ITALIC);
+        }
 
         return listItem;
     }

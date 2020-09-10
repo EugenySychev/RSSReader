@@ -40,7 +40,7 @@ public class NewsList extends Fragment {
     private View rootView;
     private List<NewsModelItem> loadedList;
     private MainActivity top;
-
+    private NewsAdapter adapter;
     public NewsList() {
 
     }
@@ -52,6 +52,8 @@ public class NewsList extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        System.out.println("Cache stored in " + getContext().getCacheDir().getAbsolutePath());
+
     }
 
     @Override
@@ -91,6 +93,9 @@ public class NewsList extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 NewsModelItem item = loadedList.get(i);
+                item.setIsRead(true);
+                loadedList.set(i, item);
+                adapter.notifyDataSetChanged();
                 Intent intent = new Intent(getContext(), NewsViewActivity.class);
                 Bundle bundle = new Bundle();
                 bundle.putString("content", item.getDescription());
@@ -130,7 +135,7 @@ public class NewsList extends Fragment {
 
     private void updateList() {
         ListView lvMain = rootView.findViewById(R.id.lvMain);
-        NewsAdapter adapter = new NewsAdapter(getContext(), (ArrayList<NewsModelItem>) loadedList);
+        adapter = new NewsAdapter(getContext(), (ArrayList<NewsModelItem>) loadedList);
         lvMain.setAdapter(adapter);
     }
 

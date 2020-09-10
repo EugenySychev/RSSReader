@@ -38,6 +38,7 @@ public class NewsViewActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_news_view);
 
+        System.out.println("Cache stored in " + getCacheDir().getAbsolutePath());
         pref = getApplicationContext().getSharedPreferences("ViewPreference", 0);
         font_size = pref.getInt("DigestFontSize", 10);
 

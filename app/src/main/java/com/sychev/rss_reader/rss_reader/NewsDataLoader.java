@@ -73,11 +73,23 @@ public class NewsDataLoader extends Thread {
         NodeList nameList = fstElmnt.getElementsByTagName("title");
         Element nameElement = (Element) nameList.item(0);
         nameList = nameElement.getChildNodes();
+        String titleText = ((Node) nameList.item(0)).getNodeValue();
 
+        String descrText = "";
         NodeList descrList = fstElmnt.getElementsByTagName("description");
-        Element descrListElement = (Element) descrList.item(0);
-        descrList = descrListElement.getChildNodes();
 
+        int i = 0;
+        while (descrText.length() < 11) {
+            Element descrListElement = (Element) descrList.item(0);
+            NodeList descrListNodes = descrListElement.getChildNodes();
+            descrText = ((Node) descrListNodes.item(i)).getNodeValue();
+            descrText = descrText.replace("<![CDATA[", "").replace("]]>", "");
+            i++;
+        }
+
+
+
+        System.out.println("Retrieved item title " + titleText + " and description: " + descrText);
         NodeList urlDescr = fstElmnt.getElementsByTagName("guid");
         Element urlDescrElement = (Element) urlDescr.item(0);
         urlDescr = urlDescrElement.getChildNodes();
@@ -95,7 +107,7 @@ public class NewsDataLoader extends Thread {
             loadedBitmap = ImageCache.getInstance().retrieveBitmapFromCache(urlString);
             System.out.println("Loaded image " + loadedBitmap.getByteCount() + " bytes size from cache");
         }
-        NewsModelItem item = new NewsModelItem(((Node) nameList.item(0)).getNodeValue(), ((Node) descrList.item(0)).getNodeValue());
+        NewsModelItem item = new NewsModelItem(titleText, descrText);
         item.setUrl(urlDescr.item(0).getNodeValue());
         item.setIcon(loadedBitmap);
         return item;

@@ -1,5 +1,6 @@
 package com.sychev.rss_reader.rss_reader;
 
+import android.media.Image;
 import android.os.Bundle;
 import android.view.Menu;
 
@@ -24,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.main_activity);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
+        ImageCache.getInstance().setCacheDir(getCacheDir());
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
 
