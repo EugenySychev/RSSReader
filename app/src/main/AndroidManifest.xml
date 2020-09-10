@@ -16,6 +16,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+        <activity android:name=".SetupSourceActivity"></activity>
         <!--
                Set to true if your app is Standalone, that is, it does not require the handheld
                app to run.
@@ -29,7 +30,7 @@
         </activity>
         <activity
             android:name=".NewsViewActivity"
-            android:label="@string/title_activity_news_view"></activity>
+            android:label="@string/title_activity_news_view" />
     </application>
 
 </manifest>

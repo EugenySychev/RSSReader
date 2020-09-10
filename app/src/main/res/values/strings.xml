@@ -111,4 +111,5 @@
     <string name="decrease">decrease</string>
     <string name="increase" />
     <string name="title_activity_scrolling">ScrollingActivity</string>
+    <string name="https_site_rss_xml">https://site/rss.xml</string>
 </resources>
