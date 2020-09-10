@@ -110,4 +110,5 @@
     <string name="hello_world">Hello Square World!</string>
     <string name="decrease">decrease</string>
     <string name="increase" />
+    <string name="title_activity_scrolling">ScrollingActivity</string>
 </resources>
