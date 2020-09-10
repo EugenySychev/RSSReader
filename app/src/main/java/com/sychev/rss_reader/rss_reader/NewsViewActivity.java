@@ -2,6 +2,7 @@ package com.sychev.rss_reader.rss_reader;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.Image;
@@ -29,12 +30,19 @@ public class NewsViewActivity extends AppCompatActivity {
     private String title = "";
     Toolbar toolbar;
 
+    SharedPreferences pref;
+    int font_size;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_news_view);
 
+        pref = getApplicationContext().getSharedPreferences("ViewPreference", 0);
+        font_size = pref.getInt("DigestFontSize", 10);
+
         toolbar = (Toolbar) findViewById(R.id.news_view_toolbar);
+        toolbar.setTitle("");
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -50,6 +58,7 @@ public class NewsViewActivity extends AppCompatActivity {
 
         TextView contentTextView = findViewById(R.id.news_text_content);
         contentTextView.setText(content);
+        contentTextView.setTextSize(font_size);
 
         ImageView imageView = findViewById(R.id.imageNewView);
         if (bmp != null)
@@ -57,6 +66,7 @@ public class NewsViewActivity extends AppCompatActivity {
 
         TextView titleTextView = findViewById(R.id.news_text_title);
         titleTextView.setText(title);
+        titleTextView.setTextSize(font_size);
 
         findViewById(R.id.open_site_button).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -91,16 +101,28 @@ public class NewsViewActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-//        //noinspection SimplifiableIfStatement
-//        if (id == R.id.action_favorite) {
-//            Toast.makeText(MainActivity.this, "Action clicked", Toast.LENGTH_LONG).show();
-//            return true;
-//        }
+        System.out.println("Pressed " + id);
+        if (id == android.R.id.home)
+        {
+            onBackPressed();
+            return super.onOptionsItemSelected(item);
+        }
+        if (id == R.id.action_increase_size) {
+            font_size++;
+        } else if (id == R.id.action_decrease_size) {
+            font_size--;
+        }
+
+        SharedPreferences.Editor editor = pref.edit();
+        editor.putInt("DigestFontSize", font_size);
+        editor.commit();
+        TextView content = findViewById(R.id.news_text_content);
+        content.setTextSize(font_size);
+
+        TextView title = findViewById(R.id.news_text_title);
+        title.setTextSize(font_size);
 
         return super.onOptionsItemSelected(item);
     }

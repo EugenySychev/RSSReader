@@ -5,15 +5,15 @@
     tools:context=".NewsViewActivity">
 
     <item
-        android:id="@+id/action_decrease_size"
-        android:orderInCategory="300"
-        android:icon="@drawable/format_font_size_decrease_icon"
-        app:showAsAction="ifRoom"
-        android:title="@string/decrease" />
-    <item
         android:id="@+id/action_increase_size"
         android:orderInCategory="300"
         android:icon="@drawable/format_font_size_increase_icon"
         app:showAsAction="ifRoom"
         android:title="@string/increase" />
+    <item
+        android:id="@+id/action_decrease_size"
+        android:orderInCategory="300"
+        android:icon="@drawable/format_font_size_decrease_icon"
+        app:showAsAction="ifRoom"
+        android:title="@string/decrease" />
 </menu>
