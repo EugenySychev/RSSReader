@@ -1,4 +1,4 @@
-package com.sychev.rss_reader.rss_reader;
+package com.sychev.rss_reader;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("com.sychev.rss_reader.rss_reader", appContext.getPackageName());
+        assertEquals("com.sychev.rss_reader", appContext.getPackageName());
     }
 }

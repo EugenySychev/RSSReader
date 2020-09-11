@@ -1,4 +1,4 @@
-package com.sychev.rss_reader.rss_reader;
+package com.sychev.rss_reader;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -13,7 +13,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class NewsAdapter extends ArrayAdapter<NewsModelItem> {
+public class NewsAdapter extends ArrayAdapter<com.sychev.rss_reader.NewsModelItem> {
     private final int MAX_LINE_LENTGTH = 70;
     private Context mContext;
     private List<NewsModelItem> mList;

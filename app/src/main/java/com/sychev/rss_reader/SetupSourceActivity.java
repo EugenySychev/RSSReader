@@ -1,4 +1,4 @@
-package com.sychev.rss_reader.rss_reader;
+package com.sychev.rss_reader;;
 
 import androidx.appcompat.app.AppCompatActivity;
 

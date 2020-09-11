@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/nav_home"
-        android:name="com.sychev.rss_reader.rss_reader.NewsList"
+        android:name="com.sychev.rss_reader.NewsList"
         android:label="@string/menu_home"
         tools:layout="@layout/fragment_news_list" />
 
