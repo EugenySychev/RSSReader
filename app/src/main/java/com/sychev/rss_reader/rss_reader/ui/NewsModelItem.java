@@ -22,7 +22,6 @@ public class NewsModelItem implements Serializable {
     private String mTitle;
     private String mDescription;
     private Bitmap mIcon;
-    private String mText;
     private String mUrl;
     private int mId;
     private boolean mIsRead;
@@ -56,14 +55,6 @@ public class NewsModelItem implements Serializable {
 
     public void setIcon(Bitmap icon) {
         mIcon = icon;
-    }
-
-    public String getText() {
-        return mText;
-    }
-
-    public void setText(String text) {
-        mText = text;
     }
 
     public String getUrl() {

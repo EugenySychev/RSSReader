@@ -57,6 +57,7 @@ public class ImageCache {
             if (bitmap == null && cacheDir.getAbsolutePath() != "/") {
                 String imageName = key.replace("/", "");
                 bitmap = BitmapFactory.decodeFile(cacheDir.getAbsolutePath() + imageName);
+                System.out.println("Read from cache " + cacheDir.getAbsolutePath() + imageName);
             }
             return bitmap;
         } catch (Exception e) {
