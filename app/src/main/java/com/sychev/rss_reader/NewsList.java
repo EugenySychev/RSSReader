@@ -69,7 +69,7 @@ public class NewsList extends Fragment {
                 updateUiVisability(msg.what);
                 if (msg.what == NewsNetworkLoader.LoadState.LOAD_OK) {
                     NewsNetworkLoader loader = (NewsNetworkLoader) msg.obj;
-                    loadedList = loader.loadedList;
+                    loadedList = loader.getLoadedList();
                     updateList();
                 }
                 super.handleMessage(msg);

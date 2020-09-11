@@ -117,6 +117,10 @@ public class NewsNetworkLoader extends Thread {
         this.handler = handler;
     }
 
+    public List<NewsModelItem> getLoadedList() {
+        return loadedList;
+    }
+
     interface LoadState {
         int LOAD_ERROR = -1;
         int LOAD_OK = 0;
