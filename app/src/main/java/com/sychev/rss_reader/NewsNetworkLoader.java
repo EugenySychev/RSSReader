@@ -21,13 +21,13 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-public class NewsDataLoader extends Thread {
-    public List<NewsModelItem> loadedList;
+public class NewsNetworkLoader extends Thread {
+    private List<NewsModelItem> loadedList;
     private int timeout;
     private URL source;
     private Handler handler;
 
-    NewsDataLoader(URL source, int timeout) {
+    NewsNetworkLoader(URL source, int timeout) {
         this.source = source;
         this.timeout = timeout;
         loadedList = new ArrayList<>();

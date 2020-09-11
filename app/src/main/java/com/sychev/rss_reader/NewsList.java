@@ -1,14 +1,9 @@
 package com.sychev.rss_reader;;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.view.menu.ListMenuItemView;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 
 import android.os.Handler;
 import android.os.Looper;
@@ -21,8 +16,6 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import java.io.ByteArrayOutputStream;
-import java.lang.reflect.Modifier;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -36,7 +29,7 @@ import java.util.List;
 public class NewsList extends Fragment {
 
     private Handler mHandler;
-    private NewsDataLoader loader;
+    private NewsNetworkLoader loader;
     private View rootView;
     private List<NewsModelItem> loadedList;
     private MainActivity top;
@@ -68,14 +61,14 @@ public class NewsList extends Fragment {
             e.printStackTrace();
         }
 
-        loader = new NewsDataLoader(url, 100);
+        loader = new NewsNetworkLoader(url, 100);
 
         mHandler = new Handler(Looper.getMainLooper()) {
             @Override
             public void handleMessage(Message msg) {
                 updateUiVisability(msg.what);
-                if (msg.what == NewsDataLoader.LoadState.LOAD_OK) {
-                    NewsDataLoader loader = (NewsDataLoader) msg.obj;
+                if (msg.what == NewsNetworkLoader.LoadState.LOAD_OK) {
+                    NewsNetworkLoader loader = (NewsNetworkLoader) msg.obj;
                     loadedList = loader.loadedList;
                     updateList();
                 }
@@ -113,13 +106,13 @@ public class NewsList extends Fragment {
         ListView listView = rootView.findViewById(R.id.lvMain);
         ProgressBar progressBar = rootView.findViewById(R.id.progressBar);
         TextView errorText = rootView.findViewById(R.id.textView);
-        if (what == NewsDataLoader.LoadState.LOAD_OK) {
+        if (what == NewsNetworkLoader.LoadState.LOAD_OK) {
             listView.setVisibility(View.VISIBLE);
             progressBar.setVisibility(View.GONE);
             errorText.setVisibility(View.GONE);
 
             System.out.println("Set visible LIST");
-        } else if (what == NewsDataLoader.LoadState.LOAD_PROCESSING) {
+        } else if (what == NewsNetworkLoader.LoadState.LOAD_PROCESSING) {
             listView.setVisibility(View.GONE);
             progressBar.setVisibility(View.VISIBLE);
             errorText.setVisibility(View.GONE);
