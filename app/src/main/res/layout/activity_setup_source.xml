@@ -10,36 +10,57 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/news_view_toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:padding="@dimen/inner_frame_layout_padding"
-        android:background="?attr/colorPrimaryDark"
-        app:popupTheme="@style/AppTheme.AppBarOverlay" />
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/news_view_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimaryDark"
+            android:padding="@dimen/inner_frame_layout_padding"
+            app:popupTheme="@style/AppTheme.AppBarOverlay" />
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_margin="4dp">
+
+            <TextView
+                android:id="@+id/text_view_enter_url"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/text_size"
+                android:layout_margin="4dp"
+                android:text="@string/enter_url_source_text" />
 
             <com.google.android.material.textfield.TextInputEditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/https_site_rss_xml" />
+                android:id="@+id/edit_url"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/https_site_rss_xml" />
 
+
+            <TextView
+                android:id="@+id/text_view_select_cat"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/text_size"
+                android:layout_margin="4dp"
+                android:layout_marginTop="20dp"
+                android:text="@string/select_category_text" />
 
             <Spinner
                 android:id="@+id/spinner_category"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1" />
+                android:layout_weight="1"
+                android:entries="@array/categories" />
 
             <Button
                 android:id="@+id/save_source_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Button" />
+                android:text="@string/save_button_title" />
 
         </LinearLayout>
     </LinearLayout>

@@ -21,4 +21,5 @@
     -->
     <dimen name="inner_frame_layout_padding">5dp</dimen>
     <dimen name="app_bar_height">180dp</dimen>
+    <dimen name="text_size">18dp</dimen>
 </resources>

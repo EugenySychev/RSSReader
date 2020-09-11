@@ -1,9 +1,12 @@
 package com.sychev.rss_reader.rss_reader;
 
-import android.media.Image;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.MenuItem;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -17,6 +20,7 @@ import com.google.android.material.navigation.NavigationView;
 public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
+    private static final int SETUP_ACTIVITY_REQUEST_CODE = 0;
 
 
     @Override
@@ -43,6 +47,30 @@ public class MainActivity extends AppCompatActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main_settings_menu, menu);
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.action_settings) {
+            Intent intent = new Intent(this, SetupSourceActivity.class);
+
+            intent.putExtra("selected_category", 1);
+            intent.putExtra("url_for_edit", "http://gazeta.sru");
+
+            startActivityForResult(intent, SETUP_ACTIVITY_REQUEST_CODE);
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == SETUP_ACTIVITY_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+                System.out.println(data.getStringExtra("url"));
+            }
+        }
     }
 
     @Override
