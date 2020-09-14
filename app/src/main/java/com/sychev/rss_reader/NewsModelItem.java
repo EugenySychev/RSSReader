@@ -5,13 +5,6 @@ import android.graphics.Bitmap;
 import java.io.Serializable;
 
 public class NewsModelItem implements Serializable {
-    public Categories getmCategory() {
-        return mCategory;
-    }
-
-    public void setmCategory(Categories mCategory) {
-        this.mCategory = mCategory;
-    }
 
     public enum Categories {
         NEWS_CATEGORY,
@@ -24,9 +17,9 @@ public class NewsModelItem implements Serializable {
     private Bitmap mIcon;
     private String mUrl;
     private int mId;
+    private long mTime;
     private boolean mIsRead;
     private Categories mCategory;
-
 
     public NewsModelItem(String title, String description) {
         mTitle = title;
@@ -88,4 +81,8 @@ public class NewsModelItem implements Serializable {
     public void setCategory(Categories cat) {
         mCategory = cat;
     }
+
+    public void setTime(long timeMils) { mTime = timeMils; }
+
+    public long getTime() { return mTime; }
 }

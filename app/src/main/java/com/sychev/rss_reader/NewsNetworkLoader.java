@@ -14,8 +14,15 @@ import org.xml.sax.SAXException;
 
 import java.io.IOException;
 import java.net.URL;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -75,6 +82,15 @@ public class NewsNetworkLoader extends Thread {
         nameList = nameElement.getChildNodes();
         String titleText = ((Node) nameList.item(0)).getNodeValue();
 
+        NodeList timeList = fstElmnt.getElementsByTagName("pubDate");
+        Element timeElement = (Element) timeList.item(0);
+        timeList = timeElement.getChildNodes();
+        String timeString = ((Node) timeList.item(0)).getNodeValue();
+        long timeMils = 0;
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEE, d MMM yyyy HH:mm:ss Z", Locale.ENGLISH); //Mon, 14 Sep 2020 17:10:06 +0300
+        LocalDateTime d = LocalDateTime.parse(timeString, formatter);
+        timeMils = d.atOffset(ZoneOffset.UTC).toInstant().toEpochMilli();
+
         String descrText = "";
         NodeList descrList = fstElmnt.getElementsByTagName("description");
 
@@ -87,9 +103,6 @@ public class NewsNetworkLoader extends Thread {
             i++;
         }
 
-
-
-        System.out.println("Retrieved item title " + titleText + " and description: " + descrText);
         NodeList urlDescr = fstElmnt.getElementsByTagName("guid");
         Element urlDescrElement = (Element) urlDescr.item(0);
         urlDescr = urlDescrElement.getChildNodes();
@@ -108,6 +121,10 @@ public class NewsNetworkLoader extends Thread {
             System.out.println("Loaded image " + loadedBitmap.getByteCount() + " bytes size from cache");
         }
         NewsModelItem item = new NewsModelItem(titleText, descrText);
+        if (timeMils > 0) {
+            item.setTime(timeMils);
+        }
+
         item.setUrl(urlDescr.item(0).getNodeValue());
         item.setIcon(loadedBitmap);
         return item;

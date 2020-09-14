@@ -10,7 +10,9 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class NewsAdapter extends ArrayAdapter<com.sychev.rss_reader.NewsModelItem> {
@@ -40,6 +42,17 @@ public class NewsAdapter extends ArrayAdapter<com.sychev.rss_reader.NewsModelIte
         TextView descr = listItem.findViewById(R.id.news_description);
         String descrText = item.getDescription();
         descr.setText(cropTextWithPoints(item.getDescription(), MAX_LINE_LENTGTH));
+
+        TextView timeview = listItem.findViewById(R.id.news_time);
+
+        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
+
+        // Create a calendar object that will convert the date and time value in milliseconds to date.
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(item.getTime());
+        String timeText = formatter.format(calendar.getTime());
+
+        timeview.setText(timeText);
 
         if (!item.getIsRead()) {
             title.setTypeface(null, Typeface.BOLD);
