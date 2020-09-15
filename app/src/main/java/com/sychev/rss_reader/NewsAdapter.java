@@ -54,11 +54,10 @@ public class NewsAdapter extends ArrayAdapter<com.sychev.rss_reader.NewsModelIte
 
         timeview.setText(timeText);
 
-        if (!item.getIsRead()) {
+        if (item.getIsRead() == 0) {
             title.setTypeface(null, Typeface.BOLD);
             descr.setTypeface(null, Typeface.BOLD);
         } else {
-
             title.setTypeface(null, Typeface.ITALIC);
             descr.setTypeface(null, Typeface.ITALIC);
         }

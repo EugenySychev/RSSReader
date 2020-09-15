@@ -77,19 +77,13 @@ public class NewsNetworkLoader extends Thread {
     private NewsModelItem getItemFromXmlNode(Node node) throws IOException {
 
         Element fstElmnt = (Element) node;
-        NodeList nameList = fstElmnt.getElementsByTagName("title");
-        Element nameElement = (Element) nameList.item(0);
-        nameList = nameElement.getChildNodes();
-        String titleText = ((Node) nameList.item(0)).getNodeValue();
 
-        NodeList timeList = fstElmnt.getElementsByTagName("pubDate");
-        Element timeElement = (Element) timeList.item(0);
-        timeList = timeElement.getChildNodes();
-        String timeString = ((Node) timeList.item(0)).getNodeValue();
-        long timeMils = 0;
+        String titleText = getValueFromElement(fstElmnt, "title");
+        String timeString = getValueFromElement(fstElmnt, "pubDate");
+
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEE, d MMM yyyy HH:mm:ss Z", Locale.ENGLISH); //Mon, 14 Sep 2020 17:10:06 +0300
         LocalDateTime d = LocalDateTime.parse(timeString, formatter);
-        timeMils = d.atOffset(ZoneOffset.UTC).toInstant().toEpochMilli();
+        long timeMils = d.atOffset(ZoneOffset.UTC).toInstant().toEpochMilli();
 
         String descrText = "";
         NodeList descrList = fstElmnt.getElementsByTagName("description");
@@ -103,10 +97,8 @@ public class NewsNetworkLoader extends Thread {
             i++;
         }
 
-        NodeList urlDescr = fstElmnt.getElementsByTagName("guid");
-        Element urlDescrElement = (Element) urlDescr.item(0);
-        urlDescr = urlDescrElement.getChildNodes();
-        String urlString = urlDescr.item(0).getNodeValue();
+        String urlString = getValueFromElement(fstElmnt, "guid");
+        NewsModelItem item = new NewsModelItem(titleText, descrText);
 
         Bitmap loadedBitmap;
 
@@ -114,20 +106,29 @@ public class NewsNetworkLoader extends Thread {
             NodeList iconList = fstElmnt.getElementsByTagName("enclosure");
             String urlStr = iconList.item(0).getAttributes().getNamedItem("url").getNodeValue();
             URL urlBitmap = new URL(urlStr);
+            item.setIconUrl(urlStr);
             loadedBitmap = BitmapFactory.decodeStream(urlBitmap.openConnection().getInputStream());
             ImageCache.getInstance().saveBitmapToCahche(urlString, loadedBitmap);
         } else {
             loadedBitmap = ImageCache.getInstance().retrieveBitmapFromCache(urlString);
             System.out.println("Loaded image " + loadedBitmap.getByteCount() + " bytes size from cache");
         }
-        NewsModelItem item = new NewsModelItem(titleText, descrText);
         if (timeMils > 0) {
             item.setTime(timeMils);
         }
 
-        item.setUrl(urlDescr.item(0).getNodeValue());
+        item.setUrl(urlString);
         item.setIcon(loadedBitmap);
+        item.setSource(source.toString());
+
         return item;
+    }
+
+    private String getValueFromElement(Element element, String name) {
+        NodeList nodeList = element.getElementsByTagName(name);
+        Element nodeElement = (Element) nodeList.item(0);
+        nodeList = nodeElement.getChildNodes();
+        return nodeList.item(0).getNodeValue();
     }
 
     public void setHandler(Handler handler) {

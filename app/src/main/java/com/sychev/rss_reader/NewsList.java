@@ -86,7 +86,7 @@ public class NewsList extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 NewsModelItem item = loadedList.get(i);
-                item.setIsRead(true);
+                item.setIsRead(1);
                 loadedList.set(i, item);
                 adapter.notifyDataSetChanged();
                 Intent intent = new Intent(getContext(), NewsViewActivity.class);
