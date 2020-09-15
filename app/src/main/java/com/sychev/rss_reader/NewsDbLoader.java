@@ -47,34 +47,7 @@ public class NewsDbLoader {
     public List<NewsModelItem> getFullNewsList() {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         List<NewsModelItem> list = new ArrayList<>();
-
-        String[] projection = {
-                BaseColumns._ID,
-                NewsDbHelper.FeedEntry.COLUMN_NAME_URL,
-                NewsDbHelper.FeedEntry.COLUMN_NAME_TITLE,
-                NewsDbHelper.FeedEntry.COLUMN_NAME_DESCR,
-                NewsDbHelper.FeedEntry.COLUMN_NAME_TIME,
-                NewsDbHelper.FeedEntry.COLUMN_NAME_IMAGE,
-                NewsDbHelper.FeedEntry.COLUMN_NAME_SOURCE,
-                NewsDbHelper.FeedEntry.COLUMN_NAME_ISREAD
-        };
-
-        String selection = NewsDbHelper.FeedEntry.COLUMN_NAME_TITLE + " = ?";
-        String[] selectionArgs = { "My Title" };
-
-// How you want the results sorted in the resulting Cursor
-        String sortOrder =
-                NewsDbHelper.FeedEntry.COLUMN_NAME_TIME + " DESC";
-
-        Cursor cursor = db.query(
-                NewsDbHelper.FeedEntry.TABLE_NAME,   // The table to query
-                projection,             // The array of columns to return (pass null to get all)
-                selection,              // The columns for the WHERE clause
-                null,          // The values for the WHERE clause
-                null,                   // don't group the rows
-                null,                   // don't filter by row groups
-                sortOrder               // The sort order
-        );
+        Cursor cursor = db.query(NewsDbHelper.FeedEntry.TABLE_NAME, null, null, null, null, null, null);
 
         while(cursor.moveToNext()) {
             NewsModelItem item = new NewsModelItem();
@@ -88,6 +61,55 @@ public class NewsDbLoader {
             list.add(item);
         }
         cursor.close();
+        return list;
+    }
+
+    public List<NewsModelItem> getNewsListForSourceAndTime(String sourceUrl, long begin, long end) {
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        List<NewsModelItem> list = new ArrayList<>();
+        String[] projection = {
+                BaseColumns._ID,
+                NewsDbHelper.FeedEntry.COLUMN_NAME_DESCR,
+                NewsDbHelper.FeedEntry.COLUMN_NAME_URL,
+                NewsDbHelper.FeedEntry.COLUMN_NAME_TITLE,
+                NewsDbHelper.FeedEntry.COLUMN_NAME_DESCR,
+                NewsDbHelper.FeedEntry.COLUMN_NAME_TIME,
+                NewsDbHelper.FeedEntry.COLUMN_NAME_IMAGE,
+                NewsDbHelper.FeedEntry.COLUMN_NAME_ISREAD,
+                NewsDbHelper.FeedEntry.COLUMN_NAME_SOURCE
+        };
+
+        String selection = NewsDbHelper.FeedEntry.COLUMN_NAME_SOURCE + " = ?";
+        String[] selectionArgs = { sourceUrl };
+
+        String sortOrder =
+                NewsDbHelper.FeedEntry.COLUMN_NAME_TIME + " DESC";
+        // TODO: add some logic. You should.
+        Cursor cursor = db.query(
+                NewsDbHelper.FeedEntry.TABLE_NAME,   // The table to query
+                projection,             // The array of columns to return (pass null to get all)
+                selection,              // The columns for the WHERE clause
+                selectionArgs,          // The values for the WHERE clause
+                null,                   // don't group the rows
+                null,                   // don't filter by row groups
+                sortOrder               // The sort order
+        );
+        return list;
+    }
+
+    public List<SourceModelItem> getSourceList() {
+        List<SourceModelItem> list = new ArrayList<>();
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+
+        Cursor cursor = db.query(NewsDbHelper.SourceEntry.TABLE_NAME, null, null, null, null, null, null);
+
+        while(cursor.moveToNext()) {
+            SourceModelItem item = new SourceModelItem();
+            item.setCategory(NewsModelItem.Categories.fromInteger(cursor.getInt(cursor.getColumnIndexOrThrow(NewsDbHelper.SourceEntry.COLUMN_NAME_CATEGORY))));
+            item.setUrl(cursor.getString(cursor.getColumnIndexOrThrow(NewsDbHelper.SourceEntry.COLUMN_NAME_URL)));
+            item.setTitle(cursor.getString(cursor.getColumnIndexOrThrow(NewsDbHelper.SourceEntry.COLUMN_NAME_TITLE)));
+            list.add(item);
+        }
         return list;
     }
 }

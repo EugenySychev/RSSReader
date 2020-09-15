@@ -9,7 +9,32 @@ public class NewsModelItem implements Serializable {
     public enum Categories {
         NEWS_CATEGORY,
         FILMS_CATEGORY,
-        OTHER_CATEGORY
+        OTHER_CATEGORY;
+
+        public static Categories fromInteger(int val) {
+            switch (val) {
+                case 0:
+                    return NEWS_CATEGORY;
+                case 1:
+                    return FILMS_CATEGORY;
+                case 2:
+                    return OTHER_CATEGORY;
+            }
+            return OTHER_CATEGORY;
+        }
+
+        public static int toInt(Categories cat) {
+            switch (cat) {
+                case NEWS_CATEGORY:
+                    return 0;
+                case FILMS_CATEGORY:
+                    return 1;
+                case OTHER_CATEGORY:
+                    return 2;
+            }
+            return 2;
+        }
+
     }
 
     private String mTitle;
