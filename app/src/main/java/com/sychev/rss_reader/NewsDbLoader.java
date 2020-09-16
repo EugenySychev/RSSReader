@@ -2,6 +2,7 @@ package com.sychev.rss_reader;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.database.CursorIndexOutOfBoundsException;
 import android.database.sqlite.SQLiteDatabase;
 import android.provider.BaseColumns;
 
@@ -14,7 +15,7 @@ public class NewsDbLoader {
     public boolean storeList(List<NewsModelItem> list) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
-        for (NewsModelItem item: list) {
+        for (NewsModelItem item : list) {
             ContentValues values = new ContentValues();
 
             values.put(NewsDbHelper.FeedEntry.COLUMN_NAME_TITLE, item.getTitle());
@@ -38,10 +39,22 @@ public class NewsDbLoader {
         ContentValues values = new ContentValues();
         values.put(NewsDbHelper.FeedEntry.COLUMN_NAME_ISREAD, isRead);
         String selection = NewsDbHelper.FeedEntry.COLUMN_NAME_URL + " LIKE ?";
-        String[] selectionArgs = { url };
+        String[] selectionArgs = {url};
 
         int count = db.update(NewsDbHelper.FeedEntry.TABLE_NAME, values, selection, selectionArgs);
         return count > 0;
+    }
+
+    private NewsModelItem getCursorItem(Cursor cursor) {
+        NewsModelItem item = new NewsModelItem();
+        item.setIconUrl(cursor.getString(cursor.getColumnIndexOrThrow(NewsDbHelper.FeedEntry.COLUMN_NAME_IMAGE)));
+        item.setDescription(cursor.getString(cursor.getColumnIndexOrThrow(NewsDbHelper.FeedEntry.COLUMN_NAME_DESCR)));
+        item.setSource(cursor.getString(cursor.getColumnIndexOrThrow(NewsDbHelper.FeedEntry.COLUMN_NAME_SOURCE)));
+        item.setIsRead(cursor.getInt(cursor.getColumnIndexOrThrow(NewsDbHelper.FeedEntry.COLUMN_NAME_ISREAD)));
+        item.setTime(cursor.getLong(cursor.getColumnIndexOrThrow(NewsDbHelper.FeedEntry.COLUMN_NAME_TIME)));
+        item.setIconUrl(cursor.getString(cursor.getColumnIndexOrThrow(NewsDbHelper.FeedEntry.COLUMN_NAME_TITLE)));
+        item.setIconUrl(cursor.getString(cursor.getColumnIndexOrThrow(NewsDbHelper.FeedEntry.COLUMN_NAME_URL)));
+        return item;
     }
 
     public List<NewsModelItem> getFullNewsList() {
@@ -49,16 +62,8 @@ public class NewsDbLoader {
         List<NewsModelItem> list = new ArrayList<>();
         Cursor cursor = db.query(NewsDbHelper.FeedEntry.TABLE_NAME, null, null, null, null, null, null);
 
-        while(cursor.moveToNext()) {
-            NewsModelItem item = new NewsModelItem();
-            item.setIconUrl(cursor.getString(cursor.getColumnIndexOrThrow(NewsDbHelper.FeedEntry.COLUMN_NAME_IMAGE)));
-            item.setDescription(cursor.getString(cursor.getColumnIndexOrThrow(NewsDbHelper.FeedEntry.COLUMN_NAME_DESCR)));
-            item.setSource(cursor.getString(cursor.getColumnIndexOrThrow(NewsDbHelper.FeedEntry.COLUMN_NAME_SOURCE)));
-            item.setIsRead(cursor.getInt(cursor.getColumnIndexOrThrow(NewsDbHelper.FeedEntry.COLUMN_NAME_ISREAD)));
-            item.setTime(cursor.getLong(cursor.getColumnIndexOrThrow(NewsDbHelper.FeedEntry.COLUMN_NAME_TIME)));
-            item.setIconUrl(cursor.getString(cursor.getColumnIndexOrThrow(NewsDbHelper.FeedEntry.COLUMN_NAME_TITLE)));
-            item.setIconUrl(cursor.getString(cursor.getColumnIndexOrThrow(NewsDbHelper.FeedEntry.COLUMN_NAME_URL)));
-            list.add(item);
+        while (cursor.moveToNext()) {
+            list.add(getCursorItem(cursor));
         }
         cursor.close();
         return list;
@@ -80,20 +85,28 @@ public class NewsDbLoader {
         };
 
         String selection = NewsDbHelper.FeedEntry.COLUMN_NAME_SOURCE + " = ?";
-        String[] selectionArgs = { sourceUrl };
+        String[] selectionArgs = {sourceUrl};
 
         String sortOrder =
                 NewsDbHelper.FeedEntry.COLUMN_NAME_TIME + " DESC";
-        // TODO: add some logic. You should.
+        String havingFilter = NewsDbHelper.FeedEntry.COLUMN_NAME_TIME + " > " + String.valueOf(begin) + " AND " +
+                NewsDbHelper.FeedEntry.COLUMN_NAME_TIME + " < " + String.valueOf(end);
+
         Cursor cursor = db.query(
                 NewsDbHelper.FeedEntry.TABLE_NAME,   // The table to query
                 projection,             // The array of columns to return (pass null to get all)
                 selection,              // The columns for the WHERE clause
                 selectionArgs,          // The values for the WHERE clause
                 null,                   // don't group the rows
-                null,                   // don't filter by row groups
+                havingFilter,                   // don't filter by row groups
                 sortOrder               // The sort order
         );
+
+        while (cursor.moveToNext()) {
+            list.add(getCursorItem(cursor));
+        }
+
+        cursor.close();
         return list;
     }
 
@@ -103,13 +116,35 @@ public class NewsDbLoader {
 
         Cursor cursor = db.query(NewsDbHelper.SourceEntry.TABLE_NAME, null, null, null, null, null, null);
 
-        while(cursor.moveToNext()) {
+        while (cursor.moveToNext()) {
             SourceModelItem item = new SourceModelItem();
             item.setCategory(NewsModelItem.Categories.fromInteger(cursor.getInt(cursor.getColumnIndexOrThrow(NewsDbHelper.SourceEntry.COLUMN_NAME_CATEGORY))));
             item.setUrl(cursor.getString(cursor.getColumnIndexOrThrow(NewsDbHelper.SourceEntry.COLUMN_NAME_URL)));
             item.setTitle(cursor.getString(cursor.getColumnIndexOrThrow(NewsDbHelper.SourceEntry.COLUMN_NAME_TITLE)));
             list.add(item);
         }
+        cursor.close();
         return list;
+    }
+
+    public boolean addSource(SourceModelItem item) {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(NewsDbHelper.SourceEntry.COLUMN_NAME_TITLE, item.getTitle());
+        values.put(NewsDbHelper.SourceEntry.COLUMN_NAME_CATEGORY, NewsModelItem.Categories.toInt(item.getCategory()));
+        values.put(NewsDbHelper.SourceEntry.COLUMN_NAME_URL, item.getUrl());
+
+        long newRowId = db.insert(NewsDbHelper.SourceEntry.TABLE_NAME, null, values);
+
+        return newRowId >= 0;
+    }
+
+    public boolean removeSource(SourceModelItem item) {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        String selection = NewsDbHelper.SourceEntry.COLUMN_NAME_URL + " LIKE ?";
+
+        String[] selectionArgs = { item.getUrl() };
+        return db.delete(NewsDbHelper.SourceEntry.TABLE_NAME, selection, selectionArgs) >= 0;
     }
 }
