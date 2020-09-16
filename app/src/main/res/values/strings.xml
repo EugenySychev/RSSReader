@@ -24,4 +24,5 @@
     <string name="save_button_title">Save</string>
     <string name="enter_url_source_text">Enter source url:</string>
     <string name="select_category_text">Select category:</string>
+    <string name="add_source">Add source</string>
 </resources>
