@@ -35,6 +35,18 @@ public class NewsModelItem implements Serializable {
             return 2;
         }
 
+        public static String toString(Categories cat) {
+            switch (cat) {
+                case NEWS_CATEGORY:
+                    return "News";
+                case FILMS_CATEGORY:
+                    return "Films";
+                case OTHER_CATEGORY:
+                    return "Others";
+            }
+            return "";
+        }
+
     }
 
     private String mTitle;

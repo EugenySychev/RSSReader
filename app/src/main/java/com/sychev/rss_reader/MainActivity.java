@@ -58,6 +58,9 @@ public class MainActivity extends AppCompatActivity {
             intent.putExtra("url_for_edit", "http://gazeta.sru");
 
             startActivityForResult(intent, SETUP_ACTIVITY_REQUEST_CODE);
+        } else if (item.getItemId() == R.id.action_sources) {
+            Intent intent = new Intent(this, SourceListActivity.class);
+            startActivity(intent);
         }
         return super.onOptionsItemSelected(item);
     }

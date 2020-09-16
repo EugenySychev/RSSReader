@@ -25,4 +25,5 @@
     <string name="enter_url_source_text">Enter source url:</string>
     <string name="select_category_text">Select category:</string>
     <string name="add_source">Add source</string>
+    <string name="actions_sources">Sources</string>
 </resources>

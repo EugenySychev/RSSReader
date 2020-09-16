@@ -3,6 +3,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.sychev.rss_reader.ScrollingActivity">
     <item
+        android:id="@+id/action_sources"
+        android:orderInCategory="99"
+        android:title="@string/actions_sources"
+        app:showAsAction="never" />
+    <item
         android:id="@+id/action_settings"
         android:orderInCategory="100"
         android:title="@string/action_settings"

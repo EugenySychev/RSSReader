@@ -26,11 +26,18 @@ public class SourceListAdapter extends BaseExpandableListAdapter {
     private List<String> expandableListTitle;
     private HashMap<String, List<Pair<String, String>> > expandableListDetail;
 
-    public SourceListAdapter(Context context, List<String> expandableListTitle, HashMap<String,
-            List<Pair<String, String>>> expandableListDetail) {
+    public SourceListAdapter(Context context, List<SourceModelItem> expandableListDetail) {
         this.context = context;
-        this.expandableListDetail = expandableListDetail;
-        this.expandableListTitle = expandableListTitle;
+
+        for (SourceModelItem item: expandableListDetail) {
+            if (this.expandableListDetail.get(NewsModelItem.Categories.toString(item.getCategory())) == null)
+            {
+                this.expandableListTitle.add(NewsModelItem.Categories.toString(item.getCategory()));
+                this.expandableListDetail.put(NewsModelItem.Categories.toString(item.getCategory()), new ArrayList<Pair<String, String>>());
+            }
+
+            this.expandableListDetail.get(NewsModelItem.Categories.toString(item.getCategory())).add(Pair.create(item.getTitle(), item.getUrl()));
+        }
     }
     @Override
     public int getGroupCount() {
