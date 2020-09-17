@@ -28,7 +28,8 @@ public class SourceListAdapter extends BaseExpandableListAdapter {
 
     public SourceListAdapter(Context context, List<SourceModelItem> expandableListDetail) {
         this.context = context;
-
+        this.expandableListDetail = new HashMap<String, List<Pair<String, String>> >();
+        this.expandableListTitle = new ArrayList<>();
         for (SourceModelItem item: expandableListDetail) {
             if (this.expandableListDetail.get(NewsModelItem.Categories.toString(item.getCategory())) == null)
             {
@@ -46,8 +47,10 @@ public class SourceListAdapter extends BaseExpandableListAdapter {
 
     @Override
     public int getChildrenCount(int i) {
-        return expandableListDetail.get(expandableListTitle.get(i))
+        if (expandableListTitle.size() > 0)
+            return expandableListDetail.get(expandableListTitle.get(i))
                 .size();
+        return 0;
     }
 
     @Override

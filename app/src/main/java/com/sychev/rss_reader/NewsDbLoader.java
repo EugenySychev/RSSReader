@@ -1,6 +1,7 @@
 package com.sychev.rss_reader;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
 import android.database.CursorIndexOutOfBoundsException;
 import android.database.sqlite.SQLiteDatabase;
@@ -11,6 +12,17 @@ import java.util.List;
 
 public class NewsDbLoader {
     NewsDbHelper dbHelper;
+    private static NewsDbLoader instance;
+
+    public static synchronized NewsDbLoader getInstance(Context context) {
+        if (instance == null)
+            instance = new NewsDbLoader(context);
+        return instance;
+    }
+
+    private NewsDbLoader(Context context) {
+        dbHelper = new NewsDbHelper(context);
+    }
 
     public boolean storeList(List<NewsModelItem> list) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();

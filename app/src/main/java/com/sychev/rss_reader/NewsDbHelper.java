@@ -53,8 +53,9 @@ public class NewsDbHelper extends SQLiteOpenHelper {
     private static final String SQL_DELETE_SOURCE_ENTRIES =
             "DROP TABLE IF EXISTS " + SourceEntry.TABLE_NAME;
 
-    public NewsDbHelper(@Nullable Context context, @Nullable String name, @Nullable SQLiteDatabase.CursorFactory factory, int version) {
-        super(context, name, factory, version);
+
+    public NewsDbHelper(@Nullable Context context) {
+        super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
     @Override
