@@ -4,27 +4,21 @@
     android:layout_height="match_parent">
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical" >
+        android:orientation="vertical">
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:textSize="@dimen/text_size"
             android:text="@string/enter_source_url" />
+
         <EditText
+            android:id="@+id/enter_source_url_edit_text"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/enter_source_url_edit_text" />
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal" >
-            
-            <Button
-                android:layout_width=""
-                android:layout_height=""
-        </LinearLayout>
-        
+            android:layout_height="wrap_content" />
+
     </LinearLayout>
 </RelativeLayout>
