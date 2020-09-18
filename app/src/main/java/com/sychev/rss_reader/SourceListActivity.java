@@ -2,24 +2,35 @@ package com.sychev.rss_reader;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.DialogFragment;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ExpandableListView;
 import android.widget.ListView;
+import android.widget.Spinner;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.zip.Inflater;
+
+import javax.xml.transform.Source;
 
 public class SourceListActivity extends AppCompatActivity {
 
-    List<SourceModelItem> sourceList;
+    private List<SourceModelItem> sourceList;
+    private SourceListAdapter listAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,31 +41,60 @@ public class SourceListActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(getBaseContext());
-                final LayoutInflater inflater = getLayoutInflater();
-                builder.setView(inflater.inflate(R.layout.source_dialog, null))
-                        .setPositiveButton(R.string.save_button_title, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                SourceModelItem item = new SourceModelItem();
-                                EditText editText = (EditText) inflater.inflate(R.id.enter_source_url_edit_text, null);
-                                System.out.println(editText.getText());
-                            }
-                        })
-                        .setNegativeButton(R.string.cancel_button, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
+                builder.setTitle("Title");
 
-                            }
-                        });
-                builder.create();
+                final View v;
+                LayoutInflater inflater = (LayoutInflater) view.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                v = inflater.inflate(R.layout.source_dialog, null);
+
+//                final EditText input = new EditText(view.getContext());
+//                input.setInputType(InputType.TYPE_TEXT_VARIATION_WEB_EDIT_TEXT);
+                builder.setView(v);
+
+                builder.setPositiveButton(R.string.save_button_title, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        EditText editText = (EditText)v.findViewById(R.id.enter_source_url_edit_text);
+                        Spinner spinner = (Spinner)v.findViewById(R.id.spinner_category);
+
+                        addSource(editText.getText().toString(), NewsModelItem.Categories.fromInteger(spinner.getSelectedItemPosition()));
+                    }
+                });
+                builder.setNegativeButton(R.string.cancel_button, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+
+                builder.show();
             }
         });
 
         sourceList = NewsDbLoader.getInstance(this).getSourceList();
 
         ExpandableListView listView = findViewById(R.id.source_list_view);
-        SourceListAdapter adapter = new SourceListAdapter(getApplicationContext(), sourceList);
-        listView.setAdapter(adapter);
+        listAdapter = new SourceListAdapter(getApplicationContext(), sourceList);
+        listView.setAdapter(listAdapter);
+    }
+
+    private void addSource(final String source, final NewsModelItem.Categories category) {
+        final SourceNetworkLoader loader = new SourceNetworkLoader(source);
+        final SourceModelItem item = new SourceModelItem();
+        Handler handler = new Handler(Looper.getMainLooper()) {
+            @Override
+            public void handleMessage(Message msg) {
+                if (msg.what == NewsNetworkLoader.LoadState.LOAD_OK) {
+                    item.setTitle(loader.getTitle());
+                    item.setCategory(category);
+                    sourceList.add(item);
+                    listAdapter.notifyDataSetChanged();
+                }
+                super.handleMessage(msg);
+            }
+        };
+        loader.setHandler(handler);
+        loader.start();
     }
 }
