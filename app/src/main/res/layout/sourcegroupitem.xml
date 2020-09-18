@@ -7,8 +7,8 @@
         android:id="@+id/categoryTitle"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:padding ="?android:attr/expandableListPreferredItemPaddingLeft"
-        android:textColor="@android:color/black"
-        android:paddingTop="10dp"
-        android:paddingBottom="10dp" />
+        android:padding ="?android:attr/expandableListPreferredItemPaddingLeft" />
+<!--        android:textColor="@android:color/black"-->
+<!--        android:paddingTop="10dp"-->
+<!--        android:paddingBottom="10dp" />-->
 </LinearLayout>

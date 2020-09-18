@@ -23,19 +23,21 @@ import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.SortedMap;
 import java.util.zip.Inflater;
 
 import javax.xml.transform.Source;
 
 public class SourceListActivity extends AppCompatActivity {
 
-    private List<SourceModelItem> sourceList;
+    private List<SourceModelItem> sourceList = new ArrayList<>();
     private SourceListAdapter listAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_source_list);
+        sourceList = NewsDbLoader.getInstance(this).getSourceList();
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -72,10 +74,10 @@ public class SourceListActivity extends AppCompatActivity {
             }
         });
 
-        sourceList = NewsDbLoader.getInstance(this).getSourceList();
 
         ExpandableListView listView = findViewById(R.id.source_list_view);
-        listAdapter = new SourceListAdapter(getApplicationContext(), sourceList);
+        listAdapter = new SourceListAdapter(getApplicationContext());
+        listAdapter.setList(sourceList);
         listView.setAdapter(listAdapter);
     }
 
@@ -88,7 +90,9 @@ public class SourceListActivity extends AppCompatActivity {
                 if (msg.what == NewsNetworkLoader.LoadState.LOAD_OK) {
                     item.setTitle(loader.getTitle());
                     item.setCategory(category);
+                    item.setUrl(source);
                     sourceList.add(item);
+                    listAdapter.setList(sourceList);
                     listAdapter.notifyDataSetChanged();
                 }
                 super.handleMessage(msg);

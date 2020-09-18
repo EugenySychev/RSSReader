@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
@@ -23,21 +24,29 @@ public class SourceListAdapter extends BaseExpandableListAdapter {
 
     private Context context;
 
-    private List<String> expandableListTitle;
+    private List<String> expandableListTitle = new ArrayList<>();// = Arrays.asList("News", "Films", "Others");
     private HashMap<String, List<Pair<String, String>> > expandableListDetail;
 
-    public SourceListAdapter(Context context, List<SourceModelItem> expandableListDetail) {
+    public SourceListAdapter(Context context) {
         this.context = context;
-        this.expandableListDetail = new HashMap<String, List<Pair<String, String>> >();
-        this.expandableListTitle = new ArrayList<>();
-        for (SourceModelItem item: expandableListDetail) {
-            if (this.expandableListDetail.get(NewsModelItem.Categories.toString(item.getCategory())) == null)
+    }
+
+    public void setList(List<SourceModelItem> sourceList) {
+        if (expandableListDetail == null)
+            expandableListDetail = new HashMap<String, List<Pair<String, String>> >();
+        for (SourceModelItem item: sourceList) {
+            String itemCategory = NewsModelItem.Categories.toString(item.getCategory());
+
+            if (!expandableListTitle.contains(itemCategory))
             {
-                this.expandableListTitle.add(NewsModelItem.Categories.toString(item.getCategory()));
-                this.expandableListDetail.put(NewsModelItem.Categories.toString(item.getCategory()), new ArrayList<Pair<String, String>>());
+                expandableListTitle.add(itemCategory);
+                expandableListDetail.put(itemCategory, new ArrayList<Pair<String, String>>());
             }
 
-            this.expandableListDetail.get(NewsModelItem.Categories.toString(item.getCategory())).add(Pair.create(item.getTitle(), item.getUrl()));
+            Pair<String, String> pair = Pair.create(item.getTitle(), item.getUrl());
+            List<Pair<String, String>> list = expandableListDetail.get(itemCategory);
+            list.add(pair);
+            expandableListDetail.put(itemCategory, list);
         }
     }
     @Override
@@ -85,7 +94,7 @@ public class SourceListAdapter extends BaseExpandableListAdapter {
         if (view == null) {
             LayoutInflater layoutInflater = (LayoutInflater) this.context.
                     getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            view = layoutInflater.inflate(R.layout.sourceviewitem, null);
+            view = layoutInflater.inflate(R.layout.sourcegroupitem, null);
         }
         TextView listTitleTextView = (TextView) view.findViewById(R.id.categoryTitle);
         listTitleTextView.setTypeface(null, Typeface.BOLD);
@@ -107,7 +116,7 @@ public class SourceListAdapter extends BaseExpandableListAdapter {
         sourceTitle.setText(expandedListText.first);
 
         TextView sourceUrl = (TextView) convertView.findViewById(R.id.source_url);
-        sourceTitle.setText(expandedListText.second);
+        sourceUrl.setText(expandedListText.second);
 
         return convertView;
     }
