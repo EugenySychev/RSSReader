@@ -11,6 +11,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.text.InputType;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
@@ -92,8 +93,9 @@ public class SourceListActivity extends AppCompatActivity {
                     item.setCategory(category);
                     item.setUrl(source);
                     sourceList.add(item);
-                    listAdapter.setList(sourceList);
+                    listAdapter.addItem(NewsModelItem.Categories.toString(category), Pair.create(loader.getTitle(), source));
                     listAdapter.notifyDataSetChanged();
+                    NewsDbLoader.getInstance(getBaseContext()).addSource(item);
                 }
                 super.handleMessage(msg);
             }

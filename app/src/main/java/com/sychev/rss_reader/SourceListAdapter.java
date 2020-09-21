@@ -17,6 +17,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.xml.transform.Source;
 
@@ -73,6 +74,8 @@ public class SourceListAdapter extends BaseExpandableListAdapter {
                 .get(i1);
     }
 
+
+
     @Override
     public long getGroupId(int i) {
         return i;
@@ -124,5 +127,31 @@ public class SourceListAdapter extends BaseExpandableListAdapter {
     @Override
     public boolean isChildSelectable(int i, int i1) {
         return true;
+    }
+
+    public void addItem(String category, Pair<String, String> item) {
+
+        if (!expandableListTitle.contains(category))
+        {
+            expandableListTitle.add(category);
+            expandableListDetail.put(category, new ArrayList<Pair<String, String>>());
+        }
+
+        List<Pair<String, String>> list = expandableListDetail.get(category);
+        list.add(item);
+        expandableListDetail.put(category, list);
+    }
+
+    public void removeItem(String category, Pair<String, String> item) {
+        for (Map.Entry<String, List<Pair<String, String>>> listItems : expandableListDetail.entrySet()) {
+            if (listItems.getValue().contains(item)) {
+                expandableListDetail.remove(listItems.getKey(), listItems.getValue());
+                if (expandableListDetail.get(listItems.getKey()).size() == 0)
+                {
+                    expandableListDetail.remove(listItems.getKey());
+                    expandableListTitle.remove(listItems.getKey());
+                }
+            }
+        }
     }
 }
