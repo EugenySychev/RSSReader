@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.CursorIndexOutOfBoundsException;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
 import android.provider.BaseColumns;
 
 import java.util.ArrayList;
@@ -45,13 +46,13 @@ public class NewsDbLoader {
         return true;
     }
 
-    public boolean setItemIsRead(String url, boolean isRead) {
+    public boolean setItemIsRead(NewsModelItem item, boolean isRead) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
         ContentValues values = new ContentValues();
         values.put(NewsDbHelper.FeedEntry.COLUMN_NAME_ISREAD, isRead);
         String selection = NewsDbHelper.FeedEntry.COLUMN_NAME_URL + " LIKE ?";
-        String[] selectionArgs = {url};
+        String[] selectionArgs = {item.getUrl()};
 
         int count = db.update(NewsDbHelper.FeedEntry.TABLE_NAME, values, selection, selectionArgs);
         return count > 0;
@@ -64,8 +65,14 @@ public class NewsDbLoader {
         item.setSource(cursor.getString(cursor.getColumnIndexOrThrow(NewsDbHelper.FeedEntry.COLUMN_NAME_SOURCE)));
         item.setIsRead(cursor.getInt(cursor.getColumnIndexOrThrow(NewsDbHelper.FeedEntry.COLUMN_NAME_ISREAD)));
         item.setTime(cursor.getLong(cursor.getColumnIndexOrThrow(NewsDbHelper.FeedEntry.COLUMN_NAME_TIME)));
-        item.setIconUrl(cursor.getString(cursor.getColumnIndexOrThrow(NewsDbHelper.FeedEntry.COLUMN_NAME_TITLE)));
-        item.setIconUrl(cursor.getString(cursor.getColumnIndexOrThrow(NewsDbHelper.FeedEntry.COLUMN_NAME_URL)));
+        item.setTitle(cursor.getString(cursor.getColumnIndexOrThrow(NewsDbHelper.FeedEntry.COLUMN_NAME_TITLE)));
+        item.setUrl(cursor.getString(cursor.getColumnIndexOrThrow(NewsDbHelper.FeedEntry.COLUMN_NAME_URL)));
+        if (item.getIconUrl().length() > 0) {
+            Bitmap loadedBitmap = ImageCache.getInstance().retrieveBitmapFromCache(item.getIconUrl());
+            if (loadedBitmap != null) {
+                item.setIcon(loadedBitmap);
+            }
+        }
         return item;
     }
 

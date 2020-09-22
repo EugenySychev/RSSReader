@@ -6,8 +6,6 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 
 import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +15,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,7 +26,7 @@ import java.util.List;
 public class NewsList extends Fragment implements NewsListLoader.updateNotifier {
 
     private Handler mHandler;
-    private NewsNetworkLoader loader;
+    private NewsListLoader loader;
     private View rootView;
     private List<NewsModelItem> loadedList;
     private MainActivity top;
@@ -45,38 +42,13 @@ public class NewsList extends Fragment implements NewsListLoader.updateNotifier 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        loader = new NewsListLoader(getContext());
+        loader.setNotifier(this);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-
-//        URL url = null;
-//        try {
-//            url = new URL("https://www.gazeta.ru/export/rss/first.xml");
-//        } catch (MalformedURLException e) {
-//            e.printStackTrace();
-//        }
-//
-//        loader = new NewsNetworkLoader(url);
-//
-//        mHandler = new Handler(Looper.getMainLooper()) {
-//            @Override
-//            public void handleMessage(Message msg) {
-//                updateUiVisability(msg.what);
-//                if (msg.what == NewsNetworkLoader.LoadState.LOAD_OK) {
-//                    NewsNetworkLoader loader = (NewsNetworkLoader) msg.obj;
-//                    loadedList = loader.getLoadedList();
-//                    updateList();
-//                }
-//                super.handleMessage(msg);
-//            }
-//        };
-//
-//        loader.setHandler(mHandler);
-//        loader.start();
-
         rootView = inflater.inflate(R.layout.fragment_news_list, container, false);
 
         ListView listView = rootView.findViewById(R.id.lvMain);
@@ -87,13 +59,13 @@ public class NewsList extends Fragment implements NewsListLoader.updateNotifier 
                 item.setIsRead(1);
                 loadedList.set(i, item);
                 adapter.notifyDataSetChanged();
+                loader.setItemIsReaded(item);
                 openDigest(item);
             }
         });
 
-        NewsListLoader.getInstance(getContext()).setNotifier(this);
         try {
-            NewsListLoader.getInstance(getContext()).requestLoadNews();
+            loader.requestLoadNews();
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
@@ -106,12 +78,11 @@ public class NewsList extends Fragment implements NewsListLoader.updateNotifier 
         bundle.putString("content", item.getDescription());
         bundle.putString("url", item.getUrl());
         bundle.putString("title", item.getTitle());
-
         intent.putExtras(bundle);
         startActivity(intent);
     }
 
-    private void updateUiVisability(int what) {
+    private void updateUiVisibility(int what) {
         ListView listView = rootView.findViewById(R.id.lvMain);
         ProgressBar progressBar = rootView.findViewById(R.id.progressBar);
         TextView errorText = rootView.findViewById(R.id.textView);
@@ -119,35 +90,27 @@ public class NewsList extends Fragment implements NewsListLoader.updateNotifier 
             listView.setVisibility(View.VISIBLE);
             progressBar.setVisibility(View.GONE);
             errorText.setVisibility(View.GONE);
-
-            System.out.println("Set visible LIST");
         } else if (what == NewsNetworkLoader.LoadState.LOAD_PROCESSING) {
             listView.setVisibility(View.GONE);
             progressBar.setVisibility(View.VISIBLE);
             errorText.setVisibility(View.GONE);
-
-            System.out.println("Set visible LOAD");
         } else {
             listView.setVisibility(View.GONE);
             progressBar.setVisibility(View.GONE);
             errorText.setVisibility(View.VISIBLE);
-            System.out.println("Set visible ERROR");
         }
-    }
-
-    private void updateList() {
-
     }
 
     @Override
     public void update() {
         ListView lvMain = rootView.findViewById(R.id.lvMain);
-        adapter = new NewsAdapter(getContext(), (ArrayList<NewsModelItem>) NewsListLoader.getInstance(getContext()).getNewsList());
+        loadedList = loader.getNewsList();
+        adapter = new NewsAdapter(getContext(), (ArrayList<NewsModelItem>) loadedList);
         lvMain.setAdapter(adapter);
     }
 
     @Override
     public void updateState(int state) {
-        updateUiVisability(state);
+        updateUiVisibility(state);
     }
 }

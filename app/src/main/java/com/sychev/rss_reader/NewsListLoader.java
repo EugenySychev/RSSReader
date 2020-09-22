@@ -24,6 +24,10 @@ public class NewsListLoader {
     private static NewsListLoader instance;
     updateNotifier notifier;
 
+    public void setItemIsReaded(NewsModelItem item) {
+        dbLoader.setItemIsRead(item, true);
+    }
+
     interface updateNotifier {
         void update();
         void updateState(int state);
@@ -64,7 +68,7 @@ public class NewsListLoader {
                         boolean notInList = true;
                         for(NewsModelItem dbItem : loadedList.get(source))
                         {
-                            if (dbItem.getUrl() == item.getUrl()) {
+                            if (dbItem.getUrl().equals(item.getUrl())) {
                                 notInList = false;
                                 break;
                             }
@@ -72,7 +76,6 @@ public class NewsListLoader {
                         if (notInList) {
                             loadedList.get(source).add(item);
                             notSavedList.add(item);
-                            notifier.update();
                         }
                     }
                     if (notSavedList.size() > 0) {
@@ -86,6 +89,7 @@ public class NewsListLoader {
                     if (!sourceItem.isUpdated())
                         allUpdated = false;
                 }
+                notifier.update();
                 if (allUpdated)
                     notifier.updateState(NewsNetworkLoader.LoadState.LOAD_OK);
                 else

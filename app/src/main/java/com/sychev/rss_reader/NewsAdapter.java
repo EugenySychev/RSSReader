@@ -66,6 +66,8 @@ public class NewsAdapter extends ArrayAdapter<com.sychev.rss_reader.NewsModelIte
     }
 
     private String cropTextWithPoints(String source, int length) {
+        if (source == null)
+            return "Some shit";
         if (source.length() > length) {
             int len = length;
             while (len > 0 && !source.substring(len - 1, len).equals(" ")) len--;
