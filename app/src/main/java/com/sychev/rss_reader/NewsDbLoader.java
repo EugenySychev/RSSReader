@@ -101,7 +101,9 @@ public class NewsDbLoader {
 
         String sortOrder =
                 NewsDbHelper.FeedEntry.COLUMN_NAME_TIME + " DESC";
-        String havingFilter = NewsDbHelper.FeedEntry.COLUMN_NAME_TIME + " > " + String.valueOf(begin) + " AND " +
+        String havingFilter = null;
+        if (begin > 0 && end > 0)
+            havingFilter = NewsDbHelper.FeedEntry.COLUMN_NAME_TIME + " > " + String.valueOf(begin) + " AND " +
                 NewsDbHelper.FeedEntry.COLUMN_NAME_TIME + " < " + String.valueOf(end);
 
         Cursor cursor = db.query(

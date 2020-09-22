@@ -34,9 +34,8 @@ public class NewsNetworkLoader extends Thread {
     private URL source;
     private Handler handler;
 
-    NewsNetworkLoader(URL source, int timeout) {
+    NewsNetworkLoader(URL source) {
         this.source = source;
-        this.timeout = timeout;
         loadedList = new ArrayList<>();
     }
 

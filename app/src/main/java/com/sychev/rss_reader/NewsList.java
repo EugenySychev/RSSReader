@@ -26,7 +26,7 @@ import java.util.List;
  * Use the {@link NewsList#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class NewsList extends Fragment {
+public class NewsList extends Fragment implements NewsListLoader.updateNotifier {
 
     private Handler mHandler;
     private NewsNetworkLoader loader;
@@ -45,8 +45,6 @@ public class NewsList extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        System.out.println("Cache stored in " + getContext().getCacheDir().getAbsolutePath());
-
     }
 
     @Override
@@ -54,30 +52,30 @@ public class NewsList extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
 
-        URL url = null;
-        try {
-            url = new URL("https://www.gazeta.ru/export/rss/first.xml");
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
-
-        loader = new NewsNetworkLoader(url, 100);
-
-        mHandler = new Handler(Looper.getMainLooper()) {
-            @Override
-            public void handleMessage(Message msg) {
-                updateUiVisability(msg.what);
-                if (msg.what == NewsNetworkLoader.LoadState.LOAD_OK) {
-                    NewsNetworkLoader loader = (NewsNetworkLoader) msg.obj;
-                    loadedList = loader.getLoadedList();
-                    updateList();
-                }
-                super.handleMessage(msg);
-            }
-        };
-
-        loader.setHandler(mHandler);
-        loader.start();
+//        URL url = null;
+//        try {
+//            url = new URL("https://www.gazeta.ru/export/rss/first.xml");
+//        } catch (MalformedURLException e) {
+//            e.printStackTrace();
+//        }
+//
+//        loader = new NewsNetworkLoader(url);
+//
+//        mHandler = new Handler(Looper.getMainLooper()) {
+//            @Override
+//            public void handleMessage(Message msg) {
+//                updateUiVisability(msg.what);
+//                if (msg.what == NewsNetworkLoader.LoadState.LOAD_OK) {
+//                    NewsNetworkLoader loader = (NewsNetworkLoader) msg.obj;
+//                    loadedList = loader.getLoadedList();
+//                    updateList();
+//                }
+//                super.handleMessage(msg);
+//            }
+//        };
+//
+//        loader.setHandler(mHandler);
+//        loader.start();
 
         rootView = inflater.inflate(R.layout.fragment_news_list, container, false);
 
@@ -89,17 +87,28 @@ public class NewsList extends Fragment {
                 item.setIsRead(1);
                 loadedList.set(i, item);
                 adapter.notifyDataSetChanged();
-                Intent intent = new Intent(getContext(), NewsViewActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putString("content", item.getDescription());
-                bundle.putString("url", item.getUrl());
-                bundle.putString("title", item.getTitle());
-
-                intent.putExtras(bundle);
-                startActivity(intent);
+                openDigest(item);
             }
         });
+
+        NewsListLoader.getInstance(getContext()).setNotifier(this);
+        try {
+            NewsListLoader.getInstance(getContext()).requestLoadNews();
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
         return rootView;
+    }
+
+    private void openDigest(NewsModelItem item) {
+        Intent intent = new Intent(getContext(), NewsViewActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putString("content", item.getDescription());
+        bundle.putString("url", item.getUrl());
+        bundle.putString("title", item.getTitle());
+
+        intent.putExtras(bundle);
+        startActivity(intent);
     }
 
     private void updateUiVisability(int what) {
@@ -127,12 +136,18 @@ public class NewsList extends Fragment {
     }
 
     private void updateList() {
+
+    }
+
+    @Override
+    public void update() {
         ListView lvMain = rootView.findViewById(R.id.lvMain);
-        adapter = new NewsAdapter(getContext(), (ArrayList<NewsModelItem>) loadedList);
+        adapter = new NewsAdapter(getContext(), (ArrayList<NewsModelItem>) NewsListLoader.getInstance(getContext()).getNewsList());
         lvMain.setAdapter(adapter);
     }
 
-    void setTopView(MainActivity top) {
-        this.top = top;
+    @Override
+    public void updateState(int state) {
+        updateUiVisability(state);
     }
 }

@@ -7,6 +7,7 @@ public class SourceModelItem implements Serializable {
     private String url;
     private String title;
     private NewsModelItem.Categories category;
+    private boolean updated;
 
     public String getUrl() {
         return url;
@@ -30,5 +31,13 @@ public class SourceModelItem implements Serializable {
 
     public void setCategory(NewsModelItem.Categories category) {
         this.category = category;
+    }
+
+    public boolean isUpdated() {
+        return updated;
+    }
+
+    public void setUpdated(boolean updated) {
+        this.updated = updated;
     }
 }
