@@ -67,7 +67,7 @@ public class NewsDbLoader {
         item.setTime(cursor.getLong(cursor.getColumnIndexOrThrow(NewsDbHelper.FeedEntry.COLUMN_NAME_TIME)));
         item.setTitle(cursor.getString(cursor.getColumnIndexOrThrow(NewsDbHelper.FeedEntry.COLUMN_NAME_TITLE)));
         item.setUrl(cursor.getString(cursor.getColumnIndexOrThrow(NewsDbHelper.FeedEntry.COLUMN_NAME_URL)));
-        if (item.getIconUrl().length() > 0) {
+        if (item.getIconUrl() != null) {
             Bitmap loadedBitmap = ImageCache.getInstance().retrieveBitmapFromCache(item.getIconUrl());
             if (loadedBitmap != null) {
                 item.setIcon(loadedBitmap);

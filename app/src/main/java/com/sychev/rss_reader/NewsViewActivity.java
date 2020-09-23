@@ -28,6 +28,7 @@ public class NewsViewActivity extends AppCompatActivity {
 
     private String urlString;
     private String title = "";
+    private String imageUrl = "";
     Toolbar toolbar;
 
     SharedPreferences pref;
@@ -53,13 +54,15 @@ public class NewsViewActivity extends AppCompatActivity {
 
         String content = getIntent().getStringExtra("content");
         urlString = getIntent().getStringExtra("url");
+        imageUrl = getIntent().getStringExtra("image");
         title = getIntent().getStringExtra("title");
 
-        Bitmap bmp = ImageCache.getInstance().retrieveBitmapFromCache(urlString);
 
         TextView contentTextView = findViewById(R.id.news_text_content);
         contentTextView.setText(content);
         contentTextView.setTextSize(font_size);
+
+        Bitmap bmp = ImageCache.getInstance().retrieveBitmapFromCache(imageUrl);
 
         ImageView imageView = findViewById(R.id.imageNewView);
         if (bmp != null)

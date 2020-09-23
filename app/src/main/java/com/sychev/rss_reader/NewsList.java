@@ -78,6 +78,7 @@ public class NewsList extends Fragment implements NewsListLoader.updateNotifier 
         bundle.putString("content", item.getDescription());
         bundle.putString("url", item.getUrl());
         bundle.putString("title", item.getTitle());
+        bundle.putString("image", item.getIconUrl());
         intent.putExtras(bundle);
         startActivity(intent);
     }

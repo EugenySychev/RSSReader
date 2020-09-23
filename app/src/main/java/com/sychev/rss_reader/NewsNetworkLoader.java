@@ -100,16 +100,17 @@ public class NewsNetworkLoader extends Thread {
         NewsModelItem item = new NewsModelItem(titleText, descrText);
 
         Bitmap loadedBitmap;
+        NodeList iconList = fstElmnt.getElementsByTagName("enclosure");
+        String urlStr = iconList.item(0).getAttributes().getNamedItem("url").getNodeValue();
 
-        if (ImageCache.getInstance().retrieveBitmapFromCache(urlString) == null) {
-            NodeList iconList = fstElmnt.getElementsByTagName("enclosure");
-            String urlStr = iconList.item(0).getAttributes().getNamedItem("url").getNodeValue();
+        if (ImageCache.getInstance().retrieveBitmapFromCache(urlStr) == null) {
             URL urlBitmap = new URL(urlStr);
             item.setIconUrl(urlStr);
+            System.out.println("Storing " + urlStr + " as image");
             loadedBitmap = BitmapFactory.decodeStream(urlBitmap.openConnection().getInputStream());
-            ImageCache.getInstance().saveBitmapToCahche(urlString, loadedBitmap);
+            ImageCache.getInstance().saveBitmapToCahche(urlStr, loadedBitmap);
         } else {
-            loadedBitmap = ImageCache.getInstance().retrieveBitmapFromCache(urlString);
+            loadedBitmap = ImageCache.getInstance().retrieveBitmapFromCache(urlStr);
             System.out.println("Loaded image " + loadedBitmap.getByteCount() + " bytes size from cache");
         }
         if (timeMils > 0) {
