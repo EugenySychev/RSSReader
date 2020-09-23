@@ -20,10 +20,10 @@ import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link NewsList#newInstance} factory method to
+ * Use the {@link NewsListFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class NewsList extends Fragment implements NewsListLoader.updateNotifier {
+public class NewsListFragment extends Fragment implements NewsListLoader.updateNotifier {
 
     private Handler mHandler;
     private NewsListLoader loader;
@@ -31,12 +31,12 @@ public class NewsList extends Fragment implements NewsListLoader.updateNotifier 
     private List<NewsModelItem> loadedList;
     private MainActivity top;
     private NewsAdapter adapter;
-    public NewsList() {
+    public NewsListFragment() {
 
     }
 
-    public static NewsList newInstance() {
-        return new NewsList();
+    public static NewsListFragment newInstance() {
+        return new NewsListFragment();
     }
 
     @Override
