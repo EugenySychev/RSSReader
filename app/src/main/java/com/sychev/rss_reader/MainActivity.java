@@ -2,6 +2,7 @@ package com.sychev.rss_reader;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -10,12 +11,17 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.google.android.material.navigation.NavigationView;
+
+import java.net.MalformedURLException;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -60,8 +66,27 @@ public class MainActivity extends AppCompatActivity {
         } else if (item.getItemId() == R.id.action_sources) {
             Intent intent = new Intent(this, SourceListActivity.class);
             startActivity(intent);
+        } else if (item.getItemId() == R.id.action_refresh) {
+            callUpdateNews();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void callUpdateNews() {
+        NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
+        NewsListFragment fragment = null;
+        if (navHostFragment != null) {
+            List<Fragment> fragments = (List<Fragment>) navHostFragment.getChildFragmentManager().getFragments();
+            fragment = (NewsListFragment) fragments.get(0);//findFragmentByTag("NewsListTag");
+        }
+        try {
+            if (fragment != null)
+                fragment.requestUpdate();
+            else
+                Log.d("MAIN", "Null frag found!!!");
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

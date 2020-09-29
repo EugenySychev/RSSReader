@@ -72,6 +72,11 @@ public class NewsListFragment extends Fragment implements NewsListLoader.updateN
         return rootView;
     }
 
+    public void requestUpdate() throws MalformedURLException {
+        if (loader != null)
+            loader.requestLoadNews();
+    }
+
     private void openDigest(NewsModelItem item) {
         Intent intent = new Intent(getContext(), NewsViewActivity.class);
         Bundle bundle = new Bundle();
