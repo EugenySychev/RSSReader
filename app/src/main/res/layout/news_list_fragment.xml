@@ -5,28 +5,27 @@
     android:layout_height="match_parent"
     tools:context=".NewsListFragment">
 
-        <TextView
-            android:id="@+id/textView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="@string/loadError"
-            android:visibility="gone" />
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="@string/loadError"
+        android:visibility="gone" />
 
-        <ProgressBar
-            android:id="@+id/progressBar"
-            style="?android:attr/progressBarStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:visibility="gone" />
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone" />
 
-        <ListView
-            android:id="@+id/lvMain"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:overScrollMode="always"
-            android:overScrollHeader="@drawable/ic_launcher_background"
-            android:visibility="visible" />
-
+    <ListView
+        android:id="@+id/lvMain"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:overScrollHeader="@drawable/ic_launcher_background"
+        android:overScrollMode="always"
+        android:visibility="visible" />
 
 </FrameLayout>

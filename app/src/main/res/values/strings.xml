@@ -28,4 +28,6 @@
     <string name="actions_sources">Sources</string>
     <string name="enter_source_url">Enter source URL</string>
     <string name="cancel_button">Cancel</string>
+    <string name="only_new">Only new</string>
+    <string name="show_all">Show all</string>
 </resources>
