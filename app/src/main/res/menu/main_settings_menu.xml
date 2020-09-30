@@ -21,6 +21,7 @@
         android:title="@string/NewsCatTitle"
         app:showAsAction="always">
         <menu>
+            <group android:checkableBehavior="single">
             <item
                 android:id="@+id/filter_only_new"
                 android:title="@string/only_new" />
@@ -28,7 +29,7 @@
             <item
                 android:id="@+id/finlter_all"
                 android:title="@string/show_all" />
-
+            </group>
         </menu>
     </item>
 </menu>

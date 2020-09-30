@@ -53,6 +53,8 @@ public class ImageCache {
     public Bitmap retrieveBitmapFromCache(String key) {
 
         try {
+            if (key.equals(""))
+                return null;
             Bitmap bitmap = (Bitmap) ImageCache.getInstance().getLru().get(key);
             if (bitmap == null && cacheDir.getAbsolutePath() != "/") {
                 String imageName = key.replace("/", "");

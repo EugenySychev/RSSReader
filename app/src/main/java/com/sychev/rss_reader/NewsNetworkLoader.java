@@ -14,13 +14,10 @@ import org.xml.sax.SAXException;
 
 import java.io.IOException;
 import java.net.URL;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -101,24 +98,28 @@ public class NewsNetworkLoader extends Thread {
 
         Bitmap loadedBitmap;
         NodeList iconList = fstElmnt.getElementsByTagName("enclosure");
-        String urlStr = iconList.item(0).getAttributes().getNamedItem("url").getNodeValue();
+        String urlStr = "";
+        if (iconList.item(0) != null)
+            urlStr = iconList.item(0).getAttributes().getNamedItem("url").getNodeValue();
 
-        if (ImageCache.getInstance().retrieveBitmapFromCache(urlStr) == null) {
-            URL urlBitmap = new URL(urlStr);
-            item.setIconUrl(urlStr);
-            System.out.println("Storing " + urlStr + " as image");
-            loadedBitmap = BitmapFactory.decodeStream(urlBitmap.openConnection().getInputStream());
-            ImageCache.getInstance().saveBitmapToCahche(urlStr, loadedBitmap);
-        } else {
-            loadedBitmap = ImageCache.getInstance().retrieveBitmapFromCache(urlStr);
-            System.out.println("Loaded image " + loadedBitmap.getByteCount() + " bytes size from cache");
+        if (!urlStr.isEmpty()) {
+            if (ImageCache.getInstance().retrieveBitmapFromCache(urlStr) == null) {
+                URL urlBitmap = new URL(urlStr);
+                item.setIconUrl(urlStr);
+                System.out.println("Storing " + urlStr + " as image");
+                loadedBitmap = BitmapFactory.decodeStream(urlBitmap.openConnection().getInputStream());
+                ImageCache.getInstance().saveBitmapToCahche(urlStr, loadedBitmap);
+            } else {
+                loadedBitmap = ImageCache.getInstance().retrieveBitmapFromCache(urlStr);
+                System.out.println("Loaded image " + loadedBitmap.getByteCount() + " bytes size from cache");
+            }
+            item.setIcon(loadedBitmap);
         }
         if (timeMils > 0) {
             item.setTime(timeMils);
         }
 
         item.setUrl(urlString);
-        item.setIcon(loadedBitmap);
         item.setSource(source.toString());
 
         return item;

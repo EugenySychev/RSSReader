@@ -8,6 +8,7 @@ import android.graphics.BitmapFactory;
 import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.Html;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -59,7 +60,7 @@ public class NewsViewActivity extends AppCompatActivity {
 
 
         TextView contentTextView = findViewById(R.id.news_text_content);
-        contentTextView.setText(content);
+        contentTextView.setText(Html.fromHtml(content));
         contentTextView.setTextSize(font_size);
 
         Bitmap bmp = ImageCache.getInstance().retrieveBitmapFromCache(imageUrl);
@@ -67,7 +68,8 @@ public class NewsViewActivity extends AppCompatActivity {
         ImageView imageView = findViewById(R.id.imageNewView);
         if (bmp != null)
             imageView.setImageBitmap(bmp);
-
+        else
+            imageView.setVisibility(View.GONE);
         TextView titleTextView = findViewById(R.id.news_text_title);
         titleTextView.setText(title);
         titleTextView.setTextSize(font_size);
