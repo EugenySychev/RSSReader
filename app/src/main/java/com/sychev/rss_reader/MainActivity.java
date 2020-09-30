@@ -76,14 +76,11 @@ public class MainActivity extends AppCompatActivity {
         NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
         NewsListFragment fragment = null;
         if (navHostFragment != null) {
-            List<Fragment> fragments = (List<Fragment>) navHostFragment.getChildFragmentManager().getFragments();
-            fragment = (NewsListFragment) fragments.get(0);//findFragmentByTag("NewsListTag");
+            fragment = (NewsListFragment) navHostFragment.getChildFragmentManager().findFragmentById(R.id.nav_host_fragment);
         }
         try {
             if (fragment != null)
                 fragment.requestUpdate();
-            else
-                Log.d("MAIN", "Null frag found!!!");
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }

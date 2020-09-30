@@ -44,12 +44,13 @@ public class NewsListFragment extends Fragment implements NewsListLoader.updateN
         super.onCreate(savedInstanceState);
         loader = new NewsListLoader(getContext());
         loader.setNotifier(this);
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.fragment_news_list, container, false);
+        rootView = inflater.inflate(R.layout.news_list_fragment, container, false);
 
         ListView listView = rootView.findViewById(R.id.lvMain);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

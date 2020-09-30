@@ -10,7 +10,7 @@
         android:name="com.sychev.rss_reader.NewsListFragment"
         android:label="@string/menu_home"
         android:tag="NewsListTag"
-        tools:layout="@layout/fragment_news_list" />
+        tools:layout="@layout/news_list_fragment" />
 
 <!--    <fragment-->
 <!--        android:id="@+id/nav_gallery"-->

@@ -24,6 +24,8 @@
             android:id="@+id/lvMain"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:overScrollMode="always"
+            android:overScrollHeader="@drawable/ic_launcher_background"
             android:visibility="visible" />
 
 
