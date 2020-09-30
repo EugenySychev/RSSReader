@@ -3,12 +3,15 @@ package com.sychev.rss_reader;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.core.text.HtmlCompat;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -41,7 +44,7 @@ public class NewsAdapter extends ArrayAdapter<com.sychev.rss_reader.NewsModelIte
 
         TextView descr = listItem.findViewById(R.id.news_description);
         String descrText = item.getDescription();
-        descr.setText(cropTextWithPoints(item.getDescription(), MAX_LINE_LENTGTH));
+        descr.setText(Html.fromHtml(cropTextWithPoints(item.getDescription(), MAX_LINE_LENTGTH), HtmlCompat.FROM_HTML_MODE_LEGACY));
 
         TextView timeview = listItem.findViewById(R.id.news_time);
 

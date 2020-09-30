@@ -1,11 +1,8 @@
-package com.sychev.rss_reader;;
+package com.sychev.rss_reader;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Html;
@@ -17,13 +14,9 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.collection.LruCache;
+import androidx.core.text.HtmlCompat;
 
-import org.w3c.dom.Text;
-
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.List;
+;
 
 public class NewsViewActivity extends AppCompatActivity {
 
@@ -60,7 +53,7 @@ public class NewsViewActivity extends AppCompatActivity {
 
 
         TextView contentTextView = findViewById(R.id.news_text_content);
-        contentTextView.setText(Html.fromHtml(content));
+        contentTextView.setText(Html.fromHtml(content, HtmlCompat.FROM_HTML_MODE_LEGACY));
         contentTextView.setTextSize(font_size);
 
         Bitmap bmp = ImageCache.getInstance().retrieveBitmapFromCache(imageUrl);
@@ -110,8 +103,7 @@ public class NewsViewActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         System.out.println("Pressed " + id);
-        if (id == android.R.id.home)
-        {
+        if (id == android.R.id.home) {
             onBackPressed();
             return super.onOptionsItemSelected(item);
         }

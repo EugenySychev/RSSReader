@@ -30,4 +30,6 @@
     <string name="cancel_button">Cancel</string>
     <string name="only_new">Only new</string>
     <string name="show_all">Show all</string>
+    <string name="string_ungrouped">Ungrouped</string>
+    <string name="string_grouped">Grouped</string>
 </resources>

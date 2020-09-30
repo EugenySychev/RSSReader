@@ -22,13 +22,21 @@
         app:showAsAction="always">
         <menu>
             <group android:checkableBehavior="single">
-            <item
-                android:id="@+id/filter_only_new"
-                android:title="@string/only_new" />
+                <item
+                    android:id="@+id/sort_ungrouped"
+                    android:title="@string/string_ungrouped" />
+                <item
+                    android:id="@+id/sort_grouped"
+                    android:title="@string/string_grouped" />
+            </group>
+            <group android:checkableBehavior="single">
+                <item
+                    android:id="@+id/filter_only_new"
+                    android:title="@string/only_new" />
 
-            <item
-                android:id="@+id/finlter_all"
-                android:title="@string/show_all" />
+                <item
+                    android:id="@+id/finlter_all"
+                    android:title="@string/show_all" />
             </group>
         </menu>
     </item>
