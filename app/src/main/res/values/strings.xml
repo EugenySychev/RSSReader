@@ -32,4 +32,6 @@
     <string name="show_all">Show all</string>
     <string name="string_ungrouped">Ungrouped</string>
     <string name="string_grouped">Grouped</string>
+    <string name="filter_title">Filters</string>
+    <string name="sort_title">Sort</string>
 </resources>

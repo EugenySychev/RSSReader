@@ -10,8 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.fragment.app.Fragment;
+import androidx.core.view.MenuCompat;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
@@ -21,7 +20,6 @@ import androidx.navigation.ui.NavigationUI;
 import com.google.android.material.navigation.NavigationView;
 
 import java.net.MalformedURLException;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -51,23 +49,56 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main_settings_menu, menu);
+        MenuCompat.setGroupDividerEnabled(menu, true);
+        MenuItem item = menu.findItem(R.id.sort_grouped);
+        item.setChecked(true);
+        MenuItem item_filter = menu.findItem(R.id.filter_all);
+        item_filter.setChecked(true);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.action_settings) {
-            Intent intent = new Intent(this, SetupSourceActivity.class);
+        Intent intent;
+        NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
+        NewsListFragment fragment = null;
 
-            intent.putExtra("selected_category", 1);
-            intent.putExtra("url_for_edit", "http://gazeta.sru");
 
-            startActivityForResult(intent, SETUP_ACTIVITY_REQUEST_CODE);
-        } else if (item.getItemId() == R.id.action_sources) {
-            Intent intent = new Intent(this, SourceListActivity.class);
-            startActivity(intent);
-        } else if (item.getItemId() == R.id.action_refresh) {
-            callUpdateNews();
+        switch (item.getItemId()) {
+            case R.id.action_settings:
+                intent = new Intent(this, SetupSourceActivity.class);
+                intent.putExtra("selected_category", 1);
+                intent.putExtra("url_for_edit", "http://gazeta.sru");
+                startActivityForResult(intent, SETUP_ACTIVITY_REQUEST_CODE);
+                break;
+            case R.id.action_sources:
+                intent = new Intent(this, SourceListActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.action_refresh:
+                callUpdateNews();
+                break;
+            case R.id.filter_all:
+                item.setChecked(true);
+
+                if (navHostFragment != null) {
+                    fragment = (NewsListFragment) navHostFragment.getChildFragmentManager().findFragmentById(R.id.nav_host_fragment);
+                }
+                if (fragment != null)
+                    fragment.setFilterOnlyNew(false);
+
+                break;
+            case R.id.filter_only_new:
+                item.setChecked(true);
+                if (navHostFragment != null) {
+                    fragment = (NewsListFragment) navHostFragment.getChildFragmentManager().findFragmentById(R.id.nav_host_fragment);
+                }
+                if (fragment != null)
+                    fragment.setFilterOnlyNew(true);
+
+                break;
+            default:
+                Log.d("Main", "Unexpected value: " + item.getItemId());
         }
         return super.onOptionsItemSelected(item);
     }

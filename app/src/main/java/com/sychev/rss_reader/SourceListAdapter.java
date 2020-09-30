@@ -6,27 +6,20 @@ import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.BaseExpandableListAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import javax.xml.transform.Source;
 
 public class SourceListAdapter extends BaseExpandableListAdapter {
 
     private Context context;
 
     private List<String> expandableListTitle = new ArrayList<>();// = Arrays.asList("News", "Films", "Others");
-    private HashMap<String, List<Pair<String, String>> > expandableListDetail;
+    private HashMap<String, List<Pair<String, String>>> expandableListDetail;
 
     public SourceListAdapter(Context context) {
         this.context = context;
@@ -34,12 +27,11 @@ public class SourceListAdapter extends BaseExpandableListAdapter {
 
     public void setList(List<SourceModelItem> sourceList) {
         if (expandableListDetail == null)
-            expandableListDetail = new HashMap<String, List<Pair<String, String>> >();
-        for (SourceModelItem item: sourceList) {
+            expandableListDetail = new HashMap<String, List<Pair<String, String>>>();
+        for (SourceModelItem item : sourceList) {
             String itemCategory = NewsModelItem.Categories.toString(item.getCategory());
 
-            if (!expandableListTitle.contains(itemCategory))
-            {
+            if (!expandableListTitle.contains(itemCategory)) {
                 expandableListTitle.add(itemCategory);
                 expandableListDetail.put(itemCategory, new ArrayList<Pair<String, String>>());
             }
@@ -50,6 +42,7 @@ public class SourceListAdapter extends BaseExpandableListAdapter {
             expandableListDetail.put(itemCategory, list);
         }
     }
+
     @Override
     public int getGroupCount() {
         return expandableListDetail.size();
@@ -59,7 +52,7 @@ public class SourceListAdapter extends BaseExpandableListAdapter {
     public int getChildrenCount(int i) {
         if (expandableListTitle.size() > 0)
             return expandableListDetail.get(expandableListTitle.get(i))
-                .size();
+                    .size();
         return 0;
     }
 
@@ -73,7 +66,6 @@ public class SourceListAdapter extends BaseExpandableListAdapter {
         return expandableListDetail.get(this.expandableListTitle.get(i))
                 .get(i1);
     }
-
 
 
     @Override
@@ -131,8 +123,7 @@ public class SourceListAdapter extends BaseExpandableListAdapter {
 
     public void addItem(String category, Pair<String, String> item) {
 
-        if (!expandableListTitle.contains(category))
-        {
+        if (!expandableListTitle.contains(category)) {
             expandableListTitle.add(category);
             expandableListDetail.put(category, new ArrayList<Pair<String, String>>());
         }
@@ -146,8 +137,7 @@ public class SourceListAdapter extends BaseExpandableListAdapter {
         for (Map.Entry<String, List<Pair<String, String>>> listItems : expandableListDetail.entrySet()) {
             if (listItems.getValue().contains(item)) {
                 expandableListDetail.remove(listItems.getKey(), listItems.getValue());
-                if (expandableListDetail.get(listItems.getKey()).size() == 0)
-                {
+                if (expandableListDetail.get(listItems.getKey()).size() == 0) {
                     expandableListDetail.remove(listItems.getKey());
                     expandableListTitle.remove(listItems.getKey());
                 }

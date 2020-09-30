@@ -20,7 +20,7 @@
         android:layout_gravity="center"
         android:visibility="gone" />
 
-    <ListView
+    <ExpandableListView
         android:id="@+id/lvMain"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

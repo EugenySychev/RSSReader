@@ -1,6 +1,5 @@
 package com.sychev.rss_reader;
 
-import android.app.Notification;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
@@ -9,11 +8,10 @@ import android.os.Message;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
-
-import javax.xml.transform.Source;
 
 public class NewsListLoader {
 
@@ -30,6 +28,7 @@ public class NewsListLoader {
 
     interface updateNotifier {
         void update();
+
         void updateState(int state);
     }
 
@@ -54,7 +53,7 @@ public class NewsListLoader {
     }
 
     public void requestLoadListSource(final SourceModelItem source) throws MalformedURLException {
-        NewsNetworkLoader loader = new NewsNetworkLoader(new URL(source.getUrl()));
+        final NewsNetworkLoader loader = new NewsNetworkLoader(new URL(source.getUrl()));
         final String sourceUrl = source.getUrl();
         loadedList.put(source, dbLoader.getNewsListForSourceAndTime(sourceUrl, 0, 0));
 
@@ -66,8 +65,7 @@ public class NewsListLoader {
                     List<NewsModelItem> notSavedList = new ArrayList<>();
                     for (NewsModelItem item : loader.getLoadedList()) {
                         boolean notInList = true;
-                        for(NewsModelItem dbItem : loadedList.get(source))
-                        {
+                        for (NewsModelItem dbItem : loadedList.get(source)) {
                             if (dbItem.getUrl().equals(item.getUrl())) {
                                 notInList = false;
                                 break;
@@ -83,9 +81,17 @@ public class NewsListLoader {
                     }
                     source.setUpdated(true);
                 }
+
+                List<NewsModelItem> list = loadedList.get(source);
+                Collections.sort(list, new Comparator<NewsModelItem>() {
+                    @Override
+                    public int compare(NewsModelItem t1, NewsModelItem t2) {
+                        return Long.compare(t1.getTime(), t2.getTime());
+                    }
+                });
+                loadedList.replace(source, list);
                 boolean allUpdated = true;
-                for (SourceModelItem sourceItem : loadedList.keySet())
-                {
+                for (SourceModelItem sourceItem : loadedList.keySet()) {
                     if (!sourceItem.isUpdated())
                         allUpdated = false;
                 }
@@ -105,16 +111,20 @@ public class NewsListLoader {
     public void requestLoadNews() throws MalformedURLException {
         List<SourceModelItem> sourceList = getListSource();
 
-        for(SourceModelItem source: sourceList) {
+        for (SourceModelItem source : sourceList) {
             requestLoadListSource(source);
         }
     }
 
     public List<NewsModelItem> getNewsList() {
         List<NewsModelItem> list = new ArrayList<>();
-        for(SourceModelItem sourceItem : loadedList.keySet()) {
+        for (SourceModelItem sourceItem : loadedList.keySet()) {
             list.addAll(loadedList.get(sourceItem));
         }
         return list;
+    }
+
+    public HashMap<SourceModelItem, List<NewsModelItem>> getLoadedList() {
+        return loadedList;
     }
 }

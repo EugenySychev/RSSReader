@@ -16,9 +16,9 @@
         app:showAsAction="always" />
     <item
         android:id="@+id/action_filter_sort"
-        android:icon="@drawable/ic_baseline_filter_list_24"
+        android:icon="@drawable/ic_baseline_sort_24"
         android:orderInCategory="100"
-        android:title="@string/NewsCatTitle"
+        android:title="@string/sort_title"
         app:showAsAction="always">
         <menu>
             <group android:checkableBehavior="single">
@@ -29,13 +29,21 @@
                     android:id="@+id/sort_grouped"
                     android:title="@string/string_grouped" />
             </group>
+        </menu>
+    </item>
+    <item
+        android:id="@+id/filter_actions"
+        android:icon="@drawable/ic_baseline_filter_list_24"
+        app:showAsAction="always"
+        android:title="@string/filter_title">
+        <menu>
             <group android:checkableBehavior="single">
                 <item
                     android:id="@+id/filter_only_new"
                     android:title="@string/only_new" />
 
                 <item
-                    android:id="@+id/finlter_all"
+                    android:id="@+id/filter_all"
                     android:title="@string/show_all" />
             </group>
         </menu>
