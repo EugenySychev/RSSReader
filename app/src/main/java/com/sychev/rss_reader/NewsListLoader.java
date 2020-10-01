@@ -126,8 +126,13 @@ public class NewsListLoader {
     }
 
     public void getNewsFromDB(boolean onlyNotRead) {
-        for(SourceModelItem source : loadedHashMap.keySet())
-            getNewsFromDB(source, onlyNotRead);
+        if (loadedHashMap.keySet().size() > 0) {
+            for(SourceModelItem source : loadedHashMap.keySet())
+                getNewsFromDB(source, onlyNotRead);
+        } else {
+            for (SourceModelItem source : getListSource())
+                getNewsFromDB(source, onlyNotRead);
+        }
     }
 
     public void requestUpdateAllNews() throws MalformedURLException {

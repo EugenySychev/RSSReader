@@ -88,8 +88,7 @@ public class SourceListActivity extends AppCompatActivity {
 
 
         ExpandableListView listView = findViewById(R.id.source_list_view);
-        listAdapter = new SourceListAdapter(getApplicationContext());
-        listAdapter.setList(sourceList);
+        listAdapter = new SourceListAdapter(getApplicationContext(), loadedNewsMap);
         listView.setAdapter(listAdapter);
 
         registerForContextMenu(listView);
@@ -113,12 +112,12 @@ public class SourceListActivity extends AppCompatActivity {
 
         int childPos = ExpandableListView.getPackedPositionChild(info.packedPosition);
 
-//        Object pair = listView.getItemAtPosition(listPosition);
-        Toast.makeText(getApplicationContext(), "Selected " + groupPos + " and " + childPos, Toast.LENGTH_LONG).show();
-//        if (pair != null)
-//            Log.d("Source", pair.first + pair.second);
+        Pair<String, String> pair = (Pair<String, String>) listAdapter.getChild(groupPos, childPos);
+        if (pair != null)
+            Toast.makeText(getApplicationContext(), "Selected " + pair.first + " and " + pair.second, Toast.LENGTH_LONG).show();
+
         if(item.getItemId()==R.id.action_edit_source_context){
-//            Toast.makeText(getApplicationContext(),"edit " + pair.first + pair.second,Toast.LENGTH_LONG).show();
+
         }
         else if(item.getItemId()==R.id.action_remove_source_context){
             Toast.makeText(getApplicationContext(),"sending sms code",Toast.LENGTH_LONG).show();

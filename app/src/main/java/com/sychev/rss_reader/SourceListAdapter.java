@@ -13,36 +13,39 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CancellationException;
+
+import javax.xml.transform.Source;
 
 public class SourceListAdapter extends BaseExpandableListAdapter {
 
     private Context context;
 
     private List<String> expandableListTitle = new ArrayList<>();// = Arrays.asList("News", "Films", "Others");
-    private HashMap<String, List<Pair<String, String>>> expandableListDetail;
+    private HashMap<String, List<Pair<String, String>>> expandableListDetail = new HashMap<>();
     private HashMap<SourceModelItem, List<NewsModelItem>> loadedNewsMap;
 
     public SourceListAdapter(Context context, HashMap<SourceModelItem, List<NewsModelItem>> loadedNewsMap) {
         this.context = context;
         this.loadedNewsMap = loadedNewsMap;
+        updateContent();
     }
 
-    public void setList(List<SourceModelItem> sourceList) {
-        if (expandableListDetail == null)
-            expandableListDetail = new HashMap<String, List<Pair<String, String>>>();
-        for (SourceModelItem item : sourceList) {
-            String itemCategory = NewsModelItem.Categories.toString(item.getCategory());
-
-            if (!expandableListTitle.contains(itemCategory)) {
-                expandableListTitle.add(itemCategory);
-                expandableListDetail.put(itemCategory, new ArrayList<Pair<String, String>>());
-            }
-
-            Pair<String, String> pair = Pair.create(item.getTitle(), item.getUrl());
-            List<Pair<String, String>> list = expandableListDetail.get(itemCategory);
-            list.add(pair);
-            expandableListDetail.put(itemCategory, list);
+    private void updateContent() {
+        for(SourceModelItem item: loadedNewsMap.keySet()) {
+            String cateoryString = NewsModelItem.Categories.toString(item.getCategory());
+            if (expandableListDetail.get(cateoryString) == null)
+                expandableListDetail.put(cateoryString, new ArrayList<Pair<String, String>>());
+            expandableListDetail.get(cateoryString).add(Pair.create(item.getTitle(), item.getUrl()));
+            if (!expandableListTitle.contains(cateoryString))
+                expandableListTitle.add(cateoryString);
         }
+    }
+
+    @Override
+    public void notifyDataSetChanged() {
+        updateContent();
+        super.notifyDataSetChanged();
     }
 
     @Override
