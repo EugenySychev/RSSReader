@@ -20,9 +20,11 @@ public class SourceListAdapter extends BaseExpandableListAdapter {
 
     private List<String> expandableListTitle = new ArrayList<>();// = Arrays.asList("News", "Films", "Others");
     private HashMap<String, List<Pair<String, String>>> expandableListDetail;
+    private HashMap<SourceModelItem, List<NewsModelItem>> loadedNewsMap;
 
-    public SourceListAdapter(Context context) {
+    public SourceListAdapter(Context context, HashMap<SourceModelItem, List<NewsModelItem>> loadedNewsMap) {
         this.context = context;
+        this.loadedNewsMap = loadedNewsMap;
     }
 
     public void setList(List<SourceModelItem> sourceList) {

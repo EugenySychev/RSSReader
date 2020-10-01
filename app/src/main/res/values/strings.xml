@@ -36,4 +36,6 @@
     <string name="sort_title">Sort</string>
     <string name="edit_context">Edit</string>
     <string name="remove_context">Remove</string>
+    <string name="enter_source_title">Enter source URL</string>
+    <string name="select_category_title">Select category:</string>
 </resources>

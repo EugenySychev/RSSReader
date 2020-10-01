@@ -30,6 +30,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.SortedMap;
 import java.util.zip.Inflater;
@@ -40,11 +41,16 @@ public class SourceListActivity extends AppCompatActivity {
 
     private List<SourceModelItem> sourceList = new ArrayList<>();
     private SourceListAdapter listAdapter;
+    private NewsListLoader loader;
+    private HashMap<SourceModelItem, List<NewsModelItem>> loadedNewsMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_source_list);
+        loader = NewsListLoader.getInstance(this);
+        loader.getNewsFromDB(false);
+        loadedNewsMap = loader.getLoadedHashMap();
         sourceList = NewsDbLoader.getInstance(this).getSourceList();
 
         FloatingActionButton fab = findViewById(R.id.fab);
@@ -52,14 +58,12 @@ public class SourceListActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
-                builder.setTitle("Title");
+                builder.setTitle(R.string.enter_source_title);
 
                 final View v;
                 LayoutInflater inflater = (LayoutInflater) view.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 v = inflater.inflate(R.layout.source_dialog, null);
 
-//                final EditText input = new EditText(view.getContext());
-//                input.setInputType(InputType.TYPE_TEXT_VARIATION_WEB_EDIT_TEXT);
                 builder.setView(v);
 
                 builder.setPositiveButton(R.string.save_button_title, new DialogInterface.OnClickListener() {
@@ -103,10 +107,14 @@ public class SourceListActivity extends AppCompatActivity {
     public boolean onContextItemSelected(MenuItem item){
 
         ExpandableListView listView = findViewById(R.id.source_list_view);
-        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-        int listPosition = info.position;
-        Object pair = listView.getItemAtPosition(listPosition);
-//        Toast.makeText(getApplicationContext(), "Selected " + item.getMenuInfo().position, Toast.LENGTH_LONG).show();
+        ExpandableListView.ExpandableListContextMenuInfo info = (ExpandableListView.ExpandableListContextMenuInfo) item.getMenuInfo();
+
+        int groupPos = ExpandableListView.getPackedPositionGroup(info.packedPosition);
+
+        int childPos = ExpandableListView.getPackedPositionChild(info.packedPosition);
+
+//        Object pair = listView.getItemAtPosition(listPosition);
+        Toast.makeText(getApplicationContext(), "Selected " + groupPos + " and " + childPos, Toast.LENGTH_LONG).show();
 //        if (pair != null)
 //            Log.d("Source", pair.first + pair.second);
         if(item.getItemId()==R.id.action_edit_source_context){
