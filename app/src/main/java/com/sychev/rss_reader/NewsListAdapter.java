@@ -2,21 +2,18 @@ package com.sychev.rss_reader;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.BaseExpandableListAdapter;
-import android.widget.ExpandableListAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.core.app.RemoteInput;
 import androidx.core.text.HtmlCompat;
 
-import java.lang.reflect.Array;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -98,8 +95,14 @@ public class NewsListAdapter extends BaseExpandableListAdapter {
 
         NewsModelItem item = hashMap.get(list[i]).get(i1);
 
+        Bitmap bmp = item.getIcon();
         ImageView image = view.findViewById(R.id.pix);
-        image.setImageBitmap(item.getIcon());
+        if (bmp != null) {
+            image.setImageBitmap(item.getIcon());
+            image.setVisibility(View.VISIBLE);
+        } else {
+            image.setVisibility(View.GONE);
+        }
 
         TextView title = view.findViewById(R.id.news_title);
         title.setText(cropTextWithPoints(item.getTitle(), MAX_LINE_LENTGTH));

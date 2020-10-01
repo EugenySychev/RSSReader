@@ -87,8 +87,11 @@ public class NewsDbLoader {
         cursor.close();
         return list;
     }
-
     public List<NewsModelItem> getNewsListForSourceAndTime(String sourceUrl, long begin, long end) {
+        return getNewsListForSourceAndTime(sourceUrl, begin, end, false);
+    }
+
+    public List<NewsModelItem> getNewsListForSourceAndTime(String sourceUrl, long begin, long end, boolean onlyNotRead) {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         List<NewsModelItem> list = new ArrayList<>();
         String[] projection = {
@@ -108,10 +111,15 @@ public class NewsDbLoader {
 
         String sortOrder =
                 NewsDbHelper.FeedEntry.COLUMN_NAME_TIME + " DESC";
-        String havingFilter = null;
+        String havingFilter = "";
         if (begin > 0 && end > 0)
             havingFilter = NewsDbHelper.FeedEntry.COLUMN_NAME_TIME + " > " + String.valueOf(begin) + " AND " +
                 NewsDbHelper.FeedEntry.COLUMN_NAME_TIME + " < " + String.valueOf(end);
+
+        if (onlyNotRead) {
+            selection += " AND " + NewsDbHelper.FeedEntry.COLUMN_NAME_ISREAD + " = ? ";
+            selectionArgs = new String[]{sourceUrl, " 0 "};
+        }
 
         Cursor cursor = db.query(
                 NewsDbHelper.FeedEntry.TABLE_NAME,   // The table to query

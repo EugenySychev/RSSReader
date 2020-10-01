@@ -14,7 +14,6 @@ import android.widget.TextView;
 import androidx.fragment.app.Fragment;
 
 import java.net.MalformedURLException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -31,7 +30,6 @@ public class NewsListFragment extends Fragment implements NewsListLoader.updateN
     private NewsListLoader loader;
     private View rootView;
     private HashMap<SourceModelItem, List<NewsModelItem>> loadedNewsMap;
-    private HashMap<SourceModelItem, List<NewsModelItem>> croppedNewsMap;
     private MainActivity top;
     private NewsListAdapter adapter;
     public NewsListFragment() {
@@ -74,7 +72,7 @@ public class NewsListFragment extends Fragment implements NewsListLoader.updateN
         });
 
         try {
-            loader.requestLoadNews();
+            loader.requestUpdateAllNews();
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
@@ -83,7 +81,7 @@ public class NewsListFragment extends Fragment implements NewsListLoader.updateN
 
     public void requestUpdate() throws MalformedURLException {
         if (loader != null)
-            loader.requestLoadNews();
+            loader.requestUpdateAllNews();
     }
 
     private void openDigest(NewsModelItem item) {
@@ -119,7 +117,7 @@ public class NewsListFragment extends Fragment implements NewsListLoader.updateN
     @Override
     public void update() {
         ExpandableListView lvMain = rootView.findViewById(R.id.lvMain);
-        loadedNewsMap = loader.getLoadedList();
+        loadedNewsMap = loader.getLoadedHashMap();
         adapter = new NewsListAdapter(getContext(), loadedNewsMap);
         lvMain.setAdapter(adapter);
     }
@@ -134,27 +132,8 @@ public class NewsListFragment extends Fragment implements NewsListLoader.updateN
     }
 
     public void setFilterOnlyNew(boolean b) {
-        if (b) {
-            HashMap<SourceModelItem, List<NewsModelItem> > croppedMap = (HashMap<SourceModelItem, List<NewsModelItem>>) loadedNewsMap.clone();
-            Object[] sources = croppedMap.keySet().toArray();
-            int sourcesCount = croppedMap.keySet().toArray().length;
-            for (int i = 0; i < sourcesCount; i++)
-            {
-                List<NewsModelItem> list = croppedMap.get(sources[i]);
-                List<NewsModelItem> forRemove = new ArrayList<>();
-                for (NewsModelItem item : list) {
-                    if (item.getIsRead() > 0) {
-                        forRemove.add(item);
-                    }
-                }
-                if (forRemove.size() > 0)
-                    list.removeAll(forRemove);
-
-                croppedMap.replace((SourceModelItem) sources[i], list);
-            }
-            adapter.setMap(croppedMap);
-        } else {
-            adapter.setMap(loadedNewsMap);
-        }
+        loader.getNewsFromDB(b);
+        loadedNewsMap = loader.getLoadedHashMap();
+        adapter.notifyDataSetChanged();
     }
 }

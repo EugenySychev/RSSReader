@@ -18,7 +18,7 @@ public class NewsListLoader {
     private NewsDbLoader dbLoader;
     private NewsNetworkLoader networkLoader;
     private Context context;
-    private HashMap<SourceModelItem, List<NewsModelItem>> loadedList;
+    private HashMap<SourceModelItem, List<NewsModelItem>> loadedHashMap;
     private static NewsListLoader instance;
     updateNotifier notifier;
 
@@ -40,7 +40,7 @@ public class NewsListLoader {
 
     public NewsListLoader(Context context) {
         this.context = context;
-        loadedList = new HashMap<>();
+        loadedHashMap = new HashMap<>();
         dbLoader = NewsDbLoader.getInstance(context);
     }
 
@@ -52,11 +52,9 @@ public class NewsListLoader {
         this.notifier = notifier;
     }
 
-    public void requestLoadListSource(final SourceModelItem source) throws MalformedURLException {
+    public void requestUpdateListSource(final SourceModelItem source) throws MalformedURLException {
         final NewsNetworkLoader loader = new NewsNetworkLoader(new URL(source.getUrl()));
-        final String sourceUrl = source.getUrl();
-        loadedList.put(source, dbLoader.getNewsListForSourceAndTime(sourceUrl, 0, 0));
-
+        getNewsFromDB(source);
         Handler handler = new Handler(Looper.getMainLooper()) {
             @Override
             public void handleMessage(Message msg) {
@@ -65,14 +63,18 @@ public class NewsListLoader {
                     List<NewsModelItem> notSavedList = new ArrayList<>();
                     for (NewsModelItem item : loader.getLoadedList()) {
                         boolean notInList = true;
-                        for (NewsModelItem dbItem : loadedList.get(source)) {
-                            if (dbItem.getUrl().equals(item.getUrl())) {
-                                notInList = false;
-                                break;
+                        if (loadedHashMap.get(source) != null) {
+                            for (NewsModelItem dbItem : loadedHashMap.get(source)) {
+                                if (dbItem.getUrl().equals(item.getUrl())) {
+                                    notInList = false;
+                                    break;
+                                }
                             }
+                        } else {
+                            loadedHashMap.put(source, new ArrayList<NewsModelItem>());
                         }
                         if (notInList) {
-                            loadedList.get(source).add(item);
+                            loadedHashMap.get(source).add(item);
                             notSavedList.add(item);
                         }
                     }
@@ -82,16 +84,20 @@ public class NewsListLoader {
                     source.setUpdated(true);
                 }
 
-                List<NewsModelItem> list = loadedList.get(source);
-                Collections.sort(list, new Comparator<NewsModelItem>() {
-                    @Override
-                    public int compare(NewsModelItem t1, NewsModelItem t2) {
-                        return Long.compare(t1.getTime(), t2.getTime());
-                    }
-                });
-                loadedList.replace(source, list);
+                List<NewsModelItem> list = loadedHashMap.get(source);
+                if (list != null) {
+                    Collections.sort(list, new Comparator<NewsModelItem>() {
+                        @Override
+                        public int compare(NewsModelItem t1, NewsModelItem t2) {
+                            return Long.compare(t1.getTime(), t2.getTime());
+                        }
+                    });
+
+                    Collections.reverse(list);
+                    loadedHashMap.replace(source, list);
+                }
                 boolean allUpdated = true;
-                for (SourceModelItem sourceItem : loadedList.keySet()) {
+                for (SourceModelItem sourceItem : loadedHashMap.keySet()) {
                     if (!sourceItem.isUpdated())
                         allUpdated = false;
                 }
@@ -108,23 +114,39 @@ public class NewsListLoader {
         loader.start();
     }
 
-    public void requestLoadNews() throws MalformedURLException {
+    private void getNewsFromDB(SourceModelItem source) {
+        getNewsFromDB(source, false);
+    }
+
+    public void getNewsFromDB(SourceModelItem source, boolean onlyNotRead) {
+        if (loadedHashMap.get(source) == null)
+            loadedHashMap.put(source, dbLoader.getNewsListForSourceAndTime(source.getUrl(), 0, 0, onlyNotRead));
+        else
+            loadedHashMap.replace(source, dbLoader.getNewsListForSourceAndTime(source.getUrl(), 0, 0, onlyNotRead));
+    }
+
+    public void getNewsFromDB(boolean onlyNotRead) {
+        for(SourceModelItem source : loadedHashMap.keySet())
+            getNewsFromDB(source, onlyNotRead);
+    }
+
+    public void requestUpdateAllNews() throws MalformedURLException {
         List<SourceModelItem> sourceList = getListSource();
 
         for (SourceModelItem source : sourceList) {
-            requestLoadListSource(source);
+            requestUpdateListSource(source);
         }
     }
 
     public List<NewsModelItem> getNewsList() {
         List<NewsModelItem> list = new ArrayList<>();
-        for (SourceModelItem sourceItem : loadedList.keySet()) {
-            list.addAll(loadedList.get(sourceItem));
+        for (SourceModelItem sourceItem : loadedHashMap.keySet()) {
+            list.addAll(loadedHashMap.get(sourceItem));
         }
         return list;
     }
 
-    public HashMap<SourceModelItem, List<NewsModelItem>> getLoadedList() {
-        return loadedList;
+    public HashMap<SourceModelItem, List<NewsModelItem>> getLoadedHashMap() {
+        return loadedHashMap;
     }
 }
