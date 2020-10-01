@@ -14,23 +14,23 @@
         android:orderInCategory="101"
         android:title="@string/NewsCatTitle"
         app:showAsAction="always" />
-    <item
-        android:id="@+id/action_filter_sort"
-        android:icon="@drawable/ic_baseline_sort_24"
-        android:orderInCategory="100"
-        android:title="@string/sort_title"
-        app:showAsAction="always">
-        <menu>
-            <group android:checkableBehavior="single">
-                <item
-                    android:id="@+id/sort_ungrouped"
-                    android:title="@string/string_ungrouped" />
-                <item
-                    android:id="@+id/sort_grouped"
-                    android:title="@string/string_grouped" />
-            </group>
-        </menu>
-    </item>
+<!--    <item-->
+<!--        android:id="@+id/action_filter_sort"-->
+<!--        android:icon="@drawable/ic_baseline_sort_24"-->
+<!--        android:orderInCategory="100"-->
+<!--        android:title="@string/sort_title"-->
+<!--        app:showAsAction="always">-->
+<!--        <menu>-->
+<!--            <group android:checkableBehavior="single">-->
+<!--                <item-->
+<!--                    android:id="@+id/sort_ungrouped"-->
+<!--                    android:title="@string/string_ungrouped" />-->
+<!--                <item-->
+<!--                    android:id="@+id/sort_grouped"-->
+<!--                    android:title="@string/string_grouped" />-->
+<!--            </group>-->
+<!--        </menu>-->
+<!--    </item>-->
     <item
         android:id="@+id/filter_actions"
         android:icon="@drawable/ic_baseline_filter_list_24"

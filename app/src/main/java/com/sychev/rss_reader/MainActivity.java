@@ -50,8 +50,8 @@ public class MainActivity extends AppCompatActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main_settings_menu, menu);
         MenuCompat.setGroupDividerEnabled(menu, true);
-        MenuItem item = menu.findItem(R.id.sort_grouped);
-        item.setChecked(true);
+//        MenuItem item = menu.findItem(R.id.sort_grouped);
+//        item.setChecked(true);
         MenuItem item_filter = menu.findItem(R.id.filter_all);
         item_filter.setChecked(true);
         return true;
