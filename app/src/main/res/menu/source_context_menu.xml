@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto" >
+
+    <item
+        android:id="@+id/action_edit_source_context"
+        android:icon="@drawable/ic_baseline_edit_24"
+        android:title="@string/edit_context" />
+    <item
+        android:id="@+id/action_remove_source_context"
+        android:icon="@drawable/ic_baseline_remove_24"
+        android:title="@string/remove_context" />
+</menu>

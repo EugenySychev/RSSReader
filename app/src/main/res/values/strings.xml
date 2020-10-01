@@ -34,4 +34,6 @@
     <string name="string_grouped">Grouped</string>
     <string name="filter_title">Filters</string>
     <string name="sort_title">Sort</string>
+    <string name="edit_context">Edit</string>
+    <string name="remove_context">Remove</string>
 </resources>

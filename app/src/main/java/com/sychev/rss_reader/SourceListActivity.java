@@ -11,13 +11,20 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.text.InputType;
+import android.util.Log;
 import android.util.Pair;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ExpandableListView;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
@@ -80,6 +87,37 @@ public class SourceListActivity extends AppCompatActivity {
         listAdapter = new SourceListAdapter(getApplicationContext());
         listAdapter.setList(sourceList);
         listView.setAdapter(listAdapter);
+
+        registerForContextMenu(listView);
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.source_context_menu, menu);
+        menu.setHeaderTitle("Select The Action");
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item){
+
+        ExpandableListView listView = findViewById(R.id.source_list_view);
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+        int listPosition = info.position;
+        Object pair = listView.getItemAtPosition(listPosition);
+//        Toast.makeText(getApplicationContext(), "Selected " + item.getMenuInfo().position, Toast.LENGTH_LONG).show();
+//        if (pair != null)
+//            Log.d("Source", pair.first + pair.second);
+        if(item.getItemId()==R.id.action_edit_source_context){
+//            Toast.makeText(getApplicationContext(),"edit " + pair.first + pair.second,Toast.LENGTH_LONG).show();
+        }
+        else if(item.getItemId()==R.id.action_remove_source_context){
+            Toast.makeText(getApplicationContext(),"sending sms code",Toast.LENGTH_LONG).show();
+        }else{
+            return false;
+        }
+        return true;
     }
 
     private void addSource(final String source, final NewsModelItem.Categories category) {
