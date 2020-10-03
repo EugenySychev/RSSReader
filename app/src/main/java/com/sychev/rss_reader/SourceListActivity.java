@@ -9,6 +9,7 @@ import android.os.Message;
 import android.util.Pair;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,6 +20,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -42,7 +44,7 @@ public class SourceListActivity extends AppCompatActivity implements NewsListLoa
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showEditSourceDialog(view.getContext(), null);
+                showAddSourceDialog(view.getContext());
             }
         });
 
@@ -52,20 +54,45 @@ public class SourceListActivity extends AppCompatActivity implements NewsListLoa
         listView.setAdapter(listAdapter);
 
         registerForContextMenu(listView);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.source_list_view_toolbar);
+        toolbar.setTitle(R.string.sources);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
     }
 
-    private void showEditSourceDialog(Context context, SourceModelItem source) {
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.source_list_view_menu, menu);
+        return true;
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == android.R.id.home) {
+            onBackPressed();
+            return super.onOptionsItemSelected(item);
+        }
+        if (id == R.id.action_add_source) {
+            showAddSourceDialog(this);
+        }
+        return true;
+    }
+
+    private void showAddSourceDialog(Context context) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle(R.string.enter_source_title);
 
         final View v;
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         v = inflater.inflate(R.layout.source_dialog, null);
-
-        if (source != null) {
-            ((EditText) v.findViewById(R.id.enter_source_url_edit_text)).setText(source.getUrl());
-            ((Spinner) v.findViewById(R.id.spinner_category)).setSelection(NewsModelItem.Categories.toInt(source.getCategory()));
-        }
 
         builder.setView(v);
 
@@ -123,9 +150,7 @@ public class SourceListActivity extends AppCompatActivity implements NewsListLoa
         }
 
         if (selectedSource != null) {
-            if (item.getItemId() == R.id.action_edit_source_context) {
-                showEditSourceDialog(this, selectedSource);
-            } else if (item.getItemId() == R.id.action_remove_source_context) {
+            if (item.getItemId() == R.id.action_remove_source_context) {
                 showRemoveDialog(this, selectedSource);
             } else {
                 return false;
@@ -142,8 +167,7 @@ public class SourceListActivity extends AppCompatActivity implements NewsListLoa
                 .setPositiveButton(R.string.ok_title, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        if (NewsListLoader.getInstance().removeSource(selectedSource))
-                            sourceList.remove(selectedSource);
+                        NewsListLoader.getInstance().removeSource(selectedSource);
                         listAdapter.notifyDataSetChanged();
                     }
                 })
@@ -157,11 +181,6 @@ public class SourceListActivity extends AppCompatActivity implements NewsListLoa
         builder.show();
     }
 
-    private void editSource(SourceModelItem source, final String sourceUrl, final NewsModelItem.Categories category) throws MalformedURLException {
-        NewsListLoader.getInstance().removeSource(source);
-        addSource(sourceUrl, category);
-    }
-
     private void addSource(final String source, final NewsModelItem.Categories category) throws MalformedURLException {
         final SourceNetworkLoader networkLoader = new SourceNetworkLoader(source);
         final SourceModelItem item = new SourceModelItem();
@@ -172,9 +191,8 @@ public class SourceListActivity extends AppCompatActivity implements NewsListLoa
                     item.setTitle(networkLoader.getTitle());
                     item.setCategory(category);
                     item.setUrl(source);
-                    sourceList.add(item);
-                    listAdapter.notifyDataSetChanged();
                     NewsListLoader.getInstance().addSource(item);
+                    listAdapter.notifyDataSetChanged();
                     try {
                         NewsListLoader.getInstance().requestUpdateListSource(item);
                     } catch (MalformedURLException e) {

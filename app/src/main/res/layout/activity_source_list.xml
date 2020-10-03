@@ -5,12 +5,20 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".SourceListActivity">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:isScrollContainer="true">
 
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/source_list_view_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:padding="@dimen/inner_frame_layout_padding"
+            android:background="?attr/colorPrimaryDark"
+            app:popupTheme="@style/AppTheme.AppBarOverlay" />
         <ExpandableListView
             android:id="@+id/source_list_view"
             android:indicatorLeft="?android:attr/expandableListPreferredItemIndicatorLeft"

@@ -26,7 +26,8 @@ public class NewsListLoader {
 
     public void addSource(SourceModelItem item) {
         if (dbLoader != null)
-            dbLoader.addSource(item);
+            if (dbLoader.addSource(item))
+                sourceList.add(item);
     }
 
 
@@ -130,26 +131,18 @@ public class NewsListLoader {
         loader.start();
     }
 
-    private void getNewsFromDB(SourceModelItem source) {
-        getNewsFromDB(source, false);
-    }
-
-    public void getNewsFromDB(SourceModelItem source, boolean onlyNotRead) {
-        this.onlyNotRead = onlyNotRead;
+    public void getNewsFromDB(SourceModelItem source) {
         if (loadedHashMap.get(source) == null)
             loadedHashMap.put(source, dbLoader.getNewsListForSourceAndTime(source.getUrl(), 0, 0, onlyNotRead));
         else
             loadedHashMap.replace(source, dbLoader.getNewsListForSourceAndTime(source.getUrl(), 0, 0, onlyNotRead));
     }
 
-    public void getNewsFromDB(boolean onlyNotRead) {
-        this.onlyNotRead = onlyNotRead;
-        if (loadedHashMap.keySet().size() > 0) {
-            loadedHashMap.clear();
-            sourceList.clear();
-        }
+    public void setOnlyNotRead(boolean onlyNotRead) { this.onlyNotRead = onlyNotRead; }
+
+    public void getAllNewsFromDB() {
         for (SourceModelItem source : getListSource())
-            getNewsFromDB(source, onlyNotRead);
+            getNewsFromDB(source);
 
     }
 
@@ -171,7 +164,8 @@ public class NewsListLoader {
 
     public boolean removeSource(SourceModelItem source) {
         if (dbLoader.removeSource(source) && dbLoader.removeNews(source)) {
-            getNewsFromDB(onlyNotRead);
+            loadedHashMap.remove(source);
+            sourceList.remove(source);
             if (notifier != null)
                 notifier.update();
             return true;

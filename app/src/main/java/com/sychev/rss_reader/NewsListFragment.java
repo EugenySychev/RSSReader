@@ -56,13 +56,9 @@ public class NewsListFragment extends Fragment implements NewsListLoader.updateN
         listView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
             @Override
             public boolean onChildClick(ExpandableListView expandableListView, View view, int i, int i1, long l) {
-                HashMap<SourceModelItem, List<NewsModelItem>> map = adapter.getHashMap();
-                Object[] listSource = map.keySet().toArray();
-                List<NewsModelItem> listNews = map.get(listSource[i]);
-                NewsModelItem item = listNews.get(i1);
-                item.setIsRead(1);
-                listNews.set(i1, item);
-                map.replace((SourceModelItem) listSource[i], listNews);
+                NewsModelItem item = (NewsModelItem) adapter.getChild(i, i1);
+                SourceModelItem source = (SourceModelItem) adapter.getGroup(i);
+                loadedNewsMap.get(source).get(i1).setIsRead(1);
                 adapter.notifyDataSetChanged();
                 NewsListLoader.getInstance().setItemIsReaded(item);
                 openDigest(item);
@@ -119,18 +115,14 @@ public class NewsListFragment extends Fragment implements NewsListLoader.updateN
         adapter.notifyDataSetChanged();
     }
 
-    private void filterMap() {
-
-    }
-
     @Override
     public void updateState(int state) {
         updateUiVisibility(state);
     }
 
-    public void setFilterOnlyNew(boolean b) {
-        NewsListLoader.getInstance().getNewsFromDB(b);
-        loadedNewsMap = NewsListLoader.getInstance().getLoadedHashMap();
+    public void setFilterOnlyNew(boolean onlyNew) {
+        NewsListLoader.getInstance().setOnlyNotRead(onlyNew);
+        NewsListLoader.getInstance().getAllNewsFromDB();
         adapter.notifyDataSetChanged();
     }
 }

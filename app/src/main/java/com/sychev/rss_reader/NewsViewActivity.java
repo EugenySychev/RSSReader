@@ -23,7 +23,6 @@ public class NewsViewActivity extends AppCompatActivity {
     private String urlString;
     private String title = "";
     private String imageUrl = "";
-    Toolbar toolbar;
 
     SharedPreferences pref;
     int font_size;
@@ -33,15 +32,8 @@ public class NewsViewActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_news_view);
 
-        System.out.println("Cache stored in " + getCacheDir().getAbsolutePath());
         pref = getApplicationContext().getSharedPreferences("ViewPreference", 0);
         font_size = pref.getInt("DigestFontSize", 10);
-
-        toolbar = (Toolbar) findViewById(R.id.news_view_toolbar);
-        toolbar.setTitle("");
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         Intent intent = new Intent(this, NewsViewActivity.class);
         Bundle bundle = intent.getExtras();
@@ -50,6 +42,12 @@ public class NewsViewActivity extends AppCompatActivity {
         urlString = getIntent().getStringExtra("url");
         imageUrl = getIntent().getStringExtra("image");
         title = getIntent().getStringExtra("title");
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.news_view_toolbar);
+        toolbar.setTitle(title);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
 
         TextView contentTextView = findViewById(R.id.news_text_content);
@@ -102,7 +100,6 @@ public class NewsViewActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        System.out.println("Pressed " + id);
         if (id == android.R.id.home) {
             onBackPressed();
             return super.onOptionsItemSelected(item);
