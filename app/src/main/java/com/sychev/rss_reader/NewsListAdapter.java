@@ -155,19 +155,6 @@ public class NewsListAdapter extends BaseExpandableListAdapter {
         return source;
     }
 
-    public boolean isOnlyNew() {
-        return onlyNew;
-    }
-
-    public void setOnlyNew(boolean onlyNew) {
-        this.onlyNew = onlyNew;
-    }
-
-    public void setMap(HashMap<SourceModelItem, List<NewsModelItem>> croppedMap) {
-        hashMap = croppedMap;
-        notifyDataSetChanged();
-    }
-
     public HashMap<SourceModelItem, List<NewsModelItem>> getHashMap() {
         return hashMap;
     }

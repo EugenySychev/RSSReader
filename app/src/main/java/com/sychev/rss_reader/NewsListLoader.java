@@ -19,12 +19,16 @@ public class NewsListLoader {
     private NewsNetworkLoader networkLoader;
     private Context context;
     private HashMap<SourceModelItem, List<NewsModelItem>> loadedHashMap;
+    private List<SourceModelItem> sourceList = new ArrayList<>();
     private static NewsListLoader instance;
+    private boolean onlyNotRead;
     updateNotifier notifier;
 
-    public void setItemIsReaded(NewsModelItem item) {
-        dbLoader.setItemIsRead(item, true);
+    public void addSource(SourceModelItem item) {
+        if (dbLoader != null)
+            dbLoader.addSource(item);
     }
+
 
     interface updateNotifier {
         void update();
@@ -32,20 +36,29 @@ public class NewsListLoader {
         void updateState(int state);
     }
 
-    public static synchronized NewsListLoader getInstance(Context context) {
+    public static synchronized NewsListLoader getInstance() {
         if (instance == null)
-            instance = new NewsListLoader(context);
+            instance = new NewsListLoader();
         return instance;
     }
 
-    public NewsListLoader(Context context) {
-        this.context = context;
+    public NewsListLoader() {
         loadedHashMap = new HashMap<>();
-        dbLoader = NewsDbLoader.getInstance(context);
+    }
+
+    public void init(Context context) {
+        this.context = context;
+        dbLoader = new NewsDbLoader(context);
     }
 
     public List<SourceModelItem> getListSource() {
-        return dbLoader.getSourceList();
+        if (sourceList.isEmpty())
+            loadSourceListFromDB();
+        return sourceList;
+    }
+
+    public void loadSourceListFromDB() {
+        sourceList = dbLoader.getListSource();
     }
 
     public void setNotifier(updateNotifier notifier) {
@@ -53,6 +66,9 @@ public class NewsListLoader {
     }
 
     public void requestUpdateListSource(final SourceModelItem source) throws MalformedURLException {
+        if (!sourceList.contains(source))
+            sourceList.add(source);
+
         final NewsNetworkLoader loader = new NewsNetworkLoader(new URL(source.getUrl()));
         getNewsFromDB(source);
         Handler handler = new Handler(Looper.getMainLooper()) {
@@ -119,6 +135,7 @@ public class NewsListLoader {
     }
 
     public void getNewsFromDB(SourceModelItem source, boolean onlyNotRead) {
+        this.onlyNotRead = onlyNotRead;
         if (loadedHashMap.get(source) == null)
             loadedHashMap.put(source, dbLoader.getNewsListForSourceAndTime(source.getUrl(), 0, 0, onlyNotRead));
         else
@@ -126,32 +143,39 @@ public class NewsListLoader {
     }
 
     public void getNewsFromDB(boolean onlyNotRead) {
+        this.onlyNotRead = onlyNotRead;
         if (loadedHashMap.keySet().size() > 0) {
-            for(SourceModelItem source : loadedHashMap.keySet())
-                getNewsFromDB(source, onlyNotRead);
-        } else {
-            for (SourceModelItem source : getListSource())
-                getNewsFromDB(source, onlyNotRead);
+            loadedHashMap.clear();
+            sourceList.clear();
         }
+        for (SourceModelItem source : getListSource())
+            getNewsFromDB(source, onlyNotRead);
+
     }
 
     public void requestUpdateAllNews() throws MalformedURLException {
-        List<SourceModelItem> sourceList = getListSource();
-
+        if (sourceList.isEmpty())
+            loadSourceListFromDB();
         for (SourceModelItem source : sourceList) {
             requestUpdateListSource(source);
         }
     }
 
-    public List<NewsModelItem> getNewsList() {
-        List<NewsModelItem> list = new ArrayList<>();
-        for (SourceModelItem sourceItem : loadedHashMap.keySet()) {
-            list.addAll(loadedHashMap.get(sourceItem));
-        }
-        return list;
-    }
-
     public HashMap<SourceModelItem, List<NewsModelItem>> getLoadedHashMap() {
         return loadedHashMap;
+    }
+
+    public void setItemIsReaded(NewsModelItem item) {
+        dbLoader.setItemIsRead(item, true);
+    }
+
+    public boolean removeSource(SourceModelItem source) {
+        if (dbLoader.removeSource(source) && dbLoader.removeNews(source)) {
+            getNewsFromDB(onlyNotRead);
+            if (notifier != null)
+                notifier.update();
+            return true;
+        }
+        return false;
     }
 }

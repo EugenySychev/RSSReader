@@ -23,22 +23,24 @@ public class SourceListAdapter extends BaseExpandableListAdapter {
 
     private List<String> expandableListTitle = new ArrayList<>();// = Arrays.asList("News", "Films", "Others");
     private HashMap<String, List<Pair<String, String>>> expandableListDetail = new HashMap<>();
-    private HashMap<SourceModelItem, List<NewsModelItem>> loadedNewsMap;
+    private List<SourceModelItem> loadedSourceList;
 
-    public SourceListAdapter(Context context, HashMap<SourceModelItem, List<NewsModelItem>> loadedNewsMap) {
+    public SourceListAdapter(Context context, List<SourceModelItem> sourceList) {
         this.context = context;
-        this.loadedNewsMap = loadedNewsMap;
+        this.loadedSourceList = sourceList;
         updateContent();
     }
 
     private void updateContent() {
-        for(SourceModelItem item: loadedNewsMap.keySet()) {
-            String cateoryString = NewsModelItem.Categories.toString(item.getCategory());
-            if (expandableListDetail.get(cateoryString) == null)
-                expandableListDetail.put(cateoryString, new ArrayList<Pair<String, String>>());
-            expandableListDetail.get(cateoryString).add(Pair.create(item.getTitle(), item.getUrl()));
-            if (!expandableListTitle.contains(cateoryString))
-                expandableListTitle.add(cateoryString);
+        expandableListTitle.clear();
+        expandableListDetail.clear();
+        for(SourceModelItem item: loadedSourceList) {
+            String categoryString = NewsModelItem.Categories.toString(item.getCategory());
+            if (expandableListDetail.get(categoryString) == null)
+                expandableListDetail.put(categoryString, new ArrayList<Pair<String, String>>());
+            expandableListDetail.get(categoryString).add(Pair.create(item.getTitle(), item.getUrl()));
+            if (!expandableListTitle.contains(categoryString))
+                expandableListTitle.add(categoryString);
         }
     }
 

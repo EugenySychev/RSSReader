@@ -3,7 +3,6 @@ package com.sychev.rss_reader;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.CursorIndexOutOfBoundsException;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.provider.BaseColumns;
@@ -13,15 +12,8 @@ import java.util.List;
 
 public class NewsDbLoader {
     NewsDbHelper dbHelper;
-    private static NewsDbLoader instance;
 
-    public static synchronized NewsDbLoader getInstance(Context context) {
-        if (instance == null)
-            instance = new NewsDbLoader(context);
-        return instance;
-    }
-
-    private NewsDbLoader(Context context) {
+    public NewsDbLoader(Context context) {
         dbHelper = new NewsDbHelper(context);
     }
 
@@ -139,7 +131,7 @@ public class NewsDbLoader {
         return list;
     }
 
-    public List<SourceModelItem> getSourceList() {
+    public List<SourceModelItem> getListSource() {
         List<SourceModelItem> list = new ArrayList<>();
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
@@ -175,5 +167,13 @@ public class NewsDbLoader {
 
         String[] selectionArgs = { item.getUrl() };
         return db.delete(NewsDbHelper.SourceEntry.TABLE_NAME, selection, selectionArgs) >= 0;
+    }
+
+    public boolean removeNews(SourceModelItem source) {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        String selection = NewsDbHelper.FeedEntry.COLUMN_NAME_SOURCE + " LIKE ?";
+
+        String[] selectionArgs = { source.getUrl() };
+        return db.delete(NewsDbHelper.FeedEntry.TABLE_NAME, selection, selectionArgs) >= 0;
     }
 }

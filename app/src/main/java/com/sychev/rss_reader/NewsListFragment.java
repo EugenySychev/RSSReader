@@ -27,11 +27,11 @@ import java.util.List;
 public class NewsListFragment extends Fragment implements NewsListLoader.updateNotifier {
 
     private Handler mHandler;
-    private NewsListLoader loader;
     private View rootView;
     private HashMap<SourceModelItem, List<NewsModelItem>> loadedNewsMap;
     private MainActivity top;
     private NewsListAdapter adapter;
+
     public NewsListFragment() {
 
     }
@@ -43,9 +43,8 @@ public class NewsListFragment extends Fragment implements NewsListLoader.updateN
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        loader = new NewsListLoader(getContext());
-        loader.setNotifier(this);
-
+        NewsListLoader.getInstance().init(this.getContext());
+        NewsListLoader.getInstance().setNotifier(this);
     }
 
     @Override
@@ -65,14 +64,16 @@ public class NewsListFragment extends Fragment implements NewsListLoader.updateN
                 listNews.set(i1, item);
                 map.replace((SourceModelItem) listSource[i], listNews);
                 adapter.notifyDataSetChanged();
-                loader.setItemIsReaded(item);
+                NewsListLoader.getInstance().setItemIsReaded(item);
                 openDigest(item);
                 return false;
             }
         });
-
+        loadedNewsMap = NewsListLoader.getInstance().getLoadedHashMap();
+        adapter = new NewsListAdapter(getContext(), loadedNewsMap);
+        listView.setAdapter(adapter);
         try {
-            loader.requestUpdateAllNews();
+            NewsListLoader.getInstance().requestUpdateAllNews();
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
@@ -80,8 +81,7 @@ public class NewsListFragment extends Fragment implements NewsListLoader.updateN
     }
 
     public void requestUpdate() throws MalformedURLException {
-        if (loader != null)
-            loader.requestUpdateAllNews();
+        NewsListLoader.getInstance().requestUpdateAllNews();
     }
 
     private void openDigest(NewsModelItem item) {
@@ -116,10 +116,7 @@ public class NewsListFragment extends Fragment implements NewsListLoader.updateN
 
     @Override
     public void update() {
-        ExpandableListView lvMain = rootView.findViewById(R.id.lvMain);
-        loadedNewsMap = loader.getLoadedHashMap();
-        adapter = new NewsListAdapter(getContext(), loadedNewsMap);
-        lvMain.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
     }
 
     private void filterMap() {
@@ -132,8 +129,8 @@ public class NewsListFragment extends Fragment implements NewsListLoader.updateN
     }
 
     public void setFilterOnlyNew(boolean b) {
-        loader.getNewsFromDB(b);
-        loadedNewsMap = loader.getLoadedHashMap();
+        NewsListLoader.getInstance().getNewsFromDB(b);
+        loadedNewsMap = NewsListLoader.getInstance().getLoadedHashMap();
         adapter.notifyDataSetChanged();
     }
 }
