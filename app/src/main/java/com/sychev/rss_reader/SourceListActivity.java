@@ -40,15 +40,6 @@ public class SourceListActivity extends AppCompatActivity implements NewsListLoa
         setContentView(R.layout.activity_source_list);
         sourceList = NewsListLoader.getInstance().getListSource();
 
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showAddSourceDialog(view.getContext());
-            }
-        });
-
-
         ExpandableListView listView = findViewById(R.id.source_list_view);
         listAdapter = new SourceListAdapter(getApplicationContext(), sourceList);
         listView.setAdapter(listAdapter);
