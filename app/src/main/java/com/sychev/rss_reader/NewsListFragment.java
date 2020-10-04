@@ -43,7 +43,7 @@ public class NewsListFragment extends Fragment implements NewsListLoader.updateN
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        NewsListLoader.getInstance().init(this.getContext());
+//        NewsListLoader.getInstance().init(this.getContext());
         NewsListLoader.getInstance().setNotifier(this);
     }
 

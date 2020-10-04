@@ -14,15 +14,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class SourceListAdapter extends BaseExpandableListAdapter {
+public class SourceNavAdapter extends BaseExpandableListAdapter {
 
     private Context context;
 
     private List<String> expandableListTitle = new ArrayList<>();// = Arrays.asList("News", "Films", "Others");
-    private HashMap<String, List<Pair<String, String>>> expandableListDetail = new HashMap<>();
+    private HashMap<String, List<Pair<String, Integer>>> expandableListDetail = new HashMap<>();
     private List<SourceModelItem> loadedSourceList;
 
-    public SourceListAdapter(Context context, List<SourceModelItem> sourceList) {
+    public SourceNavAdapter(Context context, List<SourceModelItem> sourceList) {
         this.context = context;
         this.loadedSourceList = sourceList;
         updateContent();
@@ -34,8 +34,8 @@ public class SourceListAdapter extends BaseExpandableListAdapter {
         for(SourceModelItem item: loadedSourceList) {
             String categoryString = NewsModelItem.Categories.toString(item.getCategory());
             if (expandableListDetail.get(categoryString) == null)
-                expandableListDetail.put(categoryString, new ArrayList<Pair<String, String>>());
-            expandableListDetail.get(categoryString).add(Pair.create(item.getTitle(), item.getUrl()));
+                expandableListDetail.put(categoryString, new ArrayList<Pair<String, Integer>>());
+            expandableListDetail.get(categoryString).add(Pair.create(item.getTitle(), item.getUnreadCount()));
             if (!expandableListTitle.contains(categoryString))
                 expandableListTitle.add(categoryString);
         }
@@ -104,18 +104,18 @@ public class SourceListAdapter extends BaseExpandableListAdapter {
     @Override
     public View getChildView(int listPosition, int expandedListPosition,
                              boolean isLastChild, View convertView, ViewGroup parent) {
-        Pair<String, String> expandedListText = (Pair<String, String>) getChild(listPosition, expandedListPosition);
+        Pair<String, Integer> expandedListText = (Pair<String, Integer>) getChild(listPosition, expandedListPosition);
         if (convertView == null) {
             LayoutInflater layoutInflater = (LayoutInflater) this.context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = layoutInflater.inflate(R.layout.source_setup_item_view, null);
+            convertView = layoutInflater.inflate(R.layout.source_nav_item_view, null);
         }
 
-        TextView sourceTitle = (TextView) convertView.findViewById(R.id.source_title);
+        TextView sourceTitle = (TextView) convertView.findViewById(R.id.source_nav_item_title);
         sourceTitle.setText(expandedListText.first);
 
-        TextView sourceUrl = (TextView) convertView.findViewById(R.id.source_url);
-        sourceUrl.setText(expandedListText.second);
+        TextView sourceCounter = (TextView) convertView.findViewById(R.id.source_nav_item_counter);
+        sourceCounter.setText(String.valueOf(expandedListText.second));
 
         return convertView;
     }
@@ -125,27 +125,4 @@ public class SourceListAdapter extends BaseExpandableListAdapter {
         return true;
     }
 
-    public void addItem(String category, Pair<String, String> item) {
-
-        if (!expandableListTitle.contains(category)) {
-            expandableListTitle.add(category);
-            expandableListDetail.put(category, new ArrayList<Pair<String, String>>());
-        }
-
-        List<Pair<String, String>> list = expandableListDetail.get(category);
-        list.add(item);
-        expandableListDetail.put(category, list);
-    }
-
-    public void removeItem(String category, Pair<String, String> item) {
-        for (Map.Entry<String, List<Pair<String, String>>> listItems : expandableListDetail.entrySet()) {
-            if (listItems.getValue().contains(item)) {
-                expandableListDetail.remove(listItems.getKey(), listItems.getValue());
-                if (expandableListDetail.get(listItems.getKey()).size() == 0) {
-                    expandableListDetail.remove(listItems.getKey());
-                    expandableListTitle.remove(listItems.getKey());
-                }
-            }
-        }
-    }
 }

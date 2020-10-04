@@ -76,7 +76,7 @@ public class NewsListAdapter extends BaseExpandableListAdapter {
         if (view == null) {
             LayoutInflater layoutInflater = (LayoutInflater) this.context.
                     getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            view = layoutInflater.inflate(R.layout.newsgroupitem, null);
+            view = layoutInflater.inflate(R.layout.news_list_group_view, null);
         }
         TextView listTitleTextView = (TextView) view.findViewById(R.id.news_group_title);
         listTitleTextView.setTypeface(null, Typeface.BOLD);
@@ -89,7 +89,7 @@ public class NewsListAdapter extends BaseExpandableListAdapter {
         if (view == null) {
             LayoutInflater layoutInflater = (LayoutInflater) this.context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            view = layoutInflater.inflate(R.layout.newsviewitem, null);
+            view = layoutInflater.inflate(R.layout.news_list_item_view, null);
         }
         Object[] list = hashMap.keySet().toArray();
 

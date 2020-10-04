@@ -1,7 +1,6 @@
 package com.sychev.rss_reader;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.text.Html;
 import android.view.LayoutInflater;
@@ -33,7 +32,7 @@ public class NewsAdapter extends ArrayAdapter<com.sychev.rss_reader.NewsModelIte
     public View getView(int position, View convertView, ViewGroup parent) {
         View listItem = convertView;
         if (listItem == null)
-            listItem = LayoutInflater.from(mContext).inflate(R.layout.newsviewitem, parent, false);
+            listItem = LayoutInflater.from(mContext).inflate(R.layout.news_list_item_view, parent, false);
 
         NewsModelItem item = mList.get(position);
         ImageView image = listItem.findViewById(R.id.pix);

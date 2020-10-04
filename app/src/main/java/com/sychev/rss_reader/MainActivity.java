@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ExpandableListView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -20,6 +21,7 @@ import androidx.navigation.ui.NavigationUI;
 import com.google.android.material.navigation.NavigationView;
 
 import java.net.MalformedURLException;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -35,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         ImageCache.getInstance().setCacheDir(getCacheDir());
         NavigationView navigationView = findViewById(R.id.nav_view);
-
+        NewsListLoader.getInstance().init(this);
         mAppBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.nav_home)
                 .build();
@@ -43,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
 
+        createNavigationList();
     }
 
     @Override
@@ -133,6 +136,15 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         return NavigationUI.navigateUp(navController, mAppBarConfiguration)
                 || super.onSupportNavigateUp();
+    }
+
+    void createNavigationList() {
+        List<SourceModelItem> sourceList = NewsListLoader.getInstance().getListSource();
+        SourceNavAdapter adapter = new SourceNavAdapter(this, sourceList);
+        ExpandableListView listView = findViewById(R.id.nav_list_view);
+        listView.setAdapter(adapter);
+        for (int i = 0; i < adapter.getGroupCount(); i++)
+            listView.expandGroup(i);
     }
 
 }

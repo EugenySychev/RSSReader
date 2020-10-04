@@ -23,16 +23,15 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:id="@+id/nav_layout"
             android:orientation="vertical">
 
             <include layout="@layout/nav_header_main" />
 
-            <TextView
+            <ExpandableListView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/add_source"
-                android:textSize="12sp"
-                android:layout_margin="@dimen/text_margin"/>
+                android:id="@+id/nav_list_view" />
 
         </LinearLayout>
     </com.google.android.material.navigation.NavigationView>

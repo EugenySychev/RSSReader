@@ -7,6 +7,7 @@ public class SourceModelItem implements Serializable {
     private String url;
     private String title;
     private NewsModelItem.Categories category;
+    private int unreadCount;
     private boolean updated;
 
     public String getUrl() {
@@ -39,5 +40,13 @@ public class SourceModelItem implements Serializable {
 
     public void setUpdated(boolean updated) {
         this.updated = updated;
+    }
+
+    public int getUnreadCount() {
+        return unreadCount;
+    }
+
+    public void setUnreadCount(int unreadCount) {
+        this.unreadCount = unreadCount;
     }
 }
