@@ -161,6 +161,7 @@ public class MainActivity extends AppCompatActivity implements NewsListLoader.Up
         for (int i = 0; i < adapter.getGroupCount(); i++)
             listView.expandGroup(i);
 
+        listView.setGroupIndicator(null);
         listView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
                                              @Override
                                              public boolean onChildClick(ExpandableListView expandableListView, View view, int i, int i1, long l) {

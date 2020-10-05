@@ -31,6 +31,9 @@ public class SourceNavAdapter extends BaseExpandableListAdapter {
     private void updateContent() {
         expandableListTitle.clear();
         expandableListDetail.clear();
+        String allTitle = context.getResources().getString(R.string.all_title);
+        expandableListTitle.add(allTitle);
+        expandableListDetail.put(allTitle, new ArrayList<Pair<String, Integer>>());
         for(SourceModelItem item: loadedSourceList) {
             String categoryString = NewsModelItem.Categories.toString(item.getCategory());
             if (expandableListDetail.get(categoryString) == null)
@@ -97,7 +100,7 @@ public class SourceNavAdapter extends BaseExpandableListAdapter {
         if (view == null) {
             LayoutInflater layoutInflater = (LayoutInflater) this.context.
                     getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            view = layoutInflater.inflate(R.layout.source_setup_group_view, null);
+            view = layoutInflater.inflate(R.layout.source_nav_group_view, null);
         }
         TextView listTitleTextView = (TextView) view.findViewById(R.id.categoryTitle);
         listTitleTextView.setTypeface(null, Typeface.BOLD);
