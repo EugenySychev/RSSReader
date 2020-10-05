@@ -3,15 +3,20 @@ package com.sychev.rss_reader;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ExpandableListView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
 import androidx.core.view.MenuCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
@@ -23,10 +28,11 @@ import com.google.android.material.navigation.NavigationView;
 import java.net.MalformedURLException;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements NewsListLoader.UpdateNotifier {
 
     private AppBarConfiguration mAppBarConfiguration;
     private static final int SETUP_ACTIVITY_REQUEST_CODE = 0;
+    private DrawerLayout drawerLayout;
 
 
     @Override
@@ -38,9 +44,10 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         ImageCache.getInstance().setCacheDir(getCacheDir());
-
+        drawerLayout = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
         NewsListLoader.getInstance().init(this);
+        NewsListLoader.getInstance().addNotifier(this);
         mAppBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.nav_home)
                 .build();
@@ -48,6 +55,8 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
 
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_baseline_menu_24);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         createNavigationList();
     }
 
@@ -102,6 +111,9 @@ public class MainActivity extends AppCompatActivity {
                     fragment.setFilterOnlyNew(true);
 
                 break;
+            case android.R.id.home:
+                drawerLayout.openDrawer(GravityCompat.START);
+                break;
             default:
                 Log.d("Main", "Unexpected value: " + item.getItemId());
         }
@@ -143,11 +155,43 @@ public class MainActivity extends AppCompatActivity {
 
     void createNavigationList() {
         List<SourceModelItem> sourceList = NewsListLoader.getInstance().getListSource();
-        SourceNavAdapter adapter = new SourceNavAdapter(this, sourceList);
+        final SourceNavAdapter adapter = new SourceNavAdapter(this, sourceList);
         ExpandableListView listView = findViewById(R.id.nav_list_view);
         listView.setAdapter(adapter);
         for (int i = 0; i < adapter.getGroupCount(); i++)
             listView.expandGroup(i);
+
+        listView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
+                                             @Override
+                                             public boolean onChildClick(ExpandableListView expandableListView, View view, int i, int i1, long l) {
+                                                 SourceModelItem source = (SourceModelItem) adapter.getChild(i, i1);
+
+                                                 NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
+                                                     NewsListFragment fragment = null;
+                                                     if (navHostFragment != null) {
+                                                         fragment = (NewsListFragment) navHostFragment.getChildFragmentManager().findFragmentById(R.id.nav_host_fragment);
+                                                     }
+                                                 if (fragment != null) {
+                                                     fragment.setFilterSource(source);
+                                                     return true;
+                                                 }
+
+                                                 return false;
+                                             }
+                                         }
+        );
     }
 
+    @Override
+    public void update() {
+        ExpandableListView listView = findViewById(R.id.nav_list_view);
+        if (listView != null) {
+            SourceNavAdapter adapter = (SourceNavAdapter) listView.getExpandableListAdapter();
+            adapter.notifyDataSetChanged();
+        }
+    }
+
+    @Override
+    public void updateState(int state) {
+    }
 }

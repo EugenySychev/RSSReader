@@ -24,7 +24,7 @@ import java.util.List;
  * Use the {@link NewsListFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class NewsListFragment extends Fragment implements NewsListLoader.updateNotifier {
+public class NewsListFragment extends Fragment implements NewsListLoader.UpdateNotifier {
 
     private Handler mHandler;
     private View rootView;
@@ -44,7 +44,7 @@ public class NewsListFragment extends Fragment implements NewsListLoader.updateN
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 //        NewsListLoader.getInstance().init(this.getContext());
-        NewsListLoader.getInstance().setNotifier(this);
+        NewsListLoader.getInstance().addNotifier(this);
     }
 
     @Override
@@ -59,7 +59,6 @@ public class NewsListFragment extends Fragment implements NewsListLoader.updateN
                 NewsModelItem item = (NewsModelItem) adapter.getChild(i, i1);
                 SourceModelItem source = (SourceModelItem) adapter.getGroup(i);
                 loadedNewsMap.get(source).get(i1).setIsRead(1);
-                adapter.notifyDataSetChanged();
                 NewsListLoader.getInstance().setItemIsReaded(item);
                 openDigest(item);
                 return false;
@@ -68,12 +67,7 @@ public class NewsListFragment extends Fragment implements NewsListLoader.updateN
         loadedNewsMap = NewsListLoader.getInstance().getLoadedHashMap();
         adapter = new NewsListAdapter(getContext(), loadedNewsMap);
         listView.setAdapter(adapter);
-        try {
-            NewsListLoader.getInstance().requestUpdateAllNews();
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
-
+        NewsListLoader.getInstance().getAllNewsFromDB();
         for (int i = 0; i < adapter.getGroupCount(); i++)
             listView.expandGroup(i);
         return rootView;
@@ -81,6 +75,10 @@ public class NewsListFragment extends Fragment implements NewsListLoader.updateN
 
     public void requestUpdate() throws MalformedURLException {
         NewsListLoader.getInstance().requestUpdateAllNews();
+    }
+
+    public void requestLoad() {
+        NewsListLoader.getInstance().getAllNewsFromDB();
     }
 
     private void openDigest(NewsModelItem item) {
@@ -127,5 +125,9 @@ public class NewsListFragment extends Fragment implements NewsListLoader.updateN
         NewsListLoader.getInstance().setOnlyNotRead(onlyNew);
         NewsListLoader.getInstance().getAllNewsFromDB();
         adapter.notifyDataSetChanged();
+    }
+
+    public void setFilterSource(SourceModelItem source) {
+        // TODO show only source items list, null for all sources
     }
 }

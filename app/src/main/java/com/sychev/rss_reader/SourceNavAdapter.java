@@ -67,8 +67,12 @@ public class SourceNavAdapter extends BaseExpandableListAdapter {
 
     @Override
     public Object getChild(int i, int i1) {
-        return expandableListDetail.get(this.expandableListTitle.get(i))
-                .get(i1);
+        for(SourceModelItem item: loadedSourceList) {
+            if (NewsModelItem.Categories.toString(item.getCategory()).equals(getGroup(i)) &&
+                    item.getTitle().equals(expandableListDetail.get(this.expandableListTitle.get(i)).get(i1).first))
+                return  item;
+        }
+        return null;
     }
 
 
@@ -104,7 +108,9 @@ public class SourceNavAdapter extends BaseExpandableListAdapter {
     @Override
     public View getChildView(int listPosition, int expandedListPosition,
                              boolean isLastChild, View convertView, ViewGroup parent) {
-        Pair<String, Integer> expandedListText = (Pair<String, Integer>) getChild(listPosition, expandedListPosition);
+        SourceModelItem source = (SourceModelItem) getChild(listPosition, expandedListPosition);
+
+        Pair<String, Integer> expandedListText = Pair.create(source.getTitle(), source.getUnreadCount());
         if (convertView == null) {
             LayoutInflater layoutInflater = (LayoutInflater) this.context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);

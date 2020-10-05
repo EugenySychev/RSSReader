@@ -16,20 +16,16 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ExpandableListView;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
 import java.net.MalformedURLException;
-import java.nio.file.ClosedFileSystemException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SourceListActivity extends AppCompatActivity implements NewsListLoader.updateNotifier {
+public class SourceListActivity extends AppCompatActivity implements NewsListLoader.UpdateNotifier {
 
     private List<SourceModelItem> sourceList = new ArrayList<>();
     private SourceListAdapter listAdapter;

@@ -22,7 +22,7 @@ public class NewsListLoader {
     private List<SourceModelItem> sourceList = new ArrayList<>();
     private static NewsListLoader instance;
     private boolean onlyNotRead;
-    updateNotifier notifier;
+    List<UpdateNotifier> notifierList;
 
     public void addSource(SourceModelItem item) {
         if (dbLoader != null)
@@ -31,7 +31,7 @@ public class NewsListLoader {
     }
 
 
-    interface updateNotifier {
+    interface UpdateNotifier {
         void update();
 
         void updateState(int state);
@@ -45,6 +45,7 @@ public class NewsListLoader {
 
     public NewsListLoader() {
         loadedHashMap = new HashMap<>();
+        notifierList = new ArrayList<>();
     }
 
     public void init(Context context) {
@@ -62,9 +63,11 @@ public class NewsListLoader {
         sourceList = dbLoader.getListSource();
     }
 
-    public void setNotifier(updateNotifier notifier) {
-        this.notifier = notifier;
+    public void addNotifier(UpdateNotifier notifier) {
+        notifierList.add(notifier);
     }
+
+    public void removeNotifier(UpdateNotifier notifier) { notifierList.remove(notifier); }
 
     public void requestUpdateListSource(final SourceModelItem source) throws MalformedURLException {
         if (!sourceList.contains(source))
@@ -112,17 +115,15 @@ public class NewsListLoader {
 
                     Collections.reverse(list);
                     loadedHashMap.replace(source, list);
+                    updateUnreadCounter(source);
                 }
                 boolean allUpdated = true;
                 for (SourceModelItem sourceItem : loadedHashMap.keySet()) {
                     if (!sourceItem.isUpdated())
                         allUpdated = false;
                 }
-                notifier.update();
-                if (allUpdated)
-                    notifier.updateState(NewsNetworkLoader.LoadState.LOAD_OK);
-                else
-                    notifier.updateState(NewsNetworkLoader.LoadState.LOAD_PROCESSING);
+                updateAllNotifiers();
+                updateAllNotifiersState(allUpdated);
                 super.handleMessage(msg);
             }
         };
@@ -131,11 +132,37 @@ public class NewsListLoader {
         loader.start();
     }
 
+    private void updateAllNotifiers() {
+        for (UpdateNotifier notifier : notifierList) {
+            notifier.update();
+        }
+    }
+
+
+    private void updateAllNotifiersState(boolean allUpdated) {
+        for(UpdateNotifier notifier : notifierList) {
+            if (allUpdated)
+                notifier.updateState(NewsNetworkLoader.LoadState.LOAD_OK);
+            else
+                notifier.updateState(NewsNetworkLoader.LoadState.LOAD_PROCESSING);
+        }
+    }
+
+    void updateUnreadCounter(SourceModelItem source) {
+        int count = 0;
+        for(NewsModelItem item : loadedHashMap.get(source)) {
+            if (item.getIsRead() == 0)
+                count ++;
+        }
+        source.setUnreadCount(count);
+    }
+
     public void getNewsFromDB(SourceModelItem source) {
         if (loadedHashMap.get(source) == null)
             loadedHashMap.put(source, dbLoader.getNewsListForSourceAndTime(source.getUrl(), 0, 0, onlyNotRead));
         else
             loadedHashMap.replace(source, dbLoader.getNewsListForSourceAndTime(source.getUrl(), 0, 0, onlyNotRead));
+        updateUnreadCounter(source);
     }
 
     public void setOnlyNotRead(boolean onlyNotRead) { this.onlyNotRead = onlyNotRead; }
@@ -160,14 +187,20 @@ public class NewsListLoader {
 
     public void setItemIsReaded(NewsModelItem item) {
         dbLoader.setItemIsRead(item, true);
+        for(SourceModelItem source : sourceList) {
+            if (source.getUrl().equals(item.getSource())) {
+                source.setUnreadCount(source.getUnreadCount() - 1);
+                break;
+            }
+        }
+        updateAllNotifiers();
     }
 
     public boolean removeSource(SourceModelItem source) {
         if (dbLoader.removeSource(source) && dbLoader.removeNews(source)) {
             loadedHashMap.remove(source);
             sourceList.remove(source);
-            if (notifier != null)
-                notifier.update();
+            updateAllNotifiers();
             return true;
         }
         return false;
