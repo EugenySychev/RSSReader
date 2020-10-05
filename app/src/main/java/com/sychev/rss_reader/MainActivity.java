@@ -33,9 +33,12 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
+
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
         ImageCache.getInstance().setCacheDir(getCacheDir());
+
         NavigationView navigationView = findViewById(R.id.nav_view);
         NewsListLoader.getInstance().init(this);
         mAppBarConfiguration = new AppBarConfiguration.Builder(
@@ -53,8 +56,7 @@ public class MainActivity extends AppCompatActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main_settings_menu, menu);
         MenuCompat.setGroupDividerEnabled(menu, true);
-//        MenuItem item = menu.findItem(R.id.sort_grouped);
-//        item.setChecked(true);
+
         MenuItem item_filter = menu.findItem(R.id.filter_all);
         item_filter.setChecked(true);
         return true;
@@ -124,6 +126,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+        Log.d("MAIN_ACT", "Return from some other activities");
         if (requestCode == SETUP_ACTIVITY_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
                 System.out.println(data.getStringExtra("url"));

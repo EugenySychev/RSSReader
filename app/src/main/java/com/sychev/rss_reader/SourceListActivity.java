@@ -44,6 +44,9 @@ public class SourceListActivity extends AppCompatActivity implements NewsListLoa
         listAdapter = new SourceListAdapter(getApplicationContext(), sourceList);
         listView.setAdapter(listAdapter);
 
+        for (int i = 0; i < listAdapter.getGroupCount(); i++)
+            listView.expandGroup(i);
+
         registerForContextMenu(listView);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.source_list_view_toolbar);
@@ -54,10 +57,8 @@ public class SourceListActivity extends AppCompatActivity implements NewsListLoa
 
     }
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.source_list_view_menu, menu);
         return true;
     }

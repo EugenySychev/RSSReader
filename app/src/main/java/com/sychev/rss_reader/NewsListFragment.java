@@ -73,6 +73,9 @@ public class NewsListFragment extends Fragment implements NewsListLoader.updateN
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
+
+        for (int i = 0; i < adapter.getGroupCount(); i++)
+            listView.expandGroup(i);
         return rootView;
     }
 
