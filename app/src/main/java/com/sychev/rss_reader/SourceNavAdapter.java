@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -102,9 +103,17 @@ public class SourceNavAdapter extends BaseExpandableListAdapter {
                     getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             view = layoutInflater.inflate(R.layout.source_nav_group_view, null);
         }
-        TextView listTitleTextView = (TextView) view.findViewById(R.id.categoryTitle);
+        TextView listTitleTextView = (TextView) view.findViewById(R.id.nav_category_title);
         listTitleTextView.setTypeface(null, Typeface.BOLD);
         listTitleTextView.setText(listTitle);
+
+        ImageView imageView = view.findViewById(R.id.nav_expanded_icon);
+        if (b)
+            imageView.setImageResource(R.drawable.ic_baseline_arrow_drop_down_24);
+        else
+            imageView.setImageResource(R.drawable.ic_baseline_arrow_right_24);
+    if (i == 0)
+        imageView.setVisibility(View.GONE);
         return view;
     }
 

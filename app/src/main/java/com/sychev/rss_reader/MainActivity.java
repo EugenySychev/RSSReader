@@ -3,11 +3,9 @@ package com.sychev.rss_reader;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ExpandableListView;
 
 import androidx.annotation.NonNull;
@@ -168,19 +166,37 @@ public class MainActivity extends AppCompatActivity implements NewsListLoader.Up
                                                  SourceModelItem source = (SourceModelItem) adapter.getChild(i, i1);
 
                                                  NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
-                                                     NewsListFragment fragment = null;
-                                                     if (navHostFragment != null) {
-                                                         fragment = (NewsListFragment) navHostFragment.getChildFragmentManager().findFragmentById(R.id.nav_host_fragment);
-                                                     }
+                                                 NewsListFragment fragment = null;
+                                                 if (navHostFragment != null) {
+                                                     fragment = (NewsListFragment) navHostFragment.getChildFragmentManager().findFragmentById(R.id.nav_host_fragment);
+                                                 }
                                                  if (fragment != null) {
                                                      fragment.setFilterSource(source);
+                                                     drawerLayout.close();
                                                      return true;
                                                  }
-
                                                  return false;
                                              }
                                          }
         );
+        listView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
+            @Override
+            public boolean onGroupClick(ExpandableListView expandableListView, View view, int i, long l) {
+                if (i == 0) {
+                    NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
+                    NewsListFragment fragment = null;
+                    if (navHostFragment != null) {
+                        fragment = (NewsListFragment) navHostFragment.getChildFragmentManager().findFragmentById(R.id.nav_host_fragment);
+                    }
+                    if (fragment != null) {
+                        fragment.setFilterSource(null);
+                    }
+                    drawerLayout.close();;
+                }
+
+                return false;
+            }
+        });
     }
 
     @Override

@@ -22,12 +22,33 @@ public class NewsListLoader {
     private List<SourceModelItem> sourceList = new ArrayList<>();
     private static NewsListLoader instance;
     private boolean onlyNotRead;
+    private SourceModelItem filterSource = null;
     List<UpdateNotifier> notifierList;
+
+    public SourceModelItem getFilterSource() {
+        return filterSource;
+    }
+
+    public void setFilterSource(SourceModelItem filterSource) {
+        this.filterSource = filterSource;
+        updateAllNotifiers();
+    }
 
     public void addSource(SourceModelItem item) {
         if (dbLoader != null)
             if (dbLoader.addSource(item))
                 sourceList.add(item);
+    }
+
+    public List<NewsModelItem> getLoadedNewsList() {
+        if (filterSource != null)
+            return loadedHashMap.get(filterSource);
+
+        List<NewsModelItem> fullList = new ArrayList<>();
+        for (SourceModelItem source : loadedHashMap.keySet()) {
+            fullList.addAll(loadedHashMap.get(source));
+        }
+        return fullList;
     }
 
 
@@ -67,7 +88,9 @@ public class NewsListLoader {
         notifierList.add(notifier);
     }
 
-    public void removeNotifier(UpdateNotifier notifier) { notifierList.remove(notifier); }
+    public void removeNotifier(UpdateNotifier notifier) {
+        notifierList.remove(notifier);
+    }
 
     public void requestUpdateListSource(final SourceModelItem source) throws MalformedURLException {
         if (!sourceList.contains(source))
@@ -140,7 +163,7 @@ public class NewsListLoader {
 
 
     private void updateAllNotifiersState(boolean allUpdated) {
-        for(UpdateNotifier notifier : notifierList) {
+        for (UpdateNotifier notifier : notifierList) {
             if (allUpdated)
                 notifier.updateState(NewsNetworkLoader.LoadState.LOAD_OK);
             else
@@ -150,9 +173,9 @@ public class NewsListLoader {
 
     void updateUnreadCounter(SourceModelItem source) {
         int count = 0;
-        for(NewsModelItem item : loadedHashMap.get(source)) {
+        for (NewsModelItem item : loadedHashMap.get(source)) {
             if (item.getIsRead() == 0)
-                count ++;
+                count++;
         }
         source.setUnreadCount(count);
     }
@@ -165,7 +188,9 @@ public class NewsListLoader {
         updateUnreadCounter(source);
     }
 
-    public void setOnlyNotRead(boolean onlyNotRead) { this.onlyNotRead = onlyNotRead; }
+    public void setOnlyNotRead(boolean onlyNotRead) {
+        this.onlyNotRead = onlyNotRead;
+    }
 
     public void getAllNewsFromDB() {
         for (SourceModelItem source : getListSource())
@@ -186,8 +211,9 @@ public class NewsListLoader {
     }
 
     public void setItemIsReaded(NewsModelItem item) {
+        item.setIsRead(1);
         dbLoader.setItemIsRead(item, true);
-        for(SourceModelItem source : sourceList) {
+        for (SourceModelItem source : sourceList) {
             if (source.getUrl().equals(item.getSource())) {
                 source.setUnreadCount(source.getUnreadCount() - 1);
                 break;

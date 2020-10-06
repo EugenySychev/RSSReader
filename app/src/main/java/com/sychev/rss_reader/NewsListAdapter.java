@@ -1,5 +1,6 @@
 package com.sychev.rss_reader;
 
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -8,154 +9,111 @@ import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseExpandableListAdapter;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.core.text.HtmlCompat;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
+import org.w3c.dom.Text;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.List;
 
-public class NewsListAdapter extends BaseExpandableListAdapter {
-    private final int MAX_LINE_LENTGTH = 70;
+public class NewsListAdapter extends RecyclerView.Adapter<NewsListAdapter.NewsItemView> {
 
-    private HashMap<SourceModelItem, List<NewsModelItem>> hashMap;
-    private Context context;
-    private boolean onlyNew = false;
+    private LayoutInflater inflater;
+    private List<NewsModelItem> newsList;
+    private ItemClickListener clickListener;
 
-    public NewsListAdapter(Context context, HashMap<SourceModelItem, List<NewsModelItem>> hashMap) {
-        this.context = context;
-        this.hashMap = hashMap;
+    NewsListAdapter(Context context, List<NewsModelItem> list) {
+        inflater = LayoutInflater.from(context);
+        newsList = list;
+    }
+
+    @NonNull
+    @Override
+    public NewsItemView onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = inflater.inflate(R.layout.news_list_item_view, parent, false);
+        return new NewsItemView(view);
     }
 
     @Override
-    public int getGroupCount() {
-        return hashMap.keySet().size();
+    public void onBindViewHolder(@NonNull NewsItemView holder, int position) {
+        NewsModelItem item = newsList.get(position);
+        holder.setNewsModelItem(item);
     }
 
     @Override
-    public int getChildrenCount(int i) {
-        Object[] list = hashMap.keySet().toArray();
-        return hashMap.get(list[i]).size();
+    public int getItemCount() {
+        return newsList.size();
     }
 
-    @Override
-    public Object getGroup(int i) {
-        Object[] list = hashMap.keySet().toArray();
-        return list[i];
+    public void setList(List<NewsModelItem> loadedNewsList) {
+        newsList = loadedNewsList;
     }
 
-    @Override
-    public Object getChild(int i, int i1) {
-        Object[] list = hashMap.keySet().toArray();
-        return hashMap.get(list[i]).get(i1);
-    }
+    public class NewsItemView extends  RecyclerView.ViewHolder implements View.OnClickListener {
 
-    @Override
-    public long getGroupId(int i) {
-        return i;
-    }
+        private ImageView imageView;
+        private TextView titleView;
+        private TextView timeView;
+        private TextView descrView;
 
-    @Override
-    public long getChildId(int i, int i1) {
-        return i1;
-    }
-
-    @Override
-    public boolean hasStableIds() {
-        return false;
-    }
-
-    @Override
-    public View getGroupView(int i, boolean b, View view, ViewGroup viewGroup) {
-        SourceModelItem item = (SourceModelItem) getGroup(i);
-        String title = item.getTitle();
-        if (view == null) {
-            LayoutInflater layoutInflater = (LayoutInflater) this.context.
-                    getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            view = layoutInflater.inflate(R.layout.news_list_group_view, null);
-        }
-        TextView listTitleTextView = (TextView) view.findViewById(R.id.news_group_title);
-        listTitleTextView.setTypeface(null, Typeface.BOLD);
-        listTitleTextView.setText(title);
-        return view;
-    }
-
-    @Override
-    public View getChildView(int i, int i1, boolean b, View view, ViewGroup viewGroup) {
-        if (view == null) {
-            LayoutInflater layoutInflater = (LayoutInflater) this.context
-                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            view = layoutInflater.inflate(R.layout.news_list_item_view, null);
-        }
-        Object[] list = hashMap.keySet().toArray();
-
-        NewsModelItem item = hashMap.get(list[i]).get(i1);
-
-        Bitmap bmp = item.getIcon();
-        ImageView image = view.findViewById(R.id.pix);
-        if (bmp != null) {
-            image.setImageBitmap(item.getIcon());
-            image.setVisibility(View.VISIBLE);
-        } else {
-            image.setVisibility(View.GONE);
+        public NewsItemView(@NonNull View itemView) {
+            super(itemView);
+            imageView = itemView.findViewById(R.id.pix);
+            titleView = itemView.findViewById(R.id.news_title);
+            timeView = itemView.findViewById(R.id.news_time);
+            descrView = itemView.findViewById(R.id.news_description);
+            itemView.setOnClickListener(this);
         }
 
-        TextView title = view.findViewById(R.id.news_title);
-        title.setText(cropTextWithPoints(item.getTitle(), MAX_LINE_LENTGTH));
 
-        TextView descr = view.findViewById(R.id.news_description);
-        String descrText = item.getDescription();
-        descr.setText(Html.fromHtml(cropTextWithPoints(item.getDescription(), MAX_LINE_LENTGTH), HtmlCompat.FROM_HTML_MODE_LEGACY));
+        @Override
+        public void onClick(View view) {
+            if (clickListener != null) {
+                clickListener.onItemClick(view, getAdapterPosition());
+            }
 
-        TextView timeview = view.findViewById(R.id.news_time);
-
-        @SuppressLint("SimpleDateFormat") SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
-
-        // Create a calendar object that will convert the date and time value in milliseconds to date.
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(item.getTime());
-        String timeText = formatter.format(calendar.getTime());
-
-        timeview.setText(timeText);
-
-        if (item.getIsRead() == 0) {
-            title.setTypeface(null, Typeface.BOLD);
-            descr.setTypeface(null, Typeface.BOLD);
-        } else {
-            title.setTypeface(null, Typeface.ITALIC);
-            descr.setTypeface(null, Typeface.ITALIC);
         }
 
-        if (onlyNew && item.getIsRead() > 0) {
-            view.setVisibility(View.GONE);
-        } else {
-            view.setVisibility(View.VISIBLE);
+        public void setNewsModelItem(NewsModelItem item) {
+            Bitmap icon = item.getIcon();
+            if (icon == null)
+                imageView.setVisibility(View.GONE);
+            else {
+                imageView.setVisibility(View.VISIBLE);
+                imageView.setImageBitmap(icon);
+            }
+
+            titleView.setText(item.getTitle());
+            descrView.setText(Html.fromHtml(Utils.cropTextWithPoints(item.getDescription(), 70), Html.FROM_HTML_MODE_COMPACT));
+            timeView.setText(Utils.getTimeString(item.getTime()));
+
+            if (item.getIsRead() == 0) {
+                titleView.setTypeface(null, Typeface.BOLD);
+                descrView.setTypeface(null, Typeface.BOLD);
+            } else {
+                titleView.setTypeface(null, Typeface.ITALIC);
+                descrView.setTypeface(null, Typeface.ITALIC);
+            }
+
         }
-        return view;
+
     }
 
-    @Override
-    public boolean isChildSelectable(int i, int i1) {
-        return true;
+    public NewsModelItem getItem(int position) {
+        return newsList.get(position);
     }
 
-    private String cropTextWithPoints(String source, int length) {
-        if (source == null)
-            return "Some shit";
-        if (source.length() > length) {
-            int len = length;
-            while (len > 0 && !source.substring(len - 1, len).equals(" ")) len--;
-
-            return source.substring(0, len) + "...";
-        }
-        return source;
+    public void setClickListener(ItemClickListener clickListener) {
+        this.clickListener = clickListener;
     }
 
-    public HashMap<SourceModelItem, List<NewsModelItem>> getHashMap() {
-        return hashMap;
+    public interface ItemClickListener {
+        void onItemClick(View view, int position);
     }
 }
