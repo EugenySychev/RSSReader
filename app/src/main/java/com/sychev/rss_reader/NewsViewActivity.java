@@ -16,8 +16,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.text.HtmlCompat;
 
-;
-
 public class NewsViewActivity extends AppCompatActivity {
 
     private String urlString;

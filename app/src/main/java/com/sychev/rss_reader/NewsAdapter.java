@@ -16,6 +16,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 public class NewsAdapter extends ArrayAdapter<com.sychev.rss_reader.NewsModelItem> {
     private final int MAX_LINE_LENTGTH = 70;
@@ -47,7 +48,7 @@ public class NewsAdapter extends ArrayAdapter<com.sychev.rss_reader.NewsModelIte
 
         TextView timeview = listItem.findViewById(R.id.news_time);
 
-        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
+        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss", Locale.getDefault());
 
         // Create a calendar object that will convert the date and time value in milliseconds to date.
         Calendar calendar = Calendar.getInstance();

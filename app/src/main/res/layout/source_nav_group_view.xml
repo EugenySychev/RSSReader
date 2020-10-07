@@ -7,7 +7,8 @@
     <ImageView
         android:id="@+id/nav_expanded_icon"
         android:layout_width="18dp"
-        android:layout_height="18dp" />
+        android:layout_height="18dp"
+        android:contentDescription="@string/expand_icon" />
     <TextView
         android:id="@+id/nav_category_title"
         android:layout_width="fill_parent"

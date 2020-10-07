@@ -16,7 +16,9 @@
             android:layout_height="wrap_content"
             android:inputType="textWebEditText"
             android:text="https://www.gazeta.ru/export/rss/first.xml"
-            tools:ignore="TextFields" />
+            tools:ignore="TextFields"
+            android:labelFor="@id/enter_source_url_edit_text"
+            android:autofillHints="https://source.org/rss.xml" />
 
         <TextView
             android:layout_width="match_parent"

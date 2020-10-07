@@ -192,7 +192,7 @@ public class MainActivity extends AppCompatActivity implements NewsListLoader.Up
                     if (fragment != null) {
                         fragment.setFilterSource(null);
                     }
-                    drawerLayout.close();;
+                    drawerLayout.close();
                 }
 
                 return false;

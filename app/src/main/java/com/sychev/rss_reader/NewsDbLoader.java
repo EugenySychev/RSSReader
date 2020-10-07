@@ -105,8 +105,8 @@ public class NewsDbLoader {
                 NewsDbHelper.FeedEntry.COLUMN_NAME_TIME + " DESC";
         String havingFilter = "";
         if (begin > 0 && end > 0)
-            havingFilter = NewsDbHelper.FeedEntry.COLUMN_NAME_TIME + " > " + String.valueOf(begin) + " AND " +
-                NewsDbHelper.FeedEntry.COLUMN_NAME_TIME + " < " + String.valueOf(end);
+            havingFilter = NewsDbHelper.FeedEntry.COLUMN_NAME_TIME + " > " + begin + " AND " +
+                NewsDbHelper.FeedEntry.COLUMN_NAME_TIME + " < " + end;
 
         if (onlyNotRead) {
             selection += " AND " + NewsDbHelper.FeedEntry.COLUMN_NAME_ISREAD + " = ? ";

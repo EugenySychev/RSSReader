@@ -44,4 +44,6 @@
     <string name="sources">Sources</string>
     <string name="all_title">All</string>
     <string name="update_sign">Update ...</string>
+    <string name="icon_of_digest">Icon of digest</string>
+    <string name="expand_icon">Expand icon</string>
 </resources>
