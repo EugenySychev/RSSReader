@@ -43,4 +43,5 @@
     <string name="ok_title">OK</string>
     <string name="sources">Sources</string>
     <string name="all_title">All</string>
+    <string name="update_sign">Update ...</string>
 </resources>

@@ -2,8 +2,11 @@ package com.sychev.rss_reader;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.Layout;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListView;
@@ -14,6 +17,7 @@ import android.widget.TextView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import java.net.MalformedURLException;
 import java.util.HashMap;
@@ -24,6 +28,7 @@ public class NewsListFragment extends Fragment implements NewsListLoader.UpdateN
     private View rootView;
     private HashMap<SourceModelItem, List<NewsModelItem>> loadedNewsMap;
     private NewsListAdapter adapter;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -42,6 +47,23 @@ public class NewsListFragment extends Fragment implements NewsListLoader.UpdateN
         adapter = new NewsListAdapter(getContext(), NewsListLoader.getInstance().getLoadedNewsList());
         adapter.setClickListener(this);
         listView.setAdapter(adapter);
+        swipeRefreshLayout = rootView.findViewById(R.id.swipe_refresh_layout);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+//                try {
+//                    swipeRefreshLayout.setRefreshing(true);
+//                    requestUpdate();
+//                } catch (MalformedURLException e) {
+//                    e.printStackTrace();
+//                }
+                try {
+                    wait(2000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
 
         return rootView;
     }
@@ -67,22 +89,41 @@ public class NewsListFragment extends Fragment implements NewsListLoader.UpdateN
 
     private void updateUiVisibility(int what) {
         RecyclerView listView = rootView.findViewById(R.id.lvMain);
-        ProgressBar progressBar = rootView.findViewById(R.id.progressBar);
         TextView errorText = rootView.findViewById(R.id.textView);
         if (what == NewsNetworkLoader.LoadState.LOAD_OK) {
             listView.setVisibility(View.VISIBLE);
-            progressBar.setVisibility(View.GONE);
             errorText.setVisibility(View.GONE);
+//            switchRefresh(false);
+            swipeRefreshLayout.setEnabled(false);
+            swipeRefreshLayout.setEnabled(true);
+            Log.d("NEWS", "Call disable refreshing");
         } else if (what == NewsNetworkLoader.LoadState.LOAD_PROCESSING) {
             listView.setVisibility(View.GONE);
-            progressBar.setVisibility(View.VISIBLE);
             errorText.setVisibility(View.GONE);
+//            switchRefresh(true);
+            if (!swipeRefreshLayout.isRefreshing())
+                swipeRefreshLayout.setRefreshing(true);
         } else {
             listView.setVisibility(View.GONE);
-            progressBar.setVisibility(View.GONE);
             errorText.setVisibility(View.VISIBLE);
         }
     }
+
+    private void switchRefresh(final boolean refresh) {
+        if (swipeRefreshLayout.isRefreshing() != refresh) {
+            swipeRefreshLayout.post(new Runnable() {
+                @Override
+                public void run() {
+                    swipeRefreshLayout.setRefreshing(refresh);
+                    Log.d("NEWS", "refresh set to " + refresh);
+                }
+            });
+        }
+
+//        swipeRefreshLayout.measure(View.MEASURED_SIZE_MASK,View.MEASURED_HEIGHT_STATE_SHIFT);
+//        swipeRefreshLayout.setRefreshing(refresh);
+    }
+
 
     @Override
     public void update() {

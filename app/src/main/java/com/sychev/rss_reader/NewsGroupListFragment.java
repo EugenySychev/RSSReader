@@ -2,9 +2,11 @@ package com.sychev.rss_reader;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.ExpandableListView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -79,19 +81,20 @@ public class NewsGroupListFragment extends Fragment implements NewsListLoader.Up
 
     private void updateUiVisibility(int what) {
         ListView listView = rootView.findViewById(R.id.lvMain);
-        ProgressBar progressBar = rootView.findViewById(R.id.progressBar);
+//        ProgressBar progressBar = rootView.findViewById(R.id.progressBar);
         TextView errorText = rootView.findViewById(R.id.textView);
+        Log.d("NEWS", "Update state tp " + what);
         if (what == NewsNetworkLoader.LoadState.LOAD_OK) {
             listView.setVisibility(View.VISIBLE);
-            progressBar.setVisibility(View.GONE);
+//            progressBar.setVisibility(View.GONE);
             errorText.setVisibility(View.GONE);
         } else if (what == NewsNetworkLoader.LoadState.LOAD_PROCESSING) {
             listView.setVisibility(View.GONE);
-            progressBar.setVisibility(View.VISIBLE);
+//            progressBar.setVisibility(View.VISIBLE);
             errorText.setVisibility(View.GONE);
         } else {
             listView.setVisibility(View.GONE);
-            progressBar.setVisibility(View.GONE);
+//            progressBar.setVisibility(View.GONE);
             errorText.setVisibility(View.VISIBLE);
         }
     }
