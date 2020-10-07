@@ -13,6 +13,7 @@ import android.widget.ExpandableListView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -51,17 +52,23 @@ public class NewsListFragment extends Fragment implements NewsListLoader.UpdateN
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-//                try {
-//                    swipeRefreshLayout.setRefreshing(true);
-//                    requestUpdate();
-//                } catch (MalformedURLException e) {
-//                    e.printStackTrace();
-//                }
                 try {
-                    wait(2000);
-                } catch (InterruptedException e) {
+                    swipeRefreshLayout.setRefreshing(true);
+                    requestUpdate();
+                } catch (MalformedURLException e) {
                     e.printStackTrace();
                 }
+//                swipeRefreshLayout.postDelayed(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        if (swipeRefreshLayout != null) {
+//                            swipeRefreshLayout.setRefreshing(false);
+//                            swipeRefreshLayout.stopNestedScroll();
+//                            swipeRefreshLayout.clearAnimation();
+//                            Toast.makeText(getContext(), "Refresh", Toast.LENGTH_SHORT).show();
+//                        }
+//                    }
+//                }, 2000);
             }
         });
 
@@ -93,14 +100,10 @@ public class NewsListFragment extends Fragment implements NewsListLoader.UpdateN
         if (what == NewsNetworkLoader.LoadState.LOAD_OK) {
             listView.setVisibility(View.VISIBLE);
             errorText.setVisibility(View.GONE);
-//            switchRefresh(false);
-            swipeRefreshLayout.setEnabled(false);
-            swipeRefreshLayout.setEnabled(true);
-            Log.d("NEWS", "Call disable refreshing");
+            swipeRefreshLayout.setRefreshing(false);
         } else if (what == NewsNetworkLoader.LoadState.LOAD_PROCESSING) {
             listView.setVisibility(View.GONE);
             errorText.setVisibility(View.GONE);
-//            switchRefresh(true);
             if (!swipeRefreshLayout.isRefreshing())
                 swipeRefreshLayout.setRefreshing(true);
         } else {
@@ -108,22 +111,6 @@ public class NewsListFragment extends Fragment implements NewsListLoader.UpdateN
             errorText.setVisibility(View.VISIBLE);
         }
     }
-
-    private void switchRefresh(final boolean refresh) {
-        if (swipeRefreshLayout.isRefreshing() != refresh) {
-            swipeRefreshLayout.post(new Runnable() {
-                @Override
-                public void run() {
-                    swipeRefreshLayout.setRefreshing(refresh);
-                    Log.d("NEWS", "refresh set to " + refresh);
-                }
-            });
-        }
-
-//        swipeRefreshLayout.measure(View.MEASURED_SIZE_MASK,View.MEASURED_HEIGHT_STATE_SHIFT);
-//        swipeRefreshLayout.setRefreshing(refresh);
-    }
-
 
     @Override
     public void update() {
@@ -139,7 +126,7 @@ public class NewsListFragment extends Fragment implements NewsListLoader.UpdateN
     public void setFilterOnlyNew(boolean onlyNew) {
         NewsListLoader.getInstance().setOnlyNotRead(onlyNew);
         NewsListLoader.getInstance().getAllNewsFromDB();
-        adapter.notifyDataSetChanged();
+        update();
     }
 
     public void setFilterSource(SourceModelItem source) {

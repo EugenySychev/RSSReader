@@ -61,6 +61,7 @@ public class NewsListAdapter extends RecyclerView.Adapter<NewsListAdapter.NewsIt
                 return Long.compare(t1.getTime(), t2.getTime());
             }
         });
+        Collections.reverse(newsList);
     }
 
     public class NewsItemView extends  RecyclerView.ViewHolder implements View.OnClickListener {

@@ -193,9 +193,12 @@ public class NewsListLoader {
     }
 
     public void getAllNewsFromDB() {
-        for (SourceModelItem source : getListSource())
-            getNewsFromDB(source);
-
+        if (filterSource == null) {
+            for (SourceModelItem source : getListSource())
+                getNewsFromDB(source);
+        } else {
+            getNewsFromDB(filterSource);
+        }
     }
 
     public void requestUpdateAllNews() throws MalformedURLException {

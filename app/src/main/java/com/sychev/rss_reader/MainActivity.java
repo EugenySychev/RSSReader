@@ -41,11 +41,12 @@ public class MainActivity extends AppCompatActivity implements NewsListLoader.Up
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        ImageCache.getInstance().setCacheDir(getCacheDir());
-        drawerLayout = findViewById(R.id.drawer_layout);
-        NavigationView navigationView = findViewById(R.id.nav_view);
         NewsListLoader.getInstance().init(this);
         NewsListLoader.getInstance().addNotifier(this);
+        ImageCache.getInstance().setCacheDir(getCacheDir());
+
+        drawerLayout = findViewById(R.id.drawer_layout);
+        NavigationView navigationView = findViewById(R.id.nav_view);
         mAppBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.nav_home)
                 .build();
