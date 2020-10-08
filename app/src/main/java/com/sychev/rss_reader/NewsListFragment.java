@@ -58,6 +58,17 @@ public class NewsListFragment extends Fragment implements NewsListLoader.UpdateN
                 } catch (MalformedURLException e) {
                     e.printStackTrace();
                 }
+//                swipeRefreshLayout.postDelayed(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        if (swipeRefreshLayout != null) {
+//                            swipeRefreshLayout.setRefreshing(false);
+//                            swipeRefreshLayout.stopNestedScroll();
+//                            swipeRefreshLayout.clearAnimation();
+//                            Toast.makeText(getContext(), "Refresh", Toast.LENGTH_SHORT).show();
+//                        }
+//                    }
+//                }, 2000);
             }
         });
 

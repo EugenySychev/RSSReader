@@ -16,15 +16,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-        <activity
-            android:name=".SettingsActivity"
-            android:label="@string/title_activity_settings"></activity>
-
         <meta-data
             android:name="com.google.android.wearable.standalone"
             android:value="true" />
 
-        <activity android:name=".SourceListActivity" />
+        <activity android:name=".SourceListActivity"></activity>
         <activity android:name=".SetupSourceActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
