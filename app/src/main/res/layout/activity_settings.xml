@@ -20,6 +20,8 @@
         <androidx.appcompat.widget.SwitchCompat
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:id="@+id/dark_theme_switcher"
+            android:textSize="@dimen/text_size"
             android:padding="@dimen/activity_vertical_padding"
             android:text="@string/use_dark_theme" />
     </LinearLayout>
