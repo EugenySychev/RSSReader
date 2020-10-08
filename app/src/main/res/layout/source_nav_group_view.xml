@@ -13,5 +13,6 @@
         android:id="@+id/nav_category_title"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:textSize="@dimen/text_size"
         android:layout_marginLeft="@dimen/activity_vertical_padding"/>
 </LinearLayout>

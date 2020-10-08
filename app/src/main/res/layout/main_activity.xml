@@ -28,10 +28,28 @@
 
             <include layout="@layout/nav_header_main" />
 
+            <View
+                android:id="@+id/divider"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="?android:attr/listDivider" />
+
             <ExpandableListView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/nav_list_view" />
+
+            <View
+                android:id="@+id/divider2"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="?android:attr/listDivider" />
+
+            <ListView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/nav_menu_list" />
+
 
         </LinearLayout>
     </com.google.android.material.navigation.NavigationView>

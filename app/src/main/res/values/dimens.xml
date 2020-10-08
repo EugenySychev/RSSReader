@@ -21,6 +21,8 @@
     inner_frame_layout_padding (below variable) on round screens.
     -->
     <dimen name="inner_frame_layout_padding">5dp</dimen>
+    <dimen name="item_list_layout_padding">10dp</dimen>
     <dimen name="app_bar_height">180dp</dimen>
     <dimen name="text_size">18dp</dimen>
+    <dimen name="nav_menu_icon_size">30dp</dimen>
 </resources>

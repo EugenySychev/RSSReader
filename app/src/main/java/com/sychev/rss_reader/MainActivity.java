@@ -1,12 +1,18 @@
 package com.sychev.rss_reader;
 
+import android.app.Activity;
+import android.app.ActivityOptions;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ExpandableListView;
+import android.widget.ListView;
+import android.widget.SimpleAdapter;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -24,6 +30,8 @@ import androidx.navigation.ui.NavigationUI;
 import com.google.android.material.navigation.NavigationView;
 
 import java.net.MalformedURLException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements NewsListLoader.UpdateNotifier {
@@ -78,12 +86,6 @@ public class MainActivity extends AppCompatActivity implements NewsListLoader.Up
 
 
         switch (item.getItemId()) {
-            case R.id.action_settings:
-                intent = new Intent(this, SetupSourceActivity.class);
-                intent.putExtra("selected_category", 1);
-                intent.putExtra("url_for_edit", "http://gazeta.sru");
-                startActivityForResult(intent, SETUP_ACTIVITY_REQUEST_CODE);
-                break;
             case R.id.action_sources:
                 intent = new Intent(this, SourceListActivity.class);
                 startActivity(intent);
@@ -196,6 +198,31 @@ public class MainActivity extends AppCompatActivity implements NewsListLoader.Up
                 }
 
                 return false;
+            }
+        });
+
+        ArrayList<HashMap<String, String>> arrayList = new ArrayList<>();
+
+        HashMap<String, String> hashMap = new HashMap<>();
+        hashMap.put("title", getString(R.string.action_settings));
+        hashMap.put("image", String.valueOf(R.drawable.ic_baseline_settings_24));
+        arrayList.add(hashMap);
+
+        String[] from = {"title", "image"};
+        int[] to = {R.id.nav_menu_item_title, R.id.nav_menu_item_icon };//int array of views id's
+        SimpleAdapter simpleAdapter = new SimpleAdapter(this, arrayList, R.layout.nav_menu_list_item_view, from, to);//Create object and set the parameters for simpleAdapter
+        final Activity activity = this;
+        ListView navListView = findViewById(R.id.nav_menu_list);
+        navListView.setAdapter(simpleAdapter);
+        navListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                if (i == 0)
+                {
+                    Intent intent = new Intent(getBaseContext(), SettingsActivity.class);
+                    startActivity(intent,
+                            ActivityOptions.makeSceneTransitionAnimation(activity).toBundle());
+                }
             }
         });
     }
