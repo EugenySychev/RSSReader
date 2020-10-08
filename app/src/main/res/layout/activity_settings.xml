@@ -14,7 +14,7 @@
             android:id="@+id/settings_activity_toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimaryDark"
+            android:elevation="@dimen/elevation_size"
             android:padding="@dimen/inner_frame_layout_padding" />
 
         <androidx.appcompat.widget.SwitchCompat

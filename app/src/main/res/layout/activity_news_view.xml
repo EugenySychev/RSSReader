@@ -16,8 +16,9 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:padding="@dimen/inner_frame_layout_padding"
+            android:elevation="@dimen/elevation_size"
             android:background="?attr/colorPrimaryDark"
-            app:popupTheme="@style/AppTheme.AppBarOverlay" />
+            app:popupTheme="@style/AppTheme" />
 
         <ScrollView
             android:layout_width="match_parent"

@@ -1,29 +1,27 @@
 <resources>
 
-    <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
+    <style name="AppTheme" parent="Theme.AppCompat.DayNight.DarkActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:windowTranslucentNavigation">true</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
     </style>
 
-    <style name="AppTheme.NoActionBar">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
+    <style name="newsListTitleText" parent="Widget.AppCompat.ListView">
+        <item name="android:textColor">@color/colorText</item>
+        <item name="android:textSize">@dimen/newsListTitleSize</item>
+    </style>
+    <style name="newsListDescriptionText" parent="Widget.AppCompat.ListView">
+        <item name="android:textColor">@color/colorText</item>
+        <item name="android:textSize">@dimen/newsListDescriptionSize</item>
+    </style>
+    <style name="newsListTimeText" parent="Widget.AppCompat.ListView">
+        <item name="android:textColor">@color/colorText</item>
+        <item name="android:textSize">@dimen/newsListTimeSize</item>
     </style>
 
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
-
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
-
-    <style name="NoActionBar">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
+    <style name="newsListView" parent="android:style/Widget.ListView">
+        <item name="background">@color/colorBackground</item>
     </style>
-
-    <style name="AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
-
-    <style name="PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
-
 </resources>

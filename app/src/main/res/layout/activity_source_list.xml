@@ -16,10 +16,9 @@
             android:id="@+id/source_list_view_toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimaryDark"
+            android:elevation="@dimen/elevation_size"
             android:padding="@dimen/inner_frame_layout_padding"
-            app:menu="@menu/source_list_view_menu"
-            app:popupTheme="@style/AppTheme.AppBarOverlay" />
+            app:menu="@menu/source_list_view_menu" />
 
         <ExpandableListView
             android:id="@+id/source_list_view"

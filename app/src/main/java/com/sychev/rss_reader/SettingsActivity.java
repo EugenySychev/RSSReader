@@ -1,6 +1,7 @@
 package com.sychev.rss_reader;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.appcompat.widget.Toolbar;
 
@@ -46,8 +47,8 @@ public class SettingsActivity extends AppCompatActivity {
     private void updateReference() {
         SharedPreferences.Editor editor = preferences.edit();
         editor.putBoolean("DarkTheme", useDarkTheme);
-        editor.commit();
-
+        editor.apply();
+        super.setTheme(useDarkTheme ? R.style.ThemeOverlay_AppCompat_Dark : R.style.Theme_AppCompat_Light);
     }
 
     private void loadReference() {
