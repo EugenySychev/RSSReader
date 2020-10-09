@@ -41,4 +41,16 @@
         <item name="android:background">@color/colorBackground</item>
     </style>
 
+    <style name="AlertDialogCustom" parent="Theme.AppCompat.DayNight.Dialog.Alert">
+        <item name="android:textColorPrimary">@color/colorText</item>
+<!--        <item name="colorAccent">@color/colorText</item>-->
+<!--        <item name="android:background">@color/colorBackground</item>-->
+    </style>
+    <style name="MyDarkToolbarStyle" parent="@style/Widget.AppCompat.Spinner.DropDown.ActionBar">
+        <item name="background">?android:selectableItemBackground</item>
+        <item name="android:popupBackground">@color/colorBackground</item>
+        <item name="android:dropDownSelector">?android:selectableItemBackground</item>
+        <item name="android:divider">@color/colorText</item>
+        <item name="android:overlapAnchor">true</item>
+    </style>
 </resources>

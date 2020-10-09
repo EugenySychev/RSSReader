@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -98,6 +99,13 @@ public class SourceListAdapter extends BaseExpandableListAdapter {
         TextView listTitleTextView = (TextView) view.findViewById(R.id.categoryTitle);
         listTitleTextView.setTypeface(null, Typeface.BOLD);
         listTitleTextView.setText(listTitle);
+
+        ImageView imageView = view.findViewById(R.id.setup_source_group_exp_icon);
+        if (b)
+            imageView.setImageResource(R.drawable.ic_baseline_arrow_drop_down_24);
+        else
+            imageView.setImageResource(R.drawable.ic_baseline_arrow_right_24);
+
         return view;
     }
 
@@ -125,27 +133,4 @@ public class SourceListAdapter extends BaseExpandableListAdapter {
         return true;
     }
 
-    public void addItem(String category, Pair<String, String> item) {
-
-        if (!expandableListTitle.contains(category)) {
-            expandableListTitle.add(category);
-            expandableListDetail.put(category, new ArrayList<Pair<String, String>>());
-        }
-
-        List<Pair<String, String>> list = expandableListDetail.get(category);
-        list.add(item);
-        expandableListDetail.put(category, list);
-    }
-
-    public void removeItem(String category, Pair<String, String> item) {
-        for (Map.Entry<String, List<Pair<String, String>>> listItems : expandableListDetail.entrySet()) {
-            if (listItems.getValue().contains(item)) {
-                expandableListDetail.remove(listItems.getKey(), listItems.getValue());
-                if (expandableListDetail.get(listItems.getKey()).size() == 0) {
-                    expandableListDetail.remove(listItems.getKey());
-                    expandableListTitle.remove(listItems.getKey());
-                }
-            }
-        }
-    }
 }

@@ -8,6 +8,7 @@ import android.os.Looper;
 import android.os.Message;
 import android.util.Pair;
 import android.view.ContextMenu;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -35,13 +36,15 @@ public class SourceListActivity extends AppCompatActivity implements NewsListLoa
     protected void onCreate(Bundle savedInstanceState) {
         int nightMode = getSharedPreferences(Utils.APP_SETTINGS, 0).getInt(Utils.NIGHT_MODE_SETTINGS_NAME, AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
         AppCompatDelegate.setDefaultNightMode(nightMode);
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_source_list);
         sourceList = NewsListLoader.getInstance().getListSource();
 
         ExpandableListView listView = findViewById(R.id.source_list_view);
-        listAdapter = new SourceListAdapter(getApplicationContext(), sourceList);
+        listAdapter = new SourceListAdapter(this, sourceList);
         listView.setAdapter(listAdapter);
+        listView.setGroupIndicator(null);
 
         for (int i = 0; i < listAdapter.getGroupCount(); i++)
             listView.expandGroup(i);
@@ -78,7 +81,7 @@ public class SourceListActivity extends AppCompatActivity implements NewsListLoa
     }
 
     private void showAddSourceDialog(Context context) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.AlertDialogCustom));
         builder.setTitle(R.string.enter_source_title);
 
         final View v;

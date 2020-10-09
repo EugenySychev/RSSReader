@@ -12,28 +12,32 @@
 
         <EditText
             android:id="@+id/enter_source_url_edit_text"
+            style="@style/newsListTitleText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:autofillHints="https://source.org/rss.xml"
             android:inputType="textWebEditText"
-            android:text="https://www.gazeta.ru/export/rss/first.xml"
-            tools:ignore="TextFields"
             android:labelFor="@id/enter_source_url_edit_text"
-            android:autofillHints="https://source.org/rss.xml" />
+            android:text="https://www.gazeta.ru/export/rss/first.xml"
+            tools:ignore="TextFields" />
 
         <TextView
+            style="@style/newsListTitleText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
-            android:text="@string/select_category_title"
-            android:textSize="18dp"/>
+            android:text="@string/select_category_title" />
+
         <Spinner
             android:id="@+id/spinner_category"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
             android:layout_weight="1"
-            android:entries="@array/categories" />
-
+            android:entries="@array/categories"
+            android:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+            android:theme="@style/ThemeOverlay.AppCompat.DayNight.ActionBar"
+            />
 
     </LinearLayout>
 </RelativeLayout>

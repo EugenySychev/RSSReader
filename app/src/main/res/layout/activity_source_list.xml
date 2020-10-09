@@ -10,7 +10,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:isScrollContainer="true"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        style="@style/navigationView">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/source_list_view_toolbar"
@@ -24,10 +25,6 @@
         <ExpandableListView
             android:id="@+id/source_list_view"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:divider="@android:color/darker_gray"
-            android:dividerHeight="0.5dp"
-            android:background="@color/colorBackground"
-            android:indicatorLeft="?android:attr/expandableListPreferredItemIndicatorLeft" />
+            android:layout_height="match_parent" />
     </LinearLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

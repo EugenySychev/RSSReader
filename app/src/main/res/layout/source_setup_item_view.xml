@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="@dimen/text_margin"
-    android:orientation="vertical">
+    android:orientation="vertical" >
     <TextView
         android:id="@+id/source_title"
         android:layout_width="match_parent"
@@ -13,5 +13,5 @@
         android:id="@+id/source_url"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        style="@style/newsListDescriptionText"/>
+        style="@style/newsListTimeText"/>
 </LinearLayout>
