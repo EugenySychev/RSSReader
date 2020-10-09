@@ -10,15 +10,15 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:background="@color/colorBackground" >
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/news_view_toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:padding="@dimen/inner_frame_layout_padding"
             android:elevation="@dimen/elevation_size"
-            android:background="?attr/colorPrimaryDark"
-            app:popupTheme="@style/AppTheme" />
+            app:theme="@style/toolbarStyle"  />
 
         <ScrollView
             android:layout_width="match_parent"
@@ -27,7 +27,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical" >
+                android:orientation="vertical"
+                android:background="@color/colorBackground">
 
                 <ImageView
                     android:id="@+id/imageNewView"
@@ -41,13 +42,15 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/text_margin"
                     android:text="@string/app_name"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    style="@style/newsDigestText"/>
 
                 <TextView
                     android:id="@+id/news_text_content"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/text_margin"  />
+                    android:layout_margin="@dimen/text_margin"
+                    style="@style/newsDigestText"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -60,7 +63,8 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="10dp"
                         android:layout_weight="1"
-                        android:text="@string/share" />
+                        android:text="@string/share"
+                        style="@style/Theme.AppCompat.DayNight"/>
 
                     <Button
                         android:id="@+id/open_site_button"
@@ -68,7 +72,8 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="10dp"
                         android:layout_weight="1"
-                        android:text="@string/open_site" />
+                        android:text="@string/open_site"
+                        style="@style/Theme.AppCompat.DayNight"/>
                 </LinearLayout>
             </LinearLayout>
         </ScrollView>
