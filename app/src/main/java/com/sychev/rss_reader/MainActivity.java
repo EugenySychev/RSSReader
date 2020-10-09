@@ -222,6 +222,8 @@ public class MainActivity extends AppCompatActivity implements NewsListLoader.Up
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 if (i == 0)
                 {
+                    drawerLayout.close();
+
                     Intent intent = new Intent(getBaseContext(), SettingsActivity.class);
                     startActivity(intent,
                             ActivityOptions.makeSceneTransitionAnimation(activity).toBundle());

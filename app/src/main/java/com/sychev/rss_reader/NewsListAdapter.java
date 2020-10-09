@@ -32,7 +32,7 @@ public class NewsListAdapter extends RecyclerView.Adapter<NewsListAdapter.NewsIt
 
     NewsListAdapter(Context context, List<NewsModelItem> list) {
         inflater = LayoutInflater.from(context);
-        newsList = list;
+        setList(list);
     }
 
     @NonNull
