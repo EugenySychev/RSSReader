@@ -8,5 +8,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:paddingLeft="?android:attr/expandableListPreferredItemPaddingLeft"
-        android:layout_margin="@dimen/text_margin"/>
+        android:layout_margin="@dimen/text_margin"
+        android:text="@string/stub_text"
+        style="@style/newsListTitleText"/>
 </LinearLayout>

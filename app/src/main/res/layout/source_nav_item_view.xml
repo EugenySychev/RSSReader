@@ -9,13 +9,15 @@
         android:layout_height="wrap_content"
         android:text="some_shit"
         android:paddingLeft="40dp"
-        android:id="@+id/source_nav_item_title" />
+        android:id="@+id/source_nav_item_title"
+        style="@style/newsListTitleText"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textStyle="bold"
         android:text="0"
         android:layout_gravity="end"
-        android:id="@+id/source_nav_item_counter" />
+        android:id="@+id/source_nav_item_counter"
+        style="@style/newsListUnreadCounter"/>
 
 </GridLayout>

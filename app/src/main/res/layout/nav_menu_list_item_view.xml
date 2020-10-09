@@ -1,19 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:theme="@style/newsListTitleText">
     <ImageView
         android:layout_width="@dimen/nav_menu_icon_size"
         android:layout_height="@dimen/nav_menu_icon_size"
         android:layout_margin="@dimen/item_list_layout_padding"
         android:src="@drawable/ic_baseline_settings_24"
-        android:id="@+id/nav_menu_item_icon" />
+        android:id="@+id/nav_menu_item_icon"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/nav_menu_item_title"
         android:padding="@dimen/item_list_layout_padding"
         android:text="@string/action_settings"
-        android:textSize="@dimen/text_size"/>
+        android:textSize="@dimen/text_size"
+        style="@style/newsListTitleText"/>
 
 </LinearLayout>

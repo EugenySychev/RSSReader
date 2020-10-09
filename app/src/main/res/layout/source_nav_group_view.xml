@@ -3,7 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="@dimen/activity_vertical_padding">
+    android:padding="@dimen/activity_vertical_padding"
+    android:background="@color/colorBackground">
     <ImageView
         android:id="@+id/nav_expanded_icon"
         android:layout_width="18dp"
@@ -14,5 +15,6 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:textSize="@dimen/text_size"
-        android:layout_marginLeft="@dimen/activity_vertical_padding"/>
+        android:layout_marginLeft="@dimen/activity_vertical_padding"
+        style="@style/newsListTitleText"/>
 </LinearLayout>

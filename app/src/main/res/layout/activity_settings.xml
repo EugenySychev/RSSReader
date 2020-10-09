@@ -15,10 +15,10 @@
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/settings_activity_toolbar"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
+            android:layout_height="wrap_content"
             android:elevation="@dimen/elevation_size"
-            android:padding="@dimen/inner_frame_layout_padding"
-            style="@style/toolbarStyle"/>
+            app:title="@string/action_settings"
+            app:theme="@style/toolbarStyle" />
 
         <androidx.appcompat.widget.SwitchCompat
             android:layout_width="match_parent"

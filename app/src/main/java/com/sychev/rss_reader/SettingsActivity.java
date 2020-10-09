@@ -1,5 +1,6 @@
 package com.sychev.rss_reader;
 
+import android.animation.LayoutTransition;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -28,7 +29,7 @@ public class SettingsActivity extends AppCompatActivity {
         preferences = getSharedPreferences(Utils.APP_SETTINGS, MODE_PRIVATE);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.settings_activity_toolbar);
-        toolbar.setTitle(R.string.action_settings);
+        toolbar.setLayoutTransition(new LayoutTransition());
         setSupportActionBar(toolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);

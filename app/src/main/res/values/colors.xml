@@ -6,4 +6,5 @@
     <color name="colorPrimaryNight">#000000</color>
     <color name="colorText">#000000</color>
     <color name="colorBackground">#FFFFFF</color>
+    <color name="counterBackground">#999999</color>
 </resources>

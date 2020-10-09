@@ -19,6 +19,7 @@ import android.widget.Spinner;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
 
 import java.net.MalformedURLException;
@@ -32,6 +33,8 @@ public class SourceListActivity extends AppCompatActivity implements NewsListLoa
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        int nightMode = getSharedPreferences(Utils.APP_SETTINGS, 0).getInt(Utils.NIGHT_MODE_SETTINGS_NAME, AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+        AppCompatDelegate.setDefaultNightMode(nightMode);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_source_list);
         sourceList = NewsListLoader.getInstance().getListSource();
