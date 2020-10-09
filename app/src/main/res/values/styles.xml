@@ -2,10 +2,12 @@
 
     <style name="AppTheme" parent="Theme.AppCompat.DayNight.DarkActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
+
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:windowTranslucentNavigation">true</item>
         <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:background">@color/colorBackground</item>
     </style>
 
     <style name="newsListTitleText" parent="Widget.AppCompat.ListView">
@@ -21,7 +23,15 @@
         <item name="android:textSize">@dimen/newsListTimeSize</item>
     </style>
 
-    <style name="newsListView" parent="android:style/Widget.ListView">
-        <item name="background">@color/colorBackground</item>
+    <style name="toolbarStyle" parent="Widget.AppCompat.Toolbar">
+        <item name="android:background">@color/colorBackground</item>
+        <item name="android:textColor">@color/colorText</item>
+        <item name="titleTextColor">@color/colorText</item>
     </style>
+
+    <style name="navigationView" >
+        <item name="android:textColor">@color/colorText</item>
+        <item name="android:background">@color/colorBackground</item>
+    </style>
+
 </resources>

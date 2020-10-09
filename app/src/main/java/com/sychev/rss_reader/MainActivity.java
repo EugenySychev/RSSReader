@@ -44,7 +44,8 @@ public class MainActivity extends AppCompatActivity implements NewsListLoader.Up
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        AppCompatDelegate.setDefaultNightMode( AppCompatDelegate.MODE_NIGHT_YES );
+        int nightMode = getSharedPreferences(Utils.APP_SETTINGS, 0).getInt(Utils.NIGHT_MODE_SETTINGS_NAME, AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+        AppCompatDelegate.setDefaultNightMode( nightMode );
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
 

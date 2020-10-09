@@ -7,6 +7,9 @@ import java.util.Calendar;
 
 public class Utils {
 
+    public static final String NIGHT_MODE_SETTINGS_NAME = "NightMode";
+    public static final String APP_SETTINGS = "RSSReadSettings";
+
     public static String cropTextWithPoints(String source, int length) {
         if (source == null)
             return "Some shit";

@@ -2,8 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_column="2"
-    style="@style/newsListView" >
+    android:layout_column="2" >
 
     <ImageView
         android:id="@+id/pix"

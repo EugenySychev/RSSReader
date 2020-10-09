@@ -1,13 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorPrimary">#FFFFFF</color>
+    <color name="colorPrimaryDark">#FFFFFF</color>
     <color name="colorAccent">#FF4081</color>
-    <color name="colorPrimaryNight">#11111D</color>
-    <color name="colorPrimaryDarkNight">#DDDDDD</color>
-    <color name="colorAccentNight">#888888</color>
-    <color name="colorText" tools:ignore="MissingDefaultResource">#111111</color>
-
-    <color name="colorBackground">#EEEEEE</color>
-    <color name="bg_dark">#000000</color>
+    <color name="colorPrimaryNight">#000000</color>
+    <color name="colorText">#000000</color>
+    <color name="colorBackground">#FFFFFF</color>
 </resources>
