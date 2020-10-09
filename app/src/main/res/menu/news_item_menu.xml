@@ -7,13 +7,13 @@
     <item
         android:id="@+id/action_increase_size"
         android:orderInCategory="300"
-        android:icon="@drawable/format_font_size_increase_icon"
+        android:icon="@drawable/ic_baseline_arrow_drop_up_24"
         app:showAsAction="ifRoom"
         android:title="@string/increase" />
     <item
         android:id="@+id/action_decrease_size"
         android:orderInCategory="300"
-        android:icon="@drawable/format_font_size_decrease_icon"
+        android:icon="@drawable/ic_baseline_arrow_drop_down_24"
         app:showAsAction="ifRoom"
         android:title="@string/decrease" />
 </menu>
