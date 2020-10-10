@@ -92,11 +92,11 @@ public class NewsListLoader {
         notifierList.remove(notifier);
     }
 
-    public void requestUpdateListSource(final SourceModelItem source) throws MalformedURLException {
+    public void requestUpdateListSource(final SourceModelItem source) {
         if (!sourceList.contains(source))
             sourceList.add(source);
 
-        final NewsNetworkLoader loader = new NewsNetworkLoader(new URL(source.getUrl()));
+        final NewsNetworkLoader loader = new NewsNetworkLoader(source);
         getNewsFromDB(source);
         Handler handler = new Handler(Looper.getMainLooper()) {
             @Override
@@ -201,7 +201,7 @@ public class NewsListLoader {
         }
     }
 
-    public void requestUpdateAllNews() throws MalformedURLException {
+    public void requestUpdateAllNews() {
         if (sourceList.isEmpty())
             loadSourceListFromDB();
         for (SourceModelItem source : sourceList) {

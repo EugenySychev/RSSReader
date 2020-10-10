@@ -1,12 +1,17 @@
 package com.sychev.rss_reader;
 
+import android.graphics.Bitmap;
+import android.media.Image;
+
 import java.io.Serializable;
 
 public class SourceModelItem implements Serializable {
 
     private String url;
-    private String title;
+    private String title = " ";
     private NewsModelItem.Categories category;
+    private Bitmap icon;
+    private String iconUrl = " ";
     private int unreadCount;
     private boolean updated;
 
@@ -48,5 +53,21 @@ public class SourceModelItem implements Serializable {
 
     public void setUnreadCount(int unreadCount) {
         this.unreadCount = unreadCount;
+    }
+
+    public Bitmap getIcon() {
+        return icon;
+    }
+
+    public void setIcon(Bitmap icon) {
+        this.icon = icon;
+    }
+
+    public String getIconUrl() {
+        return iconUrl;
+    }
+
+    public void setIconUrl(String iconUrl) {
+        this.iconUrl = iconUrl;
     }
 }

@@ -27,6 +27,8 @@ import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.xml.transform.Source;
+
 public class SourceListActivity extends AppCompatActivity implements NewsListLoader.UpdateNotifier {
 
     private List<SourceModelItem> sourceList = new ArrayList<>();
@@ -176,28 +178,30 @@ public class SourceListActivity extends AppCompatActivity implements NewsListLoa
     }
 
     private void addSource(final String source, final NewsModelItem.Categories category) throws MalformedURLException {
-        final SourceNetworkLoader networkLoader = new SourceNetworkLoader(source);
-        final SourceModelItem item = new SourceModelItem();
-        Handler handler = new Handler(Looper.getMainLooper()) {
-            @Override
-            public void handleMessage(Message msg) {
-                if (msg.what == NewsNetworkLoader.LoadState.LOAD_OK) {
-                    item.setTitle(networkLoader.getTitle());
-                    item.setCategory(category);
-                    item.setUrl(source);
-                    NewsListLoader.getInstance().addSource(item);
-                    listAdapter.notifyDataSetChanged();
-                    try {
-                        NewsListLoader.getInstance().requestUpdateListSource(item);
-                    } catch (MalformedURLException e) {
-                        e.printStackTrace();
-                    }
-                }
-                super.handleMessage(msg);
-            }
-        };
-        networkLoader.setHandler(handler);
-        networkLoader.start();
+        SourceModelItem sourceModelItem = new SourceModelItem();
+        sourceModelItem.setUrl(source);
+        sourceModelItem.setCategory(category);
+        NewsListLoader.getInstance().addSource(sourceModelItem);
+        NewsListLoader.getInstance().requestUpdateListSource(sourceModelItem);
+
+        //        final SourceNetworkLoader networkLoader = new SourceNetworkLoader(source);
+//        final SourceModelItem item = new SourceModelItem();
+//        Handler handler = new Handler(Looper.getMainLooper()) {
+//            @Override
+//            public void handleMessage(Message msg) {
+//                if (msg.what == NewsNetworkLoader.LoadState.LOAD_OK) {
+//                    item.setTitle(networkLoader.getTitle());
+//                    item.setCategory(category);
+//                    item.setUrl(source);
+//                    NewsListLoader.getInstance().addSource(item);
+//                    listAdapter.notifyDataSetChanged();
+//                    NewsListLoader.getInstance().requestUpdateListSource(item);
+//                }
+//                super.handleMessage(msg);
+//            }
+//        };
+//        networkLoader.setHandler(handler);
+//        networkLoader.start();
     }
 
     @Override

@@ -13,6 +13,7 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
@@ -24,15 +25,16 @@ import java.util.Locale;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Source;
 
 public class NewsNetworkLoader extends Thread {
     private List<NewsModelItem> loadedList;
-    private int timeout;
+    private SourceModelItem sourceItem;
     private URL source;
     private Handler handler;
 
-    NewsNetworkLoader(URL source) {
-        this.source = source;
+    NewsNetworkLoader(SourceModelItem source) {
+        sourceItem = source;
         loadedList = new ArrayList<>();
     }
 
@@ -44,11 +46,25 @@ public class NewsNetworkLoader extends Thread {
         handler.sendMessage(startLoadMsg);
 
         try {
+            source = new URL(sourceItem.getUrl());
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
             DocumentBuilder db = dbf.newDocumentBuilder();
             Document doc = db.parse(new InputSource(source.openStream()));
             doc.getDocumentElement().normalize();
 
+            if (sourceItem.getTitle() == null) {
+                Element elem = (Element) doc.getElementsByTagName("channel").item(0);
+                sourceItem.setTitle(getValueFromElement(elem, "title"));
+            }
+
+            if (sourceItem.getIcon() == null) {
+                URL iconSource = new URL(source.getHost() + "/favicon.ico");
+                Bitmap icon = BitmapFactory.decodeStream(iconSource.openConnection().getInputStream());
+                if (icon != null) {
+                    sourceItem.setIcon(icon);
+                    sourceItem.setIconUrl(iconSource.toString());
+                }
+            }
             NodeList nodeList = doc.getElementsByTagName("item");
             System.out.printf("Readed %d elements", nodeList.getLength());
 
