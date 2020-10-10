@@ -58,7 +58,7 @@ public class SourceListActivity extends AppCompatActivity implements NewsListLoa
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-
+        NewsListLoader.getInstance().addNotifier(this);
     }
 
     @Override

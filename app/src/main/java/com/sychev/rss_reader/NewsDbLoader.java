@@ -142,6 +142,15 @@ public class NewsDbLoader {
             item.setCategory(NewsModelItem.Categories.fromInteger(cursor.getInt(cursor.getColumnIndexOrThrow(NewsDbHelper.SourceEntry.COLUMN_NAME_CATEGORY))));
             item.setUrl(cursor.getString(cursor.getColumnIndexOrThrow(NewsDbHelper.SourceEntry.COLUMN_NAME_URL)));
             item.setTitle(cursor.getString(cursor.getColumnIndexOrThrow(NewsDbHelper.SourceEntry.COLUMN_NAME_TITLE)));
+            item.setIconUrl(cursor.getString(cursor.getColumnIndexOrThrow(NewsDbHelper.SourceEntry.COLUMN_NAME_ICON_URL)));
+            if (item.getTitle() == null)
+                item.setTitle(item.getUrl());
+            if (item.getIconUrl() != null) {
+                Bitmap loadedBitmap = ImageCache.getInstance().retrieveBitmapFromCache(item.getIconUrl());
+                if (loadedBitmap != null) {
+                    item.setIcon(loadedBitmap);
+                }
+            }
             list.add(item);
         }
         cursor.close();
@@ -155,6 +164,7 @@ public class NewsDbLoader {
         values.put(NewsDbHelper.SourceEntry.COLUMN_NAME_TITLE, item.getTitle());
         values.put(NewsDbHelper.SourceEntry.COLUMN_NAME_CATEGORY, NewsModelItem.Categories.toInt(item.getCategory()));
         values.put(NewsDbHelper.SourceEntry.COLUMN_NAME_URL, item.getUrl());
+        values.put(NewsDbHelper.SourceEntry.COLUMN_NAME_ICON_URL, item.getIconUrl());
 
         long newRowId = db.insert(NewsDbHelper.SourceEntry.TABLE_NAME, null, values);
 
@@ -175,5 +185,20 @@ public class NewsDbLoader {
 
         String[] selectionArgs = { source.getUrl() };
         return db.delete(NewsDbHelper.FeedEntry.TABLE_NAME, selection, selectionArgs) >= 0;
+    }
+
+    public boolean updateSource(SourceModelItem source) {
+        SQLiteDatabase db =  dbHelper.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(NewsDbHelper.SourceEntry.COLUMN_NAME_TITLE, source.getTitle());
+        values.put(NewsDbHelper.SourceEntry.COLUMN_NAME_CATEGORY, NewsModelItem.Categories.toInt(source.getCategory()));
+        values.put(NewsDbHelper.SourceEntry.COLUMN_NAME_URL, source.getUrl());
+        values.put(NewsDbHelper.SourceEntry.COLUMN_NAME_ICON_URL, source.getIconUrl());
+
+        String selection = NewsDbHelper.SourceEntry.COLUMN_NAME_URL + " LIKE ?";
+        String[] selectionArgs = { source.getUrl() };
+        long newRowId = db.update(NewsDbHelper.SourceEntry.TABLE_NAME, values, selection, selectionArgs);
+
+        return newRowId > 0;
     }
 }

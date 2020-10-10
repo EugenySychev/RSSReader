@@ -93,7 +93,7 @@ public class NewsListLoader {
     }
 
     public void requestUpdateListSource(final SourceModelItem source) {
-        if (!sourceList.contains(source))
+        if (!sourceList.contains(source) && source.getTitle() != null)
             sourceList.add(source);
 
         final NewsNetworkLoader loader = new NewsNetworkLoader(source);
@@ -103,6 +103,19 @@ public class NewsListLoader {
             public void handleMessage(Message msg) {
                 if (msg.what == NewsNetworkLoader.LoadState.LOAD_OK) {
                     NewsNetworkLoader loader = (NewsNetworkLoader) msg.obj;
+                    if (((NewsNetworkLoader) msg.obj).isNeedUpdateSource()) {
+                        dbLoader.updateSource(source);
+                        boolean updated = false;
+                        for (SourceModelItem item: sourceList) {
+                            if (item.getUrl() == source.getUrl()) {
+                                sourceList.set(sourceList.indexOf(item), source);
+                                updated = true;
+                            }
+                        }
+
+                        if (!updated)
+                            sourceList.add(source);
+                    }
                     List<NewsModelItem> notSavedList = new ArrayList<>();
                     for (NewsModelItem item : loader.getLoadedList()) {
                         boolean notInList = true;

@@ -32,6 +32,7 @@ public class NewsNetworkLoader extends Thread {
     private SourceModelItem sourceItem;
     private URL source;
     private Handler handler;
+    private boolean needUpdateSource = false;
 
     NewsNetworkLoader(SourceModelItem source) {
         sourceItem = source;
@@ -46,23 +47,32 @@ public class NewsNetworkLoader extends Thread {
         handler.sendMessage(startLoadMsg);
 
         try {
+            needUpdateSource = false;
             source = new URL(sourceItem.getUrl());
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
             DocumentBuilder db = dbf.newDocumentBuilder();
             Document doc = db.parse(new InputSource(source.openStream()));
             doc.getDocumentElement().normalize();
 
-            if (sourceItem.getTitle() == null) {
-                Element elem = (Element) doc.getElementsByTagName("channel").item(0);
-                sourceItem.setTitle(getValueFromElement(elem, "title"));
+//            if (sourceItem.getTitle() == null) {
+            Element elem = (Element) doc.getElementsByTagName("channel").item(0);
+            String title = getValueFromElement(elem, "title");
+            if (!title.equals(sourceItem.getTitle())) {
+                sourceItem.setTitle(title);
+                needUpdateSource = true;
             }
 
+
+//            }
+
             if (sourceItem.getIcon() == null) {
-                URL iconSource = new URL(source.getHost() + "/favicon.ico");
+                URL iconSource = new URL(source.getProtocol() + "://" + source.getHost() + "/favicon.ico");
                 Bitmap icon = BitmapFactory.decodeStream(iconSource.openConnection().getInputStream());
                 if (icon != null) {
                     sourceItem.setIcon(icon);
                     sourceItem.setIconUrl(iconSource.toString());
+                    ImageCache.getInstance().saveBitmapToCahche(iconSource.toString(), icon);
+
                 }
             }
             NodeList nodeList = doc.getElementsByTagName("item");
@@ -154,6 +164,10 @@ public class NewsNetworkLoader extends Thread {
 
     public List<NewsModelItem> getLoadedList() {
         return loadedList;
+    }
+
+    public boolean isNeedUpdateSource() {
+        return needUpdateSource;
     }
 
     interface LoadState {

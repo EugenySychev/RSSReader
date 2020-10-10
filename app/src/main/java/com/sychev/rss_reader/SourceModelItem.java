@@ -8,10 +8,10 @@ import java.io.Serializable;
 public class SourceModelItem implements Serializable {
 
     private String url;
-    private String title = " ";
+    private String title;
     private NewsModelItem.Categories category;
     private Bitmap icon;
-    private String iconUrl = " ";
+    private String iconUrl;
     private int unreadCount;
     private boolean updated;
 

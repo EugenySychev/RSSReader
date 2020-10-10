@@ -41,6 +41,7 @@ public class NewsDbHelper extends SQLiteOpenHelper {
         public static final String COLUMN_NAME_URL = "url";
         public static final String COLUMN_NAME_TITLE = "title";
         public static final String COLUMN_NAME_CATEGORY = "category";
+        public static final String COLUMN_NAME_ICON_URL = "iconUrl";
     }
 
     private static final String SQL_CREATE_SOURCE_ENTRIES =
@@ -48,6 +49,7 @@ public class NewsDbHelper extends SQLiteOpenHelper {
                     SourceEntry._ID + " INTEGER PRIMARY KEY," +
                     SourceEntry.COLUMN_NAME_URL + " TEXT," +
                     SourceEntry.COLUMN_NAME_TITLE + " TEXT," +
+                    SourceEntry.COLUMN_NAME_ICON_URL + " TEXT," +
                     SourceEntry.COLUMN_NAME_CATEGORY + " INTEGER)";
 
     private static final String SQL_DELETE_SOURCE_ENTRIES =
