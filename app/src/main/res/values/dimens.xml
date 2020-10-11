@@ -23,5 +23,6 @@
     <dimen name="text_size">18dp</dimen>
     <dimen name="nav_menu_icon_size">30dp</dimen>
     <dimen name="elevation_size">4dp</dimen>
-    <dimen name="source_icon_settings">60dp</dimen>
+    <dimen name="source_icon_settings">30dp</dimen>
+    <dimen name="nav_source_item_icon">20dp</dimen>
 </resources>

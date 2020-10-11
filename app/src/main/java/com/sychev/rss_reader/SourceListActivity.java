@@ -132,18 +132,7 @@ public class SourceListActivity extends AppCompatActivity implements NewsListLoa
         int groupPos = ExpandableListView.getPackedPositionGroup(info.packedPosition);
         int childPos = ExpandableListView.getPackedPositionChild(info.packedPosition);
 
-        Pair<String, String> pair = (Pair<String, String>) listAdapter.getChild(groupPos, childPos);
-
-        SourceModelItem selectedSource = null;
-        if (pair != null) {
-            for (SourceModelItem sourceItem : sourceList) {
-                if (sourceItem.getUrl().equals(pair.second) &&
-                        sourceItem.getTitle().equals(pair.first) &&
-                        listAdapter.getGroup(groupPos).equals(NewsModelItem.Categories.toString(sourceItem.getCategory()))) {
-                    selectedSource = sourceItem;
-                }
-            }
-        }
+        SourceModelItem selectedSource = (SourceModelItem) listAdapter.getChild(groupPos, childPos);
 
         if (selectedSource != null) {
             if (item.getItemId() == R.id.action_remove_source_context) {

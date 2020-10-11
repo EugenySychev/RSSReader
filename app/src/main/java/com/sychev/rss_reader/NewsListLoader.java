@@ -36,8 +36,10 @@ public class NewsListLoader {
 
     public void addSource(SourceModelItem item) {
         if (dbLoader != null)
-            if (dbLoader.addSource(item))
+            if (dbLoader.addSource(item)) {
                 sourceList.add(item);
+                updateAllNotifiers();
+            }
     }
 
     public List<NewsModelItem> getLoadedNewsList() {
@@ -217,6 +219,9 @@ public class NewsListLoader {
     public void requestUpdateAllNews() {
         if (sourceList.isEmpty())
             loadSourceListFromDB();
+        for (SourceModelItem source : sourceList) {
+            source.setUpdated(false);
+        }
         for (SourceModelItem source : sourceList) {
             requestUpdateListSource(source);
         }

@@ -123,7 +123,7 @@ public class SourceListAdapter extends BaseExpandableListAdapter {
         }
 
         if (item.getIcon() != null) {
-            ImageView imageView = (ImageView) convertView.findViewById(R.id.source_setup_icon_view);
+            ImageView imageView = convertView.findViewById(R.id.source_setup_icon_view);
             imageView.setImageBitmap(item.getIcon());
         }
 

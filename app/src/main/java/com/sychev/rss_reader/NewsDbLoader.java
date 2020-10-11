@@ -151,6 +151,7 @@ public class NewsDbLoader {
                     item.setIcon(loadedBitmap);
                 }
             }
+            item.setUpdated(true);
             list.add(item);
         }
         cursor.close();
