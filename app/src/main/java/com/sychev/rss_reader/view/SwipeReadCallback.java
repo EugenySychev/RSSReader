@@ -47,7 +47,7 @@ public class SwipeReadCallback extends ItemTouchHelper.SimpleCallback {
         int color = adapter.getContext().getResources().getColor(R.color.colorBackground, adapter.getContext().getTheme());
         fontPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         fontPaint.setTextSize(adapter.getContext().getResources().getDimension(R.dimen.nav_source_item_icon));
-        fontPaint.setStyle(Paint.Style.STROKE);
+        fontPaint.setStyle(Paint.Style.FILL);
         fontPaint.setColor(color);
         markReadText = adapter.getContext().getString(R.string.set_read);
         textWidth = (int) fontPaint.measureText(markReadText);
