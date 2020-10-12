@@ -26,6 +26,23 @@ public class NewsListLoader {
     private SourceModelItem filterSource = null;
     List<UpdateNotifier> notifierList;
 
+    public void setCurrentNewsListAsRead() {
+        for (NewsModelItem item : getLoadedNewsList())
+            dbLoader.setItemIsRead(item, true);
+    }
+
+    public void setTodayNewsListAsRead() {
+
+        for (NewsModelItem item : getLoadedNewsList()) {
+            // TODO add check time
+            dbLoader.setItemIsRead(item, true);
+        }
+
+    }
+
+    public void setPTodayNewsListAsRead() {
+    }
+
     public enum Categories {
         NEWS_CATEGORY,
         FILMS_CATEGORY,

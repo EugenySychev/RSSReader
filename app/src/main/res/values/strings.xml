@@ -45,4 +45,7 @@
     <string name="films_category_title">Films</string>
     <string name="others_category_title">Others</string>
     <string name="set_read">Set read</string>
+    <string name="mark_older_day_read">Mark read older one day</string>
+    <string name="mark_today_news">Mark today news</string>
+    <string name="mark_all">Mark all as read</string>
 </resources>

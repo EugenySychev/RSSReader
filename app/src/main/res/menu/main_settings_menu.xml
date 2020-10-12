@@ -7,35 +7,38 @@
         android:icon="@drawable/ic_baseline_settings_24"
         android:orderInCategory="99"
         android:title="@string/actions_sources"
-        app:showAsAction="never" />
+        app:showAsAction="ifRoom" />
     <item
         android:id="@+id/action_refresh"
         android:icon="@drawable/ic_baseline_refresh_24"
         android:orderInCategory="101"
         android:title="@string/refresh_title"
         app:showAsAction="always" />
-<!--    <item-->
-<!--        android:id="@+id/action_filter_sort"-->
-<!--        android:icon="@drawable/ic_baseline_sort_24"-->
-<!--        android:orderInCategory="100"-->
-<!--        android:title="@string/sort_title"-->
-<!--        app:showAsAction="always">-->
-<!--        <menu>-->
-<!--            <group android:checkableBehavior="single">-->
-<!--                <item-->
-<!--                    android:id="@+id/sort_ungrouped"-->
-<!--                    android:title="@string/string_ungrouped" />-->
-<!--                <item-->
-<!--                    android:id="@+id/sort_grouped"-->
-<!--                    android:title="@string/string_grouped" />-->
-<!--            </group>-->
-<!--        </menu>-->
-<!--    </item>-->
+
+    <item
+        android:id="@+id/mark_asread_action"
+        android:icon="@drawable/ic_baseline_playlist_add_check_24"
+        android:title="@string/set_read"
+        app:showAsAction="ifRoom">
+        <menu>
+            <group>
+                <item
+                    android:id="@+id/mark_read_all"
+                    android:title="@string/mark_all" />
+                <item
+                    android:id="@+id/mark_read_today"
+                    android:title="@string/mark_today_news" />
+                <item
+                    android:id="@+id/mark_read_previous_today"
+                    android:title="@string/mark_older_day_read" />
+            </group>
+        </menu>
+    </item>
     <item
         android:id="@+id/filter_actions"
         android:icon="@drawable/ic_baseline_filter_list_24"
-        app:showAsAction="always"
-        android:title="@string/filter_title">
+        android:title="@string/filter_title"
+        app:showAsAction="ifRoom">
         <menu>
             <group android:checkableBehavior="single">
                 <item
