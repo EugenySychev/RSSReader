@@ -69,7 +69,7 @@ public class SwipeReadCallback extends ItemTouchHelper.SimpleCallback {
     @Override
     public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
         float newDx = dX;
-        float positiveLimit = recyclerView.getWidth() / 2;
+        float positiveLimit = icon.getIntrinsicWidth() * 2 + textWidth;
         float negativeLimit = -1 * positiveLimit;
         if (newDx >= positiveLimit) newDx = positiveLimit;
         if (newDx <= negativeLimit) newDx = negativeLimit;
