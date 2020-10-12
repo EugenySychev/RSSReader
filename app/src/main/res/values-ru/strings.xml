@@ -41,4 +41,5 @@
     <string name="refresh_title">Обновить</string>
     <string name="films_category_title">Фильмы</string>
     <string name="others_category_title">Другое</string>
+    <string name="set_read">Set read</string>
 </resources>

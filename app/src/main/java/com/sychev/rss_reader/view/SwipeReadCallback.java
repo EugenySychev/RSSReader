@@ -1,12 +1,15 @@
 package com.sychev.rss_reader.view;
 
+import android.annotation.SuppressLint;
 import android.content.ClipData;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.View;
+import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
@@ -18,9 +21,10 @@ import com.sychev.rss_reader.R;
 public class SwipeReadCallback extends ItemTouchHelper.SimpleCallback {
 
     private NewsListAdapter adapter;
-    private final int LIMIT_SWIPE = 100;
-    private int positiveLimit;
-    private int negativeLimit;
+    private Paint fontPaint;
+    private int textWidth;
+    private String markReadText;
+
 
     private Drawable icon;
     private final ColorDrawable background;
@@ -37,11 +41,17 @@ public class SwipeReadCallback extends ItemTouchHelper.SimpleCallback {
         icon = ContextCompat.getDrawable(adapter.getContext(), R.drawable.ic_baseline_check_24);
         if (icon != null) {
             icon.setTint(adapter.getContext().getColor(R.color.colorBackground));
-            positiveLimit = icon.getIntrinsicWidth() * 2;
-            negativeLimit = -1 * positiveLimit;
         }
         background = new ColorDrawable(Color.GRAY);
         this.actor = actor;
+        int color = adapter.getContext().getResources().getColor(R.color.colorBackground, adapter.getContext().getTheme());
+        fontPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        fontPaint.setTextSize(adapter.getContext().getResources().getDimension(R.dimen.nav_source_item_icon));
+        fontPaint.setStyle(Paint.Style.STROKE);
+        fontPaint.setColor(color);
+        markReadText = adapter.getContext().getString(R.string.set_read);
+        textWidth = (int) fontPaint.measureText(markReadText);
+
     }
 
     @Override
@@ -58,10 +68,12 @@ public class SwipeReadCallback extends ItemTouchHelper.SimpleCallback {
 
     @Override
     public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
-        int newDx = (int) dX;
-
+        float newDx = dX;
+        float positiveLimit = recyclerView.getWidth() / 2;
+        float negativeLimit = -1 * positiveLimit;
         if (newDx >= positiveLimit) newDx = positiveLimit;
         if (newDx <= negativeLimit) newDx = negativeLimit;
+        Log.d("SWIPE", "Dx is " + dX);
         super.onChildDraw(c, recyclerView, viewHolder, newDx, dY, actionState, isCurrentlyActive);
 
         View itemView = viewHolder.itemView;
@@ -78,20 +90,26 @@ public class SwipeReadCallback extends ItemTouchHelper.SimpleCallback {
 
             background.setBounds(itemView.getLeft(), itemView.getTop(),
                     itemView.getLeft() + ((int) newDx) + backgroundCornerOffset, itemView.getBottom());
-            Log.d("SWIPE", "Bounds " + iconLeft + " " + iconRight);
+
+            background.draw(c);
+            icon.draw(c);
+            // using this magic number because i don't know how to get text height
+            c.drawText(markReadText, iconLeft + 10, iconBottom - 10, fontPaint );
         } else if (newDx < 0) { // Swiping to the left
             int iconLeft = itemView.getRight() - iconMargin - icon.getIntrinsicWidth();
             int iconRight = itemView.getRight() - iconMargin;
             icon.setBounds(iconLeft, iconTop, iconRight, iconBottom);
 
-            Log.d("SWIPE", "Bounds " + iconLeft + " " + iconRight);
             background.setBounds(itemView.getRight() + ((int) newDx) - backgroundCornerOffset,
                     itemView.getTop(), itemView.getRight(), itemView.getBottom());
-        } else { // view is unSwiped
+
+            background.draw(c);
+            icon.draw(c);
+            c.drawText(markReadText, iconLeft - textWidth - 10, iconBottom - 10, fontPaint );
+        } else {
             background.setBounds(0, 0, 0, 0);
         }
 
-        background.draw(c);
-        icon.draw(c);
+
     }
 }

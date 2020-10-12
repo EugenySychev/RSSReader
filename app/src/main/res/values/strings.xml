@@ -44,4 +44,5 @@
     <string name="refresh_title">Refresh</string>
     <string name="films_category_title">Films</string>
     <string name="others_category_title">Others</string>
+    <string name="set_read">Set read</string>
 </resources>
