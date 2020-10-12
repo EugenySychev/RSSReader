@@ -1,4 +1,4 @@
-package com.sychev.rss_reader;
+package com.sychev.rss_reader.view;
 
 import android.animation.LayoutTransition;
 import android.app.Activity;
@@ -12,6 +12,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.appcompat.widget.Toolbar;
+
+import com.sychev.rss_reader.R;
+import com.sychev.rss_reader.Utils;
 
 import java.util.Objects;
 

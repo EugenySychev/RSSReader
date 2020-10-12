@@ -1,7 +1,6 @@
-package com.sychev.rss_reader;
+package com.sychev.rss_reader.view;
 
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
@@ -9,17 +8,16 @@ import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import org.w3c.dom.Text;
+import com.sychev.rss_reader.R;
+import com.sychev.rss_reader.Utils;
+import com.sychev.rss_reader.data.NewsModelItem;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -62,6 +60,10 @@ public class NewsListAdapter extends RecyclerView.Adapter<NewsListAdapter.NewsIt
             }
         });
         Collections.reverse(newsList);
+    }
+
+    public Context getContext() {
+        return inflater.getContext();
     }
 
     public class NewsItemView extends  RecyclerView.ViewHolder implements View.OnClickListener {

@@ -1,4 +1,4 @@
-package com.sychev.rss_reader;
+package com.sychev.rss_reader.data;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;

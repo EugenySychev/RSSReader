@@ -1,12 +1,8 @@
-package com.sychev.rss_reader;
+package com.sychev.rss_reader.view;
 
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
-import android.util.Pair;
 import android.view.ContextMenu;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
@@ -23,11 +19,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
 
+import com.sychev.rss_reader.R;
+import com.sychev.rss_reader.Utils;
+import com.sychev.rss_reader.data.NewsListLoader;
+import com.sychev.rss_reader.data.SourceModelItem;
+
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.xml.transform.Source;
 
 public class SourceListActivity extends AppCompatActivity implements NewsListLoader.UpdateNotifier {
 

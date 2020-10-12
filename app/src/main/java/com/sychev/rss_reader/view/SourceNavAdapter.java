@@ -1,9 +1,7 @@
-package com.sychev.rss_reader;
+package com.sychev.rss_reader.view;
 
 import android.content.Context;
-import android.graphics.ImageFormat;
 import android.graphics.Typeface;
-import android.support.v4.media.session.IMediaControllerCallback;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,21 +10,23 @@ import android.widget.BaseExpandableListAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.nio.InvalidMarkException;
+import com.sychev.rss_reader.R;
+import com.sychev.rss_reader.data.NewsListLoader;
+import com.sychev.rss_reader.data.SourceModelItem;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-public class SourceListAdapter extends BaseExpandableListAdapter {
+public class SourceNavAdapter extends BaseExpandableListAdapter {
 
     private Context context;
 
     private List<String> expandableListTitle = new ArrayList<>();// = Arrays.asList("News", "Films", "Others");
-    private HashMap<String, List<SourceModelItem>> expandableListDetail = new HashMap<>();
+    private HashMap<String, List<Pair<String, Integer>>> expandableListDetail = new HashMap<>();
     private List<SourceModelItem> loadedSourceList;
 
-    public SourceListAdapter(Context context, List<SourceModelItem> sourceList) {
+    public SourceNavAdapter(Context context, List<SourceModelItem> sourceList) {
         this.context = context;
         this.loadedSourceList = sourceList;
         updateContent();
@@ -35,11 +35,14 @@ public class SourceListAdapter extends BaseExpandableListAdapter {
     private void updateContent() {
         expandableListTitle.clear();
         expandableListDetail.clear();
+        String allTitle = context.getResources().getString(R.string.all_title);
+        expandableListTitle.add(allTitle);
+        expandableListDetail.put(allTitle, new ArrayList<Pair<String, Integer>>());
         for(SourceModelItem item: loadedSourceList) {
             String categoryString = NewsListLoader.Categories.toString(item.getCategory());
             if (expandableListDetail.get(categoryString) == null)
-                expandableListDetail.put(categoryString, new ArrayList<SourceModelItem>());
-            expandableListDetail.get(categoryString).add(item);
+                expandableListDetail.put(categoryString, new ArrayList<Pair<String, Integer>>());
+            expandableListDetail.get(categoryString).add(Pair.create(item.getTitle(), item.getUnreadCount()));
             if (!expandableListTitle.contains(categoryString))
                 expandableListTitle.add(categoryString);
         }
@@ -71,8 +74,12 @@ public class SourceListAdapter extends BaseExpandableListAdapter {
 
     @Override
     public Object getChild(int i, int i1) {
-        return expandableListDetail.get(this.expandableListTitle.get(i))
-                .get(i1);
+        for(SourceModelItem item: loadedSourceList) {
+            if (NewsListLoader.Categories.toString(item.getCategory()).equals(getGroup(i)) &&
+                    item.getTitle().equals(expandableListDetail.get(this.expandableListTitle.get(i)).get(i1).first))
+                return  item;
+        }
+        return null;
     }
 
 
@@ -97,41 +104,43 @@ public class SourceListAdapter extends BaseExpandableListAdapter {
         if (view == null) {
             LayoutInflater layoutInflater = (LayoutInflater) this.context.
                     getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            view = layoutInflater.inflate(R.layout.source_setup_group_view, null);
+            view = layoutInflater.inflate(R.layout.source_nav_group_view, null);
         }
-        TextView listTitleTextView = (TextView) view.findViewById(R.id.categoryTitle);
+        TextView listTitleTextView = (TextView) view.findViewById(R.id.nav_category_title);
         listTitleTextView.setTypeface(null, Typeface.BOLD);
         listTitleTextView.setText(listTitle);
 
-        ImageView imageView = view.findViewById(R.id.setup_source_group_exp_icon);
+        ImageView imageView = view.findViewById(R.id.nav_expanded_icon);
         if (b)
             imageView.setImageResource(R.drawable.ic_baseline_arrow_drop_down_24);
         else
             imageView.setImageResource(R.drawable.ic_baseline_arrow_right_24);
-
+    if (i == 0)
+        imageView.setVisibility(View.GONE);
         return view;
     }
 
     @Override
     public View getChildView(int listPosition, int expandedListPosition,
                              boolean isLastChild, View convertView, ViewGroup parent) {
-        SourceModelItem item = (SourceModelItem) getChild(listPosition, expandedListPosition);
+        SourceModelItem source = (SourceModelItem) getChild(listPosition, expandedListPosition);
+
         if (convertView == null) {
             LayoutInflater layoutInflater = (LayoutInflater) this.context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = layoutInflater.inflate(R.layout.source_setup_item_view, null);
+            convertView = layoutInflater.inflate(R.layout.source_nav_item_view, null);
         }
 
-        if (item.getIcon() != null) {
-            ImageView imageView = convertView.findViewById(R.id.source_setup_icon_view);
-            imageView.setImageBitmap(item.getIcon());
+        if (source.getIcon() != null){
+            ImageView imageView = convertView.findViewById(R.id.source_nav_item_icon);
+            imageView.setImageBitmap(source.getIcon());
         }
 
-        TextView sourceTitle = (TextView) convertView.findViewById(R.id.source_title);
-        sourceTitle.setText(item.getTitle());
+        TextView sourceTitle = (TextView) convertView.findViewById(R.id.source_nav_item_title);
+        sourceTitle.setText(source.getTitle());
 
-        TextView sourceUrl = (TextView) convertView.findViewById(R.id.source_url);
-        sourceUrl.setText(item.getUrl());
+        TextView sourceCounter = (TextView) convertView.findViewById(R.id.source_nav_item_counter);
+        sourceCounter.setText(String.valueOf(source.getUnreadCount()));
 
         return convertView;
     }

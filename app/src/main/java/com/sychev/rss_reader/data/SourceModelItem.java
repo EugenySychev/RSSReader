@@ -1,7 +1,6 @@
-package com.sychev.rss_reader;
+package com.sychev.rss_reader.data;
 
 import android.graphics.Bitmap;
-import android.media.Image;
 
 import java.io.Serializable;
 

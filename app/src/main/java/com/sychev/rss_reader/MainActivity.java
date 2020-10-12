@@ -5,7 +5,6 @@ import android.app.ActivityOptions;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -29,11 +28,17 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.google.android.material.navigation.NavigationView;
+import com.sychev.rss_reader.data.ImageCache;
+import com.sychev.rss_reader.data.NewsListLoader;
+import com.sychev.rss_reader.data.SourceModelItem;
+import com.sychev.rss_reader.view.NewsListFragment;
+import com.sychev.rss_reader.view.SettingsActivity;
+import com.sychev.rss_reader.view.SourceListActivity;
+import com.sychev.rss_reader.view.SourceNavAdapter;
 
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements NewsListLoader.UpdateNotifier {
 

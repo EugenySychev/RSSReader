@@ -1,9 +1,13 @@
-package com.sychev.rss_reader;
+package com.sychev.rss_reader.view;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Handler;
 import android.os.Message;
+
+import com.sychev.rss_reader.data.ImageCache;
+import com.sychev.rss_reader.data.NewsModelItem;
+import com.sychev.rss_reader.data.SourceModelItem;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -13,7 +17,6 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
@@ -25,7 +28,6 @@ import java.util.Locale;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.Source;
 
 public class NewsNetworkLoader extends Thread {
     private List<NewsModelItem> loadedList;
@@ -34,7 +36,7 @@ public class NewsNetworkLoader extends Thread {
     private Handler handler;
     private boolean needUpdateSource = false;
 
-    NewsNetworkLoader(SourceModelItem source) {
+    public NewsNetworkLoader(SourceModelItem source) {
         sourceItem = source;
         loadedList = new ArrayList<>();
     }
@@ -170,7 +172,7 @@ public class NewsNetworkLoader extends Thread {
         return needUpdateSource;
     }
 
-    interface LoadState {
+    public interface LoadState {
         int LOAD_ERROR = -1;
         int LOAD_OK = 0;
         int LOAD_PROCESSING = 1;

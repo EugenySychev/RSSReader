@@ -1,30 +1,28 @@
-package com.sychev.rss_reader;
+package com.sychev.rss_reader.view;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.text.Layout;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ExpandableListView;
-import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
+import com.sychev.rss_reader.R;
+import com.sychev.rss_reader.data.NewsListLoader;
+import com.sychev.rss_reader.data.NewsModelItem;
+import com.sychev.rss_reader.data.SourceModelItem;
 
 import java.net.MalformedURLException;
 import java.util.HashMap;
 import java.util.List;
 
-public class NewsListFragment extends Fragment implements NewsListLoader.UpdateNotifier, NewsListAdapter.ItemClickListener {
+public class NewsListFragment extends Fragment implements NewsListLoader.UpdateNotifier, NewsListAdapter.ItemClickListener, SwipeReadCallback.SwipeActionCallback {
 
     private View rootView;
     private HashMap<SourceModelItem, List<NewsModelItem>> loadedNewsMap;
@@ -43,7 +41,7 @@ public class NewsListFragment extends Fragment implements NewsListLoader.UpdateN
         rootView = inflater.inflate(R.layout.news_list_fragment, container, false);
         NewsListLoader.getInstance().getAllNewsFromDB();
 
-        RecyclerView listView = rootView.findViewById(R.id.lvMain);
+        final RecyclerView listView = rootView.findViewById(R.id.lvMain);
         listView.setLayoutManager(new LinearLayoutManager(getContext()));
         adapter = new NewsListAdapter(getContext(), NewsListLoader.getInstance().getLoadedNewsList());
         adapter.setClickListener(this);
@@ -58,20 +56,11 @@ public class NewsListFragment extends Fragment implements NewsListLoader.UpdateN
                 } catch (MalformedURLException e) {
                     e.printStackTrace();
                 }
-//                swipeRefreshLayout.postDelayed(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        if (swipeRefreshLayout != null) {
-//                            swipeRefreshLayout.setRefreshing(false);
-//                            swipeRefreshLayout.stopNestedScroll();
-//                            swipeRefreshLayout.clearAnimation();
-//                            Toast.makeText(getContext(), "Refresh", Toast.LENGTH_SHORT).show();
-//                        }
-//                    }
-//                }, 2000);
             }
         });
 
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new SwipeReadCallback(adapter, this));
+        itemTouchHelper.attachToRecyclerView(listView);
         return rootView;
     }
 
@@ -135,8 +124,13 @@ public class NewsListFragment extends Fragment implements NewsListLoader.UpdateN
 
     @Override
     public void onItemClick(View view, int position) {
-        NewsModelItem item = (NewsModelItem) adapter.getItem(position);
+        NewsModelItem item = adapter.getItem(position);
         NewsListLoader.getInstance().setItemIsReaded(item);
         openDigest(item);
+    }
+
+    @Override
+    public void processSwipe(int position) {
+        NewsListLoader.getInstance().setItemIsReaded(adapter.getItem(position));
     }
 }

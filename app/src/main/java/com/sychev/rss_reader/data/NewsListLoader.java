@@ -1,13 +1,13 @@
-package com.sychev.rss_reader;
+package com.sychev.rss_reader.data;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 
-import java.net.MalformedURLException;
-import java.net.URL;
+import com.sychev.rss_reader.view.NewsNetworkLoader;
+import com.sychev.rss_reader.R;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -109,7 +109,7 @@ public class NewsListLoader {
     }
 
 
-    interface UpdateNotifier {
+    public interface UpdateNotifier {
         void update();
 
         void updateState(int state);

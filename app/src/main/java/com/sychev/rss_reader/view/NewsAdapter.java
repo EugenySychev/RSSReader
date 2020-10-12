@@ -1,4 +1,4 @@
-package com.sychev.rss_reader;
+package com.sychev.rss_reader.view;
 
 import android.content.Context;
 import android.graphics.Typeface;
@@ -12,13 +12,16 @@ import android.widget.TextView;
 
 import androidx.core.text.HtmlCompat;
 
+import com.sychev.rss_reader.R;
+import com.sychev.rss_reader.data.NewsModelItem;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
-public class NewsAdapter extends ArrayAdapter<com.sychev.rss_reader.NewsModelItem> {
+public class NewsAdapter extends ArrayAdapter<NewsModelItem> {
     private final int MAX_LINE_LENTGTH = 70;
     private Context mContext;
     private List<NewsModelItem> mList;

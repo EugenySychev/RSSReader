@@ -1,6 +1,5 @@
-package com.sychev.rss_reader;
+package com.sychev.rss_reader.view;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
@@ -14,8 +13,11 @@ import android.widget.TextView;
 
 import androidx.core.text.HtmlCompat;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
+import com.sychev.rss_reader.R;
+import com.sychev.rss_reader.Utils;
+import com.sychev.rss_reader.data.NewsModelItem;
+import com.sychev.rss_reader.data.SourceModelItem;
+
 import java.util.HashMap;
 import java.util.List;
 

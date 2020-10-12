@@ -1,4 +1,4 @@
-package com.sychev.rss_reader;
+package com.sychev.rss_reader.view;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -6,13 +6,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.ExpandableListView;
 import android.widget.ListView;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
+
+import com.sychev.rss_reader.R;
+import com.sychev.rss_reader.data.NewsListLoader;
+import com.sychev.rss_reader.data.NewsModelItem;
+import com.sychev.rss_reader.data.SourceModelItem;
 
 import java.net.MalformedURLException;
 import java.util.HashMap;
