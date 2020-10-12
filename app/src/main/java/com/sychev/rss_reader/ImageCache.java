@@ -39,8 +39,8 @@ public class ImageCache {
             ImageCache.getInstance().getLru().put(key, bitmap);
 
             if (cacheDir.getAbsolutePath() != "/") {
-                String imageName = key.replace("/", "");
-                try (FileOutputStream out = new FileOutputStream(cacheDir.getAbsolutePath() + imageName)) {
+                String imageName = cacheDir.getAbsolutePath()  + "/" + key.replace("/", "").replace(":", "");
+                try (FileOutputStream out = new FileOutputStream(imageName)) {
                     bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -57,9 +57,9 @@ public class ImageCache {
                 return null;
             Bitmap bitmap = (Bitmap) ImageCache.getInstance().getLru().get(key);
             if (bitmap == null && cacheDir.getAbsolutePath() != "/") {
-                String imageName = key.replace("/", "");
-                bitmap = BitmapFactory.decodeFile(cacheDir.getAbsolutePath() + imageName);
-                System.out.println("Read from cache " + cacheDir.getAbsolutePath() + imageName);
+                String imageName = cacheDir.getAbsolutePath()  + "/" + key.replace("/", "").replace(":", "");
+                bitmap = BitmapFactory.decodeFile(imageName);
+                System.out.println("Read from cache " + imageName);
             }
             return bitmap;
         } catch (Exception e) {
