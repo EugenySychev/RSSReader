@@ -12,6 +12,8 @@ import java.util.List;
 
 public class NewsDbLoader {
     NewsDbHelper dbHelper;
+    List<SourceModelItem> sourceModelItems = new ArrayList<>();
+    List<NewsModelItem>  newsModelItems= new ArrayList<>();
 
     public NewsDbLoader(Context context) {
         dbHelper = new NewsDbHelper(context);
@@ -70,14 +72,14 @@ public class NewsDbLoader {
 
     public List<NewsModelItem> getFullNewsList() {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
-        List<NewsModelItem> list = new ArrayList<>();
+        newsModelItems.clear();
         Cursor cursor = db.query(NewsDbHelper.FeedEntry.TABLE_NAME, null, null, null, null, null, null);
 
         while (cursor.moveToNext()) {
-            list.add(getCursorItem(cursor));
+            newsModelItems.add(getCursorItem(cursor));
         }
         cursor.close();
-        return list;
+        return newsModelItems;
     }
     public List<NewsModelItem> getNewsListForSourceAndTime(String sourceUrl, long begin, long end) {
         return getNewsListForSourceAndTime(sourceUrl, begin, end, false);
@@ -132,9 +134,8 @@ public class NewsDbLoader {
     }
 
     public List<SourceModelItem> getListSource() {
-        List<SourceModelItem> list = new ArrayList<>();
         SQLiteDatabase db = dbHelper.getReadableDatabase();
-
+        sourceModelItems.clear();
         Cursor cursor = db.query(NewsDbHelper.SourceEntry.TABLE_NAME, null, null, null, null, null, null);
 
         while (cursor.moveToNext()) {
@@ -152,10 +153,10 @@ public class NewsDbLoader {
                 }
             }
             item.setUpdated(true);
-            list.add(item);
+            sourceModelItems.add(item);
         }
         cursor.close();
-        return list;
+        return sourceModelItems;
     }
 
     public boolean addSource(SourceModelItem item) {
@@ -168,7 +169,7 @@ public class NewsDbLoader {
         values.put(NewsDbHelper.SourceEntry.COLUMN_NAME_ICON_URL, item.getIconUrl());
 
         long newRowId = db.insert(NewsDbHelper.SourceEntry.TABLE_NAME, null, values);
-
+        sourceModelItems.add(item);
         return newRowId >= 0;
     }
 
@@ -177,6 +178,7 @@ public class NewsDbLoader {
         String selection = NewsDbHelper.SourceEntry.COLUMN_NAME_URL + " LIKE ?";
 
         String[] selectionArgs = { item.getUrl() };
+        sourceModelItems.remove(item);
         return db.delete(NewsDbHelper.SourceEntry.TABLE_NAME, selection, selectionArgs) >= 0;
     }
 
@@ -185,6 +187,7 @@ public class NewsDbLoader {
         String selection = NewsDbHelper.FeedEntry.COLUMN_NAME_SOURCE + " LIKE ?";
 
         String[] selectionArgs = { source.getUrl() };
+
         return db.delete(NewsDbHelper.FeedEntry.TABLE_NAME, selection, selectionArgs) >= 0;
     }
 

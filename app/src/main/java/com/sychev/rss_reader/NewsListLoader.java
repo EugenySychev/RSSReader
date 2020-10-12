@@ -37,7 +37,6 @@ public class NewsListLoader {
     public void addSource(SourceModelItem item) {
         if (dbLoader != null)
             if (dbLoader.addSource(item)) {
-                sourceList.add(item);
                 updateAllNotifiers();
             }
     }
@@ -115,8 +114,8 @@ public class NewsListLoader {
                             }
                         }
 
-                        if (!updated)
-                            sourceList.add(source);
+//                        if (!updated)
+//                            sourceList.add(source);
                     }
                     List<NewsModelItem> notSavedList = new ArrayList<>();
                     for (NewsModelItem item : loader.getLoadedList()) {

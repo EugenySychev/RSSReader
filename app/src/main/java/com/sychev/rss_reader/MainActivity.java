@@ -158,8 +158,7 @@ public class MainActivity extends AppCompatActivity implements NewsListLoader.Up
     }
 
     void createNavigationList() {
-        List<SourceModelItem> sourceList = NewsListLoader.getInstance().getListSource();
-        final SourceNavAdapter adapter = new SourceNavAdapter(this, sourceList);
+        final SourceNavAdapter adapter = new SourceNavAdapter(this, NewsListLoader.getInstance().getListSource());
         ExpandableListView listView = findViewById(R.id.nav_list_view);
         listView.setAdapter(adapter);
         for (int i = 0; i < adapter.getGroupCount(); i++)
