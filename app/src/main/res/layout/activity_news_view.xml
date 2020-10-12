@@ -10,25 +10,32 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:background="@color/colorBackground" >
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/news_view_toolbar"
+        android:background="@color/colorBackground"
+        android:orientation="vertical">
+
+        <com.google.android.material.appbar.AppBarLayout
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:padding="@dimen/inner_frame_layout_padding"
-            android:elevation="@dimen/elevation_size"
-            app:theme="@style/toolbarStyle"  />
+            android:layout_height="wrap_content"
+            android:theme="@style/AppTheme">
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/news_view_toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="?attr/colorPrimaryDark"
+                app:popupTheme="@style/AppTheme" />
+        </com.google.android.material.appbar.AppBarLayout>
 
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_margin="10dp">
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:background="@color/colorBackground">
+                android:background="@color/colorBackground"
+                android:orientation="vertical">
 
                 <ImageView
                     android:id="@+id/imageNewView"
@@ -38,19 +45,19 @@
 
                 <TextView
                     android:id="@+id/news_text_title"
+                    style="@style/newsDigestText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/text_margin"
                     android:text="@string/app_name"
-                    android:textStyle="bold"
-                    style="@style/newsDigestText"/>
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/news_text_content"
+                    style="@style/newsDigestText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/text_margin"
-                    style="@style/newsDigestText"/>
+                    android:layout_margin="@dimen/text_margin" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -59,21 +66,21 @@
 
                     <Button
                         android:id="@+id/share_item_button"
+                        style="@style/Theme.AppCompat.DayNight"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="10dp"
                         android:layout_weight="1"
-                        android:text="@string/share"
-                        style="@style/Theme.AppCompat.DayNight"/>
+                        android:text="@string/share" />
 
                     <Button
                         android:id="@+id/open_site_button"
+                        style="@style/Theme.AppCompat.DayNight"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="10dp"
                         android:layout_weight="1"
-                        android:text="@string/open_site"
-                        style="@style/Theme.AppCompat.DayNight"/>
+                        android:text="@string/open_site" />
                 </LinearLayout>
             </LinearLayout>
         </ScrollView>

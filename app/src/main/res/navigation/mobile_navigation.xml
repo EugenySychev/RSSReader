@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/nav_home"
         android:name="com.sychev.rss_reader.NewsListFragment"
-        android:label="@string/menu_home"
+        android:label="@string/app_name"
         android:tag="NewsListTag"
         tools:layout="@layout/news_list_fragment" />
 

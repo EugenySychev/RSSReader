@@ -13,15 +13,18 @@
         android:orientation="vertical"
         style="@style/navigationView">
 
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/source_list_view_toolbar"
+        <com.google.android.material.appbar.AppBarLayout
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:elevation="@dimen/elevation_size"
-            android:padding="@dimen/inner_frame_layout_padding"
-            app:menu="@menu/source_list_view_menu"
-            app:theme="@style/toolbarStyle" />
+            android:layout_height="wrap_content"
+            android:theme="@style/AppTheme">
 
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/source_list_view_toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="?attr/colorPrimaryDark"
+                app:popupTheme="@style/AppTheme" />
+        </com.google.android.material.appbar.AppBarLayout>
         <ExpandableListView
             android:id="@+id/source_list_view"
             android:layout_width="match_parent"

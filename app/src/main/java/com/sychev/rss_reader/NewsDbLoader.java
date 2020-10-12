@@ -140,7 +140,7 @@ public class NewsDbLoader {
 
         while (cursor.moveToNext()) {
             SourceModelItem item = new SourceModelItem();
-            item.setCategory(NewsModelItem.Categories.fromInteger(cursor.getInt(cursor.getColumnIndexOrThrow(NewsDbHelper.SourceEntry.COLUMN_NAME_CATEGORY))));
+            item.setCategory(NewsListLoader.Categories.fromInteger(cursor.getInt(cursor.getColumnIndexOrThrow(NewsDbHelper.SourceEntry.COLUMN_NAME_CATEGORY))));
             item.setUrl(cursor.getString(cursor.getColumnIndexOrThrow(NewsDbHelper.SourceEntry.COLUMN_NAME_URL)));
             item.setTitle(cursor.getString(cursor.getColumnIndexOrThrow(NewsDbHelper.SourceEntry.COLUMN_NAME_TITLE)));
             item.setIconUrl(cursor.getString(cursor.getColumnIndexOrThrow(NewsDbHelper.SourceEntry.COLUMN_NAME_ICON_URL)));
@@ -164,7 +164,7 @@ public class NewsDbLoader {
 
         ContentValues values = new ContentValues();
         values.put(NewsDbHelper.SourceEntry.COLUMN_NAME_TITLE, item.getTitle());
-        values.put(NewsDbHelper.SourceEntry.COLUMN_NAME_CATEGORY, NewsModelItem.Categories.toInt(item.getCategory()));
+        values.put(NewsDbHelper.SourceEntry.COLUMN_NAME_CATEGORY, NewsListLoader.Categories.toInt(item.getCategory()));
         values.put(NewsDbHelper.SourceEntry.COLUMN_NAME_URL, item.getUrl());
         values.put(NewsDbHelper.SourceEntry.COLUMN_NAME_ICON_URL, item.getIconUrl());
 
@@ -195,7 +195,7 @@ public class NewsDbLoader {
         SQLiteDatabase db =  dbHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(NewsDbHelper.SourceEntry.COLUMN_NAME_TITLE, source.getTitle());
-        values.put(NewsDbHelper.SourceEntry.COLUMN_NAME_CATEGORY, NewsModelItem.Categories.toInt(source.getCategory()));
+        values.put(NewsDbHelper.SourceEntry.COLUMN_NAME_CATEGORY, NewsListLoader.Categories.toInt(source.getCategory()));
         values.put(NewsDbHelper.SourceEntry.COLUMN_NAME_URL, source.getUrl());
         values.put(NewsDbHelper.SourceEntry.COLUMN_NAME_ICON_URL, source.getIconUrl());
 

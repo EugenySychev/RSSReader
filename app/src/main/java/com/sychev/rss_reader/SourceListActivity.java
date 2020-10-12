@@ -99,7 +99,7 @@ public class SourceListActivity extends AppCompatActivity implements NewsListLoa
                 Spinner spinner = (Spinner) v.findViewById(R.id.spinner_category);
 
                 try {
-                    addSource(editText.getText().toString(), NewsModelItem.Categories.fromInteger(spinner.getSelectedItemPosition()));
+                    addSource(editText.getText().toString(), NewsListLoader.Categories.fromInteger(spinner.getSelectedItemPosition()));
                 } catch (MalformedURLException e) {
                     e.printStackTrace();
                 }
@@ -166,7 +166,7 @@ public class SourceListActivity extends AppCompatActivity implements NewsListLoa
         builder.show();
     }
 
-    private void addSource(final String source, final NewsModelItem.Categories category) throws MalformedURLException {
+    private void addSource(final String source, final NewsListLoader.Categories category) throws MalformedURLException {
         SourceModelItem sourceModelItem = new SourceModelItem();
         sourceModelItem.setUrl(source);
         sourceModelItem.setCategory(category);

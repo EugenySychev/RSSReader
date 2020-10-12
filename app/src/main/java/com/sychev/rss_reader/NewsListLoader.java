@@ -1,6 +1,7 @@
 package com.sychev.rss_reader;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
@@ -17,13 +18,68 @@ public class NewsListLoader {
 
     private NewsDbLoader dbLoader;
     private NewsNetworkLoader networkLoader;
-    private Context context;
+    private static Context context;
     private HashMap<SourceModelItem, List<NewsModelItem>> loadedHashMap;
     private List<SourceModelItem> sourceList = new ArrayList<>();
     private static NewsListLoader instance;
     private boolean onlyNotRead;
     private SourceModelItem filterSource = null;
     List<UpdateNotifier> notifierList;
+
+    public enum Categories {
+        NEWS_CATEGORY,
+        FILMS_CATEGORY,
+        OTHER_CATEGORY;
+
+        public static Categories fromInteger(int val) {
+            switch (val) {
+                case 0:
+                    return NEWS_CATEGORY;
+                case 1:
+                    return FILMS_CATEGORY;
+                case 2:
+                    return OTHER_CATEGORY;
+            }
+            return OTHER_CATEGORY;
+        }
+
+        public static int toInt(Categories cat) {
+            switch (cat) {
+                case NEWS_CATEGORY:
+                    return 0;
+                case FILMS_CATEGORY:
+                    return 1;
+                case OTHER_CATEGORY:
+                    return 2;
+            }
+            return 2;
+        }
+
+        public static String toString(Categories cat) {
+            if (context != null) {
+                switch (cat) {
+                    case NEWS_CATEGORY:
+                        return context.getResources().getString(R.string.news_category_string);
+                    case FILMS_CATEGORY:
+                        return context.getResources().getString(R.string.films_category_title);
+                    case OTHER_CATEGORY:
+                        return context.getResources().getString(R.string.others_category_title);
+                }
+            } else {
+                switch (cat) {
+                    case NEWS_CATEGORY:
+                        return "News";
+                    case FILMS_CATEGORY:
+                        return "Films";
+                    case OTHER_CATEGORY:
+                        return "Other";
+                }
+            }
+            return "";
+        }
+
+    }
+
 
     public SourceModelItem getFilterSource() {
         return filterSource;

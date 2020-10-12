@@ -36,7 +36,7 @@ public class SourceListAdapter extends BaseExpandableListAdapter {
         expandableListTitle.clear();
         expandableListDetail.clear();
         for(SourceModelItem item: loadedSourceList) {
-            String categoryString = NewsModelItem.Categories.toString(item.getCategory());
+            String categoryString = NewsListLoader.Categories.toString(item.getCategory());
             if (expandableListDetail.get(categoryString) == null)
                 expandableListDetail.put(categoryString, new ArrayList<SourceModelItem>());
             expandableListDetail.get(categoryString).add(item);

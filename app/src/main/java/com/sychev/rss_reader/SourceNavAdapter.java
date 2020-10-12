@@ -36,7 +36,7 @@ public class SourceNavAdapter extends BaseExpandableListAdapter {
         expandableListTitle.add(allTitle);
         expandableListDetail.put(allTitle, new ArrayList<Pair<String, Integer>>());
         for(SourceModelItem item: loadedSourceList) {
-            String categoryString = NewsModelItem.Categories.toString(item.getCategory());
+            String categoryString = NewsListLoader.Categories.toString(item.getCategory());
             if (expandableListDetail.get(categoryString) == null)
                 expandableListDetail.put(categoryString, new ArrayList<Pair<String, Integer>>());
             expandableListDetail.get(categoryString).add(Pair.create(item.getTitle(), item.getUnreadCount()));
@@ -72,7 +72,7 @@ public class SourceNavAdapter extends BaseExpandableListAdapter {
     @Override
     public Object getChild(int i, int i1) {
         for(SourceModelItem item: loadedSourceList) {
-            if (NewsModelItem.Categories.toString(item.getCategory()).equals(getGroup(i)) &&
+            if (NewsListLoader.Categories.toString(item.getCategory()).equals(getGroup(i)) &&
                     item.getTitle().equals(expandableListDetail.get(this.expandableListTitle.get(i)).get(i1).first))
                 return  item;
         }

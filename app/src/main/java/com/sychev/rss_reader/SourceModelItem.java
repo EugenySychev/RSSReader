@@ -9,7 +9,7 @@ public class SourceModelItem implements Serializable {
 
     private String url;
     private String title;
-    private NewsModelItem.Categories category;
+    private NewsListLoader.Categories category;
     private Bitmap icon;
     private String iconUrl;
     private int unreadCount;
@@ -31,11 +31,11 @@ public class SourceModelItem implements Serializable {
         this.title = title;
     }
 
-    public NewsModelItem.Categories getCategory() {
+    public NewsListLoader.Categories getCategory() {
         return category;
     }
 
-    public void setCategory(NewsModelItem.Categories category) {
+    public void setCategory(NewsListLoader.Categories category) {
         this.category = category;
     }
 

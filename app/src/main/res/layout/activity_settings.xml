@@ -12,13 +12,19 @@
         android:orientation="vertical"
         android:background="@color/colorBackground">
 
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/settings_activity_toolbar"
+        <com.google.android.material.appbar.AppBarLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:elevation="@dimen/elevation_size"
-            app:title="@string/action_settings"
-            app:theme="@style/toolbarStyle" />
+            android:theme="@style/AppTheme">
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/settings_activity_toolbar"
+                app:title="@string/action_settings"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="?attr/colorPrimaryDark"
+                app:popupTheme="@style/AppTheme" />
+        </com.google.android.material.appbar.AppBarLayout>
 
         <androidx.appcompat.widget.SwitchCompat
             android:layout_width="match_parent"
