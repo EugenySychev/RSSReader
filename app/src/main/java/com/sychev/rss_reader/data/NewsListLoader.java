@@ -4,13 +4,15 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.util.Log;
 
-import com.sychev.rss_reader.view.NewsNetworkLoader;
 import com.sychev.rss_reader.R;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -27,20 +29,47 @@ public class NewsListLoader {
     List<UpdateNotifier> notifierList;
 
     public void setCurrentNewsListAsRead() {
-        for (NewsModelItem item : getLoadedNewsList())
+        List<NewsModelItem> list = getLoadedNewsList();
+        for (NewsModelItem item : list) {
+            item.setIsRead(1);
             dbLoader.setItemIsRead(item, true);
+        }
+        updateAllUnreadCounters();
+        updateAllNotifiers();
     }
 
     public void setTodayNewsListAsRead() {
+        Date currentTime = Calendar.getInstance().getTime();
+        long timeMils = currentTime.toInstant().toEpochMilli();
+        Log.d("NEWSLOADER", "setPTodayNewsListAsRead: " + timeMils);
+        timeMils -= 24 * 60 * 60 * 1000;
 
-        for (NewsModelItem item : getLoadedNewsList()) {
-            // TODO add check time
-            dbLoader.setItemIsRead(item, true);
+        Log.d("NEWSLOADER", "setPTodayNewsListAsRead: " + timeMils);
+        List<NewsModelItem> list = getLoadedNewsList();
+        for (NewsModelItem item : list) {
+            if (item.getTime() > timeMils) {
+                item.setIsRead(1);
+                dbLoader.setItemIsRead(item, true);
+            }
         }
-
+        updateAllUnreadCounters();
+        updateAllNotifiers();
     }
 
     public void setPTodayNewsListAsRead() {
+        Date currentTime = Calendar.getInstance().getTime();
+        long timeMils = currentTime.toInstant().toEpochMilli();
+        Log.d("NEWSLOADER", "setPTodayNewsListAsRead: " + timeMils);
+        timeMils -= 24 * 60 * 60 * 1000;
+        List<NewsModelItem> list = getLoadedNewsList();
+        for (NewsModelItem item : list) {
+            if (item.getTime() < timeMils) {
+                item.setIsRead(1);
+                dbLoader.setItemIsRead(item, true);
+            }
+        }
+        updateAllUnreadCounters();
+        updateAllNotifiers();
     }
 
     public enum Categories {
@@ -180,7 +209,7 @@ public class NewsListLoader {
                     if (((NewsNetworkLoader) msg.obj).isNeedUpdateSource()) {
                         dbLoader.updateSource(source);
                         boolean updated = false;
-                        for (SourceModelItem item: sourceList) {
+                        for (SourceModelItem item : sourceList) {
                             if (item.getUrl() == source.getUrl()) {
                                 sourceList.set(sourceList.indexOf(item), source);
                                 updated = true;
@@ -258,7 +287,12 @@ public class NewsListLoader {
         }
     }
 
-    void updateUnreadCounter(SourceModelItem source) {
+    private void updateAllUnreadCounters() {
+        for (SourceModelItem source : sourceList)
+            updateUnreadCounter(source);
+    }
+
+    public void updateUnreadCounter(SourceModelItem source) {
         int count = 0;
         for (NewsModelItem item : loadedHashMap.get(source)) {
             if (item.getIsRead() == 0)

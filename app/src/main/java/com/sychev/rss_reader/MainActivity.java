@@ -123,10 +123,10 @@ public class MainActivity extends AppCompatActivity implements NewsListLoader.Up
                 NewsListLoader.getInstance().setCurrentNewsListAsRead();
                 break;
             case R.id.mark_read_previous_today:
-                NewsListLoader.getInstance().setTodayNewsListAsRead();
+                NewsListLoader.getInstance().setPTodayNewsListAsRead();
                 break;
             case R.id.mark_read_today:
-                NewsListLoader.getInstance().setPTodayNewsListAsRead();
+                NewsListLoader.getInstance().setTodayNewsListAsRead();
                 break;
             case android.R.id.home:
                 drawerLayout.openDrawer(GravityCompat.START);

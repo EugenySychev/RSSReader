@@ -1,4 +1,4 @@
-package com.sychev.rss_reader.view;
+package com.sychev.rss_reader.data;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -19,6 +19,7 @@ import org.xml.sax.SAXException;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -107,7 +108,7 @@ public class NewsNetworkLoader extends Thread {
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEE, d MMM yyyy HH:mm:ss Z", Locale.ENGLISH); //Mon, 14 Sep 2020 17:10:06 +0300
         LocalDateTime d = LocalDateTime.parse(timeString, formatter);
-        long timeMils = d.atOffset(ZoneOffset.UTC).toInstant().toEpochMilli();
+        long timeMils = d.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
 
         String descrText = "";
         NodeList descrList = fstElmnt.getElementsByTagName("description");

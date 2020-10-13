@@ -14,6 +14,7 @@ import androidx.fragment.app.Fragment;
 import com.sychev.rss_reader.R;
 import com.sychev.rss_reader.data.NewsListLoader;
 import com.sychev.rss_reader.data.NewsModelItem;
+import com.sychev.rss_reader.data.NewsNetworkLoader;
 import com.sychev.rss_reader.data.SourceModelItem;
 
 import java.net.MalformedURLException;
