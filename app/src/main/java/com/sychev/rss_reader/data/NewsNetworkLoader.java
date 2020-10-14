@@ -132,9 +132,9 @@ public class NewsNetworkLoader extends Thread {
             urlStr = iconList.item(0).getAttributes().getNamedItem("url").getNodeValue();
 
         if (!urlStr.isEmpty()) {
+            item.setIconUrl(urlStr);
             if (ImageCache.getInstance().retrieveBitmapFromCache(urlStr) == null) {
                 URL urlBitmap = new URL(urlStr);
-                item.setIconUrl(urlStr);
                 System.out.println("Storing " + urlStr + " as image");
                 loadedBitmap = BitmapFactory.decodeStream(urlBitmap.openConnection().getInputStream());
                 ImageCache.getInstance().saveBitmapToCahche(urlStr, loadedBitmap);

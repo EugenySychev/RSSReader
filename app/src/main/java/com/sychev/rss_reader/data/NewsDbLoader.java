@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.provider.BaseColumns;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,7 +66,12 @@ public class NewsDbLoader {
             Bitmap loadedBitmap = ImageCache.getInstance().retrieveBitmapFromCache(item.getIconUrl());
             if (loadedBitmap != null) {
                 item.setIcon(loadedBitmap);
+            } else {
+                ImageLoader loader = new ImageLoader(item);
+                loader.start();
             }
+        }  else {
+            Log.d("LOADER", "Load empty iconUrl for " + item.getTitle());
         }
         return item;
     }
