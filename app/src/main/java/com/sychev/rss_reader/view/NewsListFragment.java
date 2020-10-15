@@ -126,12 +126,12 @@ public class NewsListFragment extends Fragment implements NewsListLoader.UpdateN
     @Override
     public void onItemClick(View view, int position) {
         NewsModelItem item = adapter.getItem(position);
-        NewsListLoader.getInstance().setItemIsReaded(item);
+        NewsListLoader.getInstance().setItemIsRead(item);
         openDigest(item);
     }
 
     @Override
     public void processSwipe(int position) {
-        NewsListLoader.getInstance().setItemIsReaded(adapter.getItem(position));
+        NewsListLoader.getInstance().setItemIsReadWithoutUpdate(adapter.getItem(position));
     }
 }

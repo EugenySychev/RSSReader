@@ -18,18 +18,21 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.sychev.rss_reader.R;
 
+import java.util.logging.Handler;
+
 public class SwipeReadCallback extends ItemTouchHelper.SimpleCallback {
 
-    private NewsListAdapter adapter;
-    private Paint fontPaint;
-    private int textWidth;
-    private String markReadText;
+    private final NewsListAdapter adapter;
+    private final Paint fontPaint;
+    private final int textWidth;
+    private final String markReadText;
 
+    private boolean swipeProcessed;
 
-    private Drawable icon;
+    private final Drawable icon;
     private final ColorDrawable background;
 
-    private SwipeActionCallback actor;
+    private final SwipeActionCallback actor;
 
     public interface SwipeActionCallback {
         void processSwipe(int position);
@@ -61,19 +64,21 @@ public class SwipeReadCallback extends ItemTouchHelper.SimpleCallback {
 
     @Override
     public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-        int position = viewHolder.getAdapterPosition();
-        actor.processSwipe(position);
+//        int position = viewHolder.getAdapterPosition();
+//        actor.processSwipe(position);
         adapter.notifyDataSetChanged();
     }
 
     @Override
-    public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
+    public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView,
+                            @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY,
+                            int actionState, boolean isCurrentlyActive) {
         float newDx = dX;
         float positiveLimit = icon.getIntrinsicWidth() * 2 + textWidth;
         float negativeLimit = -1 * positiveLimit;
         if (newDx >= positiveLimit) newDx = positiveLimit;
         if (newDx <= negativeLimit) newDx = negativeLimit;
-        Log.d("SWIPE", "Dx is " + dX);
+        Log.d("SWIPE", "Dx is " + dX + " action state " + actionState + " is active " + isCurrentlyActive);
         super.onChildDraw(c, recyclerView, viewHolder, newDx, dY, actionState, isCurrentlyActive);
 
         View itemView = viewHolder.itemView;
@@ -110,6 +115,27 @@ public class SwipeReadCallback extends ItemTouchHelper.SimpleCallback {
             background.setBounds(0, 0, 0, 0);
         }
 
+        if (!swipeProcessed && isCurrentlyActive) {
+            if ((newDx < 0 && newDx < negativeLimit / 3) ||
+                    (newDx > 0 && newDx > positiveLimit / 3))
+            {
+                swipeProcessed = true;
+                android.os.Handler handler = new android.os.Handler();
+                int position = viewHolder.getAdapterPosition();
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        actor.processSwipe(position);
+                    }
+                });
+            }
+        }
 
+        if (swipeProcessed && !isCurrentlyActive)
+            swipeProcessed = false;
+
+        if (newDx == 0 && !isCurrentlyActive) {
+            adapter.notifyDataSetChanged();
+        }
     }
 }

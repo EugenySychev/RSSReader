@@ -49,7 +49,7 @@ public class NewsGroupListFragment extends Fragment implements NewsListLoader.Up
                 NewsModelItem item = (NewsModelItem) adapter.getChild(i, i1);
                 SourceModelItem source = (SourceModelItem) adapter.getGroup(i);
                 loadedNewsMap.get(source).get(i1).setIsRead(1);
-                NewsListLoader.getInstance().setItemIsReaded(item);
+                NewsListLoader.getInstance().setItemIsRead(item);
                 openDigest(item);
                 return false;
             }

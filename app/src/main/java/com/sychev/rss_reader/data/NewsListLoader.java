@@ -337,7 +337,12 @@ public class NewsListLoader {
         return loadedHashMap;
     }
 
-    public void setItemIsReaded(NewsModelItem item) {
+    public void setItemIsRead(NewsModelItem item) {
+        setItemIsReadWithoutUpdate(item);
+        updateAllNotifiers();
+    }
+
+    public void setItemIsReadWithoutUpdate(NewsModelItem item) {
         item.setIsRead(1);
         dbLoader.setItemIsRead(item, true);
         for (SourceModelItem source : sourceList) {
@@ -346,7 +351,6 @@ public class NewsListLoader {
                 break;
             }
         }
-        updateAllNotifiers();
     }
 
     public boolean removeSource(SourceModelItem source) {
