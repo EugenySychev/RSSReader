@@ -241,28 +241,33 @@ public class NewsListLoader {
                         dbLoader.storeList(notSavedList);
                     }
                     source.setUpdated(true);
+
+                    List<NewsModelItem> list = loadedHashMap.get(source);
+                    if (list != null) {
+                        Collections.sort(list, new Comparator<NewsModelItem>() {
+                            @Override
+                            public int compare(NewsModelItem t1, NewsModelItem t2) {
+                                return Long.compare(t1.getTime(), t2.getTime());
+                            }
+                        });
+
+                        Collections.reverse(list);
+                        loadedHashMap.replace(source, list);
+                        updateUnreadCounter(source);
+                    }
+                    boolean allUpdated = true;
+                    for (SourceModelItem sourceItem : loadedHashMap.keySet()) {
+                        if (!sourceItem.isUpdated())
+                            allUpdated = false;
+                    }
+                    updateAllNotifiers();
+                    updateAllNotifiersState(allUpdated ? NewsNetworkLoader.LoadState.LOAD_OK : NewsNetworkLoader.LoadState.LOAD_PROCESSING);
+
+                } else if (msg.what == NewsNetworkLoader.LoadState.LOAD_ERROR) {
+                    updateAllNotifiersState(NewsNetworkLoader.LoadState.LOAD_ERROR);
                 }
 
-                List<NewsModelItem> list = loadedHashMap.get(source);
-                if (list != null) {
-                    Collections.sort(list, new Comparator<NewsModelItem>() {
-                        @Override
-                        public int compare(NewsModelItem t1, NewsModelItem t2) {
-                            return Long.compare(t1.getTime(), t2.getTime());
-                        }
-                    });
 
-                    Collections.reverse(list);
-                    loadedHashMap.replace(source, list);
-                    updateUnreadCounter(source);
-                }
-                boolean allUpdated = true;
-                for (SourceModelItem sourceItem : loadedHashMap.keySet()) {
-                    if (!sourceItem.isUpdated())
-                        allUpdated = false;
-                }
-                updateAllNotifiers();
-                updateAllNotifiersState(allUpdated);
                 super.handleMessage(msg);
             }
         };
@@ -278,12 +283,9 @@ public class NewsListLoader {
     }
 
 
-    private void updateAllNotifiersState(boolean allUpdated) {
+    private void updateAllNotifiersState(int state) {
         for (UpdateNotifier notifier : notifierList) {
-            if (allUpdated)
-                notifier.updateState(NewsNetworkLoader.LoadState.LOAD_OK);
-            else
-                notifier.updateState(NewsNetworkLoader.LoadState.LOAD_PROCESSING);
+            notifier.updateState(state);
         }
     }
 

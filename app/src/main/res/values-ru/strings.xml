@@ -45,4 +45,5 @@
     <string name="mark_older_day_read">Все старее одного дня</string>
     <string name="mark_today_news">Только сегодняшние</string>
     <string name="mark_all">Пометить прочитанным всё</string>
+    <string name="nothing_to_show">Здесь ничего нет</string>
 </resources>

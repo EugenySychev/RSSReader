@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.ItemTouchHelper;
@@ -44,9 +45,11 @@ public class NewsListFragment extends Fragment implements NewsListLoader.UpdateN
 
         final RecyclerView listView = rootView.findViewById(R.id.lvMain);
         listView.setLayoutManager(new LinearLayoutManager(getContext()));
-        adapter = new NewsListAdapter(getContext(), NewsListLoader.getInstance().getLoadedNewsList());
+        adapter = new NewsListAdapter(getContext());
+        update();
         adapter.setClickListener(this);
         listView.setAdapter(adapter);
+
         swipeRefreshLayout = rootView.findViewById(R.id.swipe_refresh_layout);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -85,20 +88,14 @@ public class NewsListFragment extends Fragment implements NewsListLoader.UpdateN
     }
 
     private void updateUiVisibility(int what) {
-        RecyclerView listView = rootView.findViewById(R.id.lvMain);
-        TextView errorText = rootView.findViewById(R.id.textView);
         if (what == NewsNetworkLoader.LoadState.LOAD_OK) {
-            listView.setVisibility(View.VISIBLE);
-            errorText.setVisibility(View.GONE);
             swipeRefreshLayout.setRefreshing(false);
         } else if (what == NewsNetworkLoader.LoadState.LOAD_PROCESSING) {
-            listView.setVisibility(View.GONE);
-            errorText.setVisibility(View.GONE);
             if (!swipeRefreshLayout.isRefreshing())
                 swipeRefreshLayout.setRefreshing(true);
-        } else {
-            listView.setVisibility(View.GONE);
-            errorText.setVisibility(View.VISIBLE);
+        } else { // Error loading
+            swipeRefreshLayout.setRefreshing(false);
+            Toast.makeText(getContext(), getString(R.string.loadError), Toast.LENGTH_LONG).show();
         }
     }
 
@@ -106,6 +103,16 @@ public class NewsListFragment extends Fragment implements NewsListLoader.UpdateN
     public void update() {
         adapter.setList(NewsListLoader.getInstance().getLoadedNewsList());
         adapter.notifyDataSetChanged();
+
+        RecyclerView listView = rootView.findViewById(R.id.lvMain);
+        TextView errorText = rootView.findViewById(R.id.textView);
+        if (adapter.getItemCount() == 0) {
+            listView.setVisibility(View.GONE);
+            errorText.setVisibility(View.VISIBLE);
+        } else {
+            listView.setVisibility(View.VISIBLE);
+            errorText.setVisibility(View.GONE);
+        }
     }
 
     @Override

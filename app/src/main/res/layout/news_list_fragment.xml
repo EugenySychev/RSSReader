@@ -15,13 +15,15 @@
                 android:id="@+id/textView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:text="@string/loadError"
-                android:visibility="gone" />
+                android:text="@string/nothing_to_show"
+                android:gravity="center"
+                android:textSize="25sp"
+                android:visibility="visible" />
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/lvMain"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:visibility="visible"
+                android:visibility="gone"
                 android:background="@color/colorBackground"/>
         </LinearLayout>
 </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

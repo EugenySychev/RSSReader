@@ -28,9 +28,8 @@ public class NewsListAdapter extends RecyclerView.Adapter<NewsListAdapter.NewsIt
     private List<NewsModelItem> newsList;
     private ItemClickListener clickListener;
 
-    NewsListAdapter(Context context, List<NewsModelItem> list) {
+    NewsListAdapter(Context context) {
         inflater = LayoutInflater.from(context);
-        setList(list);
     }
 
     @NonNull
@@ -66,12 +65,24 @@ public class NewsListAdapter extends RecyclerView.Adapter<NewsListAdapter.NewsIt
         return inflater.getContext();
     }
 
-    public class NewsItemView extends  RecyclerView.ViewHolder implements View.OnClickListener {
+    public NewsModelItem getItem(int position) {
+        return newsList.get(position);
+    }
 
-        private ImageView imageView;
-        private TextView titleView;
-        private TextView timeView;
-        private TextView descrView;
+    public void setClickListener(ItemClickListener clickListener) {
+        this.clickListener = clickListener;
+    }
+
+    public interface ItemClickListener {
+        void onItemClick(View view, int position);
+    }
+
+    public class NewsItemView extends RecyclerView.ViewHolder implements View.OnClickListener {
+
+        private final ImageView imageView;
+        private final TextView titleView;
+        private final TextView timeView;
+        private final TextView descrView;
 
         public NewsItemView(@NonNull View itemView) {
             super(itemView);
@@ -111,20 +122,6 @@ public class NewsListAdapter extends RecyclerView.Adapter<NewsListAdapter.NewsIt
                 titleView.setTypeface(null, Typeface.ITALIC);
                 descrView.setTypeface(null, Typeface.ITALIC);
             }
-
         }
-
-    }
-
-    public NewsModelItem getItem(int position) {
-        return newsList.get(position);
-    }
-
-    public void setClickListener(ItemClickListener clickListener) {
-        this.clickListener = clickListener;
-    }
-
-    public interface ItemClickListener {
-        void onItemClick(View view, int position);
     }
 }

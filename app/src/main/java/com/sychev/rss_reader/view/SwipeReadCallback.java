@@ -64,8 +64,6 @@ public class SwipeReadCallback extends ItemTouchHelper.SimpleCallback {
 
     @Override
     public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-//        int position = viewHolder.getAdapterPosition();
-//        actor.processSwipe(position);
         adapter.notifyDataSetChanged();
     }
 
@@ -98,9 +96,8 @@ public class SwipeReadCallback extends ItemTouchHelper.SimpleCallback {
 
             background.draw(c);
             icon.draw(c);
-            // using this magic number because i don't know how to get text height
             c.drawText(markReadText, iconLeft + 10, iconBottom - 10, fontPaint );
-        } else if (newDx < 0) { // Swiping to the left
+        } else if (newDx < 0) {
             int iconLeft = itemView.getRight() - iconMargin - icon.getIntrinsicWidth();
             int iconRight = itemView.getRight() - iconMargin;
             icon.setBounds(iconLeft, iconTop, iconRight, iconBottom);

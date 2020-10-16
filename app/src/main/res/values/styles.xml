@@ -10,23 +10,27 @@
         <item name="android:background">@color/colorBackground</item>
     </style>
 
-    <style name="newsDigestText" >
+    <style name="newsDigestText">
         <item name="android:textColor">@color/colorText</item>
     </style>
+
     <style name="newsListTitleText" parent="Widget.AppCompat.ListView">
         <item name="android:textColor">@color/colorText</item>
         <item name="android:textSize">@dimen/newsListTitleSize</item>
     </style>
 
-    <style name="newsListUnreadCounter" parent="Widget.AppCompat.ListView">
-    <item name="android:textColor">@color/colorText</item>
-        <item name="background">@color/counterBackground</item>
-    <item name="android:textSize">@dimen/newsListTitleSize</item>
+    <style name="newsListUnreadCounter" parent="Widget.AppCompat.TextView">
+        <item name="android:textColor">@color/colorText</item>
+        <item name="android:background">@color/counterBackground</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:textSize">@dimen/newsListTitleSize</item>
     </style>
+
     <style name="newsListDescriptionText" parent="Widget.AppCompat.ListView">
         <item name="android:textColor">@color/colorText</item>
         <item name="android:textSize">@dimen/newsListDescriptionSize</item>
     </style>
+
     <style name="newsListTimeText" parent="Widget.AppCompat.ListView">
         <item name="android:textColor">@color/colorText</item>
         <item name="android:textSize">@dimen/newsListTimeSize</item>
@@ -39,16 +43,17 @@
         <item name="colorControlNormal">@color/colorText</item>
     </style>
 
-    <style name="navigationView" >
+    <style name="navigationView">
         <item name="android:textColor">@color/colorText</item>
         <item name="android:background">@color/colorBackground</item>
     </style>
 
     <style name="AlertDialogCustom" parent="Theme.AppCompat.DayNight.Dialog.Alert">
         <item name="android:textColorPrimary">@color/colorText</item>
-<!--        <item name="colorAccent">@color/colorText</item>-->
-<!--        <item name="android:background">@color/colorBackground</item>-->
+        <!--        <item name="colorAccent">@color/colorText</item>-->
+        <!--        <item name="android:background">@color/colorBackground</item>-->
     </style>
+
     <style name="MyDarkToolbarStyle" parent="@style/Widget.AppCompat.Spinner.DropDown.ActionBar">
         <item name="background">?android:selectableItemBackground</item>
         <item name="android:popupBackground">@color/colorBackground</item>
