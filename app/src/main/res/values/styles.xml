@@ -21,7 +21,7 @@
 
     <style name="newsListUnreadCounter" parent="Widget.AppCompat.TextView">
         <item name="android:textColor">@color/colorText</item>
-        <item name="android:background">@color/counterBackground</item>
+        <item name="android:background">@drawable/rounded_corner</item>
         <item name="android:textAlignment">center</item>
         <item name="android:textSize">@dimen/newsListTitleSize</item>
     </style>
