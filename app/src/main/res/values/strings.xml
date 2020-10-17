@@ -49,4 +49,6 @@
     <string name="mark_today_news">Mark today news</string>
     <string name="mark_all">Mark all as read</string>
     <string name="nothing_to_show">Nothing to show</string>
+    <string name="auto_clean_cache_days_period">Cache lifetime, days</string>
+    <string name="days">days</string>
 </resources>

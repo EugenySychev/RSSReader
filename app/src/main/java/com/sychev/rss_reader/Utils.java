@@ -9,6 +9,8 @@ public class Utils {
 
     public static final String NIGHT_MODE_SETTINGS_NAME = "NightMode";
     public static final String APP_SETTINGS = "RSSReadSettings";
+    public static final String CLEAN_PERIOD_TIME_DISTANCE = "CleanCacheTimePeriod";
+    public static int defaultTimeDistanceCleaning = 30;
 
     public static String cropTextWithPoints(String source, int length) {
         if (source == null)

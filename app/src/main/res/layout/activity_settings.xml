@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".view.SettingsActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:background="@color/colorBackground">
+        android:background="@color/colorBackground"
+        android:orientation="vertical">
 
         <com.google.android.material.appbar.AppBarLayout
             android:layout_width="match_parent"
@@ -19,19 +19,42 @@
 
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/settings_activity_toolbar"
-                app:title="@string/action_settings"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                app:popupTheme="@style/AppTheme" />
+                app:popupTheme="@style/AppTheme"
+                app:title="@string/action_settings" />
         </com.google.android.material.appbar.AppBarLayout>
 
         <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/dark_theme_switcher"
+            style="@style/newsListTitleText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/dark_theme_switcher"
-            android:textSize="@dimen/text_size"
             android:padding="@dimen/activity_vertical_padding"
             android:text="@string/use_dark_theme"
-            style="@style/newsListTitleText"/>
+            android:textSize="@dimen/text_size" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/newsListTitleText"
+                android:padding="@dimen/activity_vertical_padding"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="bottom"
+                android:text="@string/auto_clean_cache_days_period" />
+
+            <EditText
+                android:id="@+id/timePeriodDays"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top"
+                android:ems="10"
+                android:inputType="number" />
+
+        </LinearLayout>
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

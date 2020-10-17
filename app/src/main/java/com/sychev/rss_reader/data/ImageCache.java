@@ -2,12 +2,14 @@ package com.sychev.rss_reader.data;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Log;
 
 import androidx.collection.LruCache;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Calendar;
 
 public class ImageCache {
 
@@ -71,5 +73,25 @@ public class ImageCache {
         this.cacheDir = cacheDir;
     }
 
+    public void cleanCacheDir(int timePeriod) {
+        long timePeriodMilli = timePeriod * 1000 * 60 * 60 * 24;
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                File[] files = cacheDir.listFiles();
+                long currentTime = Calendar.getInstance().getTime().toInstant().toEpochMilli();
+                currentTime -= timePeriodMilli;
+                for (File file : files) {
+                    Log.d("ImageCache", "Checking " + file.getName() + " as modified at " + file.lastModified() + " and " + currentTime);
+                    if (file.lastModified() < currentTime)
+                    {
+                        Log.d("ImageCache", "Remove " + file.getName());
+                        file.delete();
+                    }
+                }
+            }
+        });
+        thread.start();
+    }
 
 }

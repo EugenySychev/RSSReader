@@ -61,6 +61,8 @@ public class MainActivity extends AppCompatActivity implements NewsListLoader.Up
         NewsListLoader.getInstance().addNotifier(this);
         ImageCache.getInstance().setCacheDir(getCacheDir());
 
+        int cleanTimePeriod = getSharedPreferences(Utils.APP_SETTINGS, 0).getInt(Utils.CLEAN_PERIOD_TIME_DISTANCE, Utils.defaultTimeDistanceCleaning);
+        ImageCache.getInstance().cleanCacheDir(cleanTimePeriod);
         drawerLayout = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
         mAppBarConfiguration = new AppBarConfiguration.Builder(
