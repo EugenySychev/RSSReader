@@ -115,16 +115,16 @@ public class NewsNetworkLoader extends Thread {
         LocalDateTime d = LocalDateTime.parse(timeString, formatter);
         long timeMils = d.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
 
-        String descrText = getValueFromElement(fstElmnt, "description");
-//
-//        int i = 0;
-//        while (descrText.length() < 11) {
-//            Element descrListElement = (Element) descrList.item(0);
-//            NodeList descrListNodes = descrListElement.getChildNodes();
-//            descrText = ((Node) descrListNodes.item(i)).getNodeValue();
-//            descrText = descrText.replace("<![CDATA[", "").replace("]]>", "");
-//            i++;
-//        }
+//        String descrText = getValueFromElement(fstElmnt, "description");
+        String descrText = "";
+        NodeList descrList = fstElmnt.getElementsByTagName("description");
+        Element descrListElement = (Element) descrList.item(0);
+        NodeList descrListNodes = descrListElement.getChildNodes();
+
+        for(int i = 0; i < descrListNodes.getLength(); i++) {
+            descrText += descrListNodes.item(i).getNodeValue();
+
+        }
 
         String urlString = "";
 
@@ -160,7 +160,7 @@ public class NewsNetworkLoader extends Thread {
 
         Bitmap finalLoadedBitmap = loadedBitmap;
         Spanned descrTextSpan = Html.fromHtml(descrText,
-                Html.FROM_HTML_MODE_COMPACT,
+                Html.FROM_HTML_MODE_LEGACY,
                 new Html.ImageGetter() {
                     @Override
                     public Drawable getDrawable(String sourceFromDescr) {
@@ -187,12 +187,17 @@ public class NewsNetworkLoader extends Thread {
 
                         return null;
                     }
-                }, null);
-        descrText = Utils.trimString(descrTextSpan.toString());
+                }, new Html.TagHandler() {
+                    @Override
+                    public void handleTag(boolean opening, String tag, Editable output, XMLReader xmlReader) {
+                        Log.d("NETWORK", "Handle " + opening + " " + tag + " " + output.toString() );
+                    }
+                });
+        String descrTextRes = Utils.trimString(descrTextSpan.toString());
         char bjChar = 0xfffc;
         char spChar = 0x0;
-        descrText = descrText.replace(bjChar, spChar);
-        item.setDescription(descrText);
+        descrTextRes = descrTextRes.replace(bjChar, spChar);
+        item.setDescription(descrTextRes);
         item.setUrl(urlString);
         item.setSource(source.toString());
 
