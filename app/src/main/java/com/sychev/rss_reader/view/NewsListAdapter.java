@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.text.Html;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +22,8 @@ import com.sychev.rss_reader.data.NewsModelItem;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+
+import static com.sychev.rss_reader.Utils.cropTextWithPoints;
 
 public class NewsListAdapter extends RecyclerView.Adapter<NewsListAdapter.NewsItemView> {
 
@@ -112,7 +115,7 @@ public class NewsListAdapter extends RecyclerView.Adapter<NewsListAdapter.NewsIt
             }
 
             titleView.setText(item.getTitle());
-            descrView.setText(Html.fromHtml(Utils.cropTextWithPoints(item.getDescription(), 70), Html.FROM_HTML_MODE_COMPACT));
+            descrView.setText(cropTextWithPoints(item.getDescription(), 70));
             timeView.setText(Utils.getTimeString(item.getTime()));
 
             if (item.getIsRead() == 0) {
@@ -122,6 +125,7 @@ public class NewsListAdapter extends RecyclerView.Adapter<NewsListAdapter.NewsIt
                 titleView.setTypeface(null, Typeface.ITALIC);
                 descrView.setTypeface(null, Typeface.ITALIC);
             }
+
         }
     }
 }

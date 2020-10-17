@@ -24,6 +24,19 @@ public class Utils {
         return source;
     }
 
+    public static String trimString(String source) {
+        int len = source.length();
+        int st = 0;
+
+        while ((st < len) && (source.charAt(st) == ' ' || source.charAt(st) == '\n')) {
+            st++;
+        }
+        while ((st < len) && (source.charAt(len - 1) == ' ' || source.charAt(len - 1) == '\n')) {
+            len--;
+        }
+        return ((st > 0) || (len < source.length())) ? source.substring(st, len) : source;
+    }
+
     public static String getTimeString(long time) {
         @SuppressLint("SimpleDateFormat") SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
         Calendar calendar = Calendar.getInstance();

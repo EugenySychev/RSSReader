@@ -2,12 +2,18 @@ package com.sychev.rss_reader.data;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.LevelListDrawable;
 import android.os.Handler;
 import android.os.Message;
+import android.text.Editable;
+import android.text.Html;
+import android.text.Spannable;
+import android.text.Spanned;
+import android.util.Log;
 
-import com.sychev.rss_reader.data.ImageCache;
-import com.sychev.rss_reader.data.NewsModelItem;
-import com.sychev.rss_reader.data.SourceModelItem;
+import com.sychev.rss_reader.Utils;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -15,12 +21,13 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
+import org.xml.sax.XMLReader;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +36,8 @@ import java.util.Locale;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+
+import static androidx.core.text.HtmlCompat.FROM_HTML_MODE_LEGACY;
 
 public class NewsNetworkLoader extends Thread {
     private List<NewsModelItem> loadedList;
@@ -57,16 +66,12 @@ public class NewsNetworkLoader extends Thread {
             Document doc = db.parse(new InputSource(source.openStream()));
             doc.getDocumentElement().normalize();
 
-//            if (sourceItem.getTitle() == null) {
             Element elem = (Element) doc.getElementsByTagName("channel").item(0);
             String title = getValueFromElement(elem, "title");
             if (!title.equals(sourceItem.getTitle())) {
                 sourceItem.setTitle(title);
                 needUpdateSource = true;
             }
-
-
-//            }
 
             if (sourceItem.getIcon() == null) {
                 URL iconSource = new URL(source.getProtocol() + "://" + source.getHost() + "/favicon.ico");
@@ -110,22 +115,27 @@ public class NewsNetworkLoader extends Thread {
         LocalDateTime d = LocalDateTime.parse(timeString, formatter);
         long timeMils = d.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
 
-        String descrText = "";
-        NodeList descrList = fstElmnt.getElementsByTagName("description");
+        String descrText = getValueFromElement(fstElmnt, "description");
+//
+//        int i = 0;
+//        while (descrText.length() < 11) {
+//            Element descrListElement = (Element) descrList.item(0);
+//            NodeList descrListNodes = descrListElement.getChildNodes();
+//            descrText = ((Node) descrListNodes.item(i)).getNodeValue();
+//            descrText = descrText.replace("<![CDATA[", "").replace("]]>", "");
+//            i++;
+//        }
 
-        int i = 0;
-        while (descrText.length() < 11) {
-            Element descrListElement = (Element) descrList.item(0);
-            NodeList descrListNodes = descrListElement.getChildNodes();
-            descrText = ((Node) descrListNodes.item(i)).getNodeValue();
-            descrText = descrText.replace("<![CDATA[", "").replace("]]>", "");
-            i++;
-        }
+        String urlString = "";
 
-        String urlString = getValueFromElement(fstElmnt, "guid");
+        if (fstElmnt.getElementsByTagName("guid").item(0) != null)
+            urlString = getValueFromElement(fstElmnt, "guid");
+        else if (fstElmnt.getElementsByTagName("link").item(0) != null)
+            urlString = getValueFromElement(fstElmnt, "link");
+
         NewsModelItem item = new NewsModelItem(titleText, descrText);
 
-        Bitmap loadedBitmap;
+        Bitmap loadedBitmap = null;
         NodeList iconList = fstElmnt.getElementsByTagName("enclosure");
         String urlStr = "";
         if (iconList.item(0) != null)
@@ -148,6 +158,41 @@ public class NewsNetworkLoader extends Thread {
             item.setTime(timeMils);
         }
 
+        Bitmap finalLoadedBitmap = loadedBitmap;
+        Spanned descrTextSpan = Html.fromHtml(descrText,
+                Html.FROM_HTML_MODE_COMPACT,
+                new Html.ImageGetter() {
+                    @Override
+                    public Drawable getDrawable(String sourceFromDescr) {
+                        URL sourceUrl;
+
+                        try {
+                            String sourceFromDescrString = sourceFromDescr;
+                            if (sourceFromDescrString.substring(0, 2).equals("//")) {
+                                sourceFromDescrString = "https:" + sourceFromDescrString;
+                            }
+                            sourceUrl = new URL(sourceFromDescrString);
+
+                            Bitmap bitmap = BitmapFactory.decodeStream(sourceUrl.openStream());
+                            if (bitmap != null && finalLoadedBitmap == null) {
+                                ImageCache.getInstance().saveBitmapToCahche(sourceFromDescrString, bitmap);
+                                item.setIcon(bitmap);
+                                item.setIconUrl(sourceFromDescrString);
+                            }
+                        } catch (MalformedURLException e) {
+                            e.printStackTrace();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
+                        return null;
+                    }
+                }, null);
+        descrText = Utils.trimString(descrTextSpan.toString());
+        char bjChar = 0xfffc;
+        char spChar = 0x0;
+        descrText = descrText.replace(bjChar, spChar);
+        item.setDescription(descrText);
         item.setUrl(urlString);
         item.setSource(source.toString());
 

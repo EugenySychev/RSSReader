@@ -3,6 +3,10 @@ package com.sychev.rss_reader.view;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.LevelListDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Html;
@@ -19,14 +23,19 @@ import androidx.core.text.HtmlCompat;
 import com.sychev.rss_reader.R;
 import com.sychev.rss_reader.data.ImageCache;
 
-public class NewsViewActivity extends AppCompatActivity {
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 
-    private String urlString;
-    private String title = "";
-    private String imageUrl = "";
+import static androidx.core.text.HtmlCompat.FROM_HTML_MODE_LEGACY;
+
+public class NewsViewActivity extends AppCompatActivity {
 
     SharedPreferences pref;
     int font_size;
+    private String urlString;
+    private String title = "";
+    private String imageUrl = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +61,7 @@ public class NewsViewActivity extends AppCompatActivity {
 
 
         TextView contentTextView = findViewById(R.id.news_text_content);
-        contentTextView.setText(Html.fromHtml(content, HtmlCompat.FROM_HTML_MODE_LEGACY));
+        contentTextView.setText(content);
         contentTextView.setTextSize(font_size);
 
         Bitmap bmp = ImageCache.getInstance().retrieveBitmapFromCache(imageUrl);

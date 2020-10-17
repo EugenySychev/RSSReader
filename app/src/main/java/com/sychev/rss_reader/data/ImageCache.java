@@ -70,6 +70,8 @@ public class ImageCache {
     }
 
     public void removeBitmap(String key) {
+        if (key == null)
+            return;
         if (cacheDir.getAbsolutePath() != "/" && !key.isEmpty()) {
             String imageName = cacheDir.getAbsolutePath() + "/" + key.replace("/", "").replace(":", "");
             File file = new File(imageName);
