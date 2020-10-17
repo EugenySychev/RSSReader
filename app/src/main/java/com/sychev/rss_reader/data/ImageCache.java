@@ -41,7 +41,7 @@ public class ImageCache {
             ImageCache.getInstance().getLru().put(key, bitmap);
 
             if (cacheDir.getAbsolutePath() != "/") {
-                String imageName = cacheDir.getAbsolutePath()  + "/" + key.replace("/", "").replace(":", "");
+                String imageName = cacheDir.getAbsolutePath() + "/" + key.replace("/", "").replace(":", "");
                 try (FileOutputStream out = new FileOutputStream(imageName)) {
                     bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
                 } catch (IOException e) {
@@ -59,7 +59,7 @@ public class ImageCache {
                 return null;
             Bitmap bitmap = (Bitmap) ImageCache.getInstance().getLru().get(key);
             if (bitmap == null && cacheDir.getAbsolutePath() != "/") {
-                String imageName = cacheDir.getAbsolutePath()  + "/" + key.replace("/", "").replace(":", "");
+                String imageName = cacheDir.getAbsolutePath() + "/" + key.replace("/", "").replace(":", "");
                 bitmap = BitmapFactory.decodeFile(imageName);
                 System.out.println("Read from cache " + imageName);
             }
@@ -67,6 +67,16 @@ public class ImageCache {
         } catch (Exception e) {
         }
         return null;
+    }
+
+    public void removeBitmap(String key) {
+        if (cacheDir.getAbsolutePath() != "/" && !key.isEmpty()) {
+            String imageName = cacheDir.getAbsolutePath() + "/" + key.replace("/", "").replace(":", "");
+            File file = new File(imageName);
+            if (file.exists()) {
+                file.delete();
+            }
+        }
     }
 
     public void setCacheDir(File cacheDir) {
@@ -83,8 +93,7 @@ public class ImageCache {
                 currentTime -= timePeriodMilli;
                 for (File file : files) {
                     Log.d("ImageCache", "Checking " + file.getName() + " as modified at " + file.lastModified() + " and " + currentTime);
-                    if (file.lastModified() < currentTime)
-                    {
+                    if (file.lastModified() < currentTime) {
                         Log.d("ImageCache", "Remove " + file.getName());
                         file.delete();
                     }

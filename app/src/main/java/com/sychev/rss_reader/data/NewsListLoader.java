@@ -357,6 +357,8 @@ public class NewsListLoader {
 
     public boolean removeSource(SourceModelItem source) {
         if (dbLoader.removeSource(source) && dbLoader.removeNews(source)) {
+            for(NewsModelItem item : loadedHashMap.get(source))
+                ImageCache.getInstance().removeBitmap(item.getIconUrl());
             loadedHashMap.remove(source);
             sourceList.remove(source);
             updateAllNotifiers();
