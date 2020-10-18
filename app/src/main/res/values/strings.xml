@@ -51,4 +51,5 @@
     <string name="nothing_to_show">Nothing to show</string>
     <string name="auto_clean_cache_days_period">Cache lifetime, days</string>
     <string name="days">days</string>
+    <string name="select_action">Select the action</string>
 </resources>

@@ -131,17 +131,18 @@ public class SourceNavAdapter extends BaseExpandableListAdapter {
             convertView = layoutInflater.inflate(R.layout.source_nav_item_view, null);
         }
 
-        if (source.getIcon() != null){
-            ImageView imageView = convertView.findViewById(R.id.source_nav_item_icon);
-            imageView.setImageBitmap(source.getIcon());
+        if (source != null) {
+            if (source.getIcon() != null) {
+                ImageView imageView = convertView.findViewById(R.id.source_nav_item_icon);
+                imageView.setImageBitmap(source.getIcon());
+            }
+
+            TextView sourceTitle = (TextView) convertView.findViewById(R.id.source_nav_item_title);
+            sourceTitle.setText(source.getTitle());
+
+            TextView sourceCounter = (TextView) convertView.findViewById(R.id.source_nav_item_counter);
+            sourceCounter.setText(String.valueOf(source.getUnreadCount()));
         }
-
-        TextView sourceTitle = (TextView) convertView.findViewById(R.id.source_nav_item_title);
-        sourceTitle.setText(source.getTitle());
-
-        TextView sourceCounter = (TextView) convertView.findViewById(R.id.source_nav_item_counter);
-        sourceCounter.setText(String.valueOf(source.getUnreadCount()));
-
         return convertView;
     }
 

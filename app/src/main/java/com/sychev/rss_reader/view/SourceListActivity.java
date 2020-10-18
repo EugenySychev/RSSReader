@@ -119,7 +119,7 @@ public class SourceListActivity extends AppCompatActivity implements NewsListLoa
         super.onCreateContextMenu(menu, v, menuInfo);
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.source_context_menu, menu);
-        menu.setHeaderTitle("Select The Action");
+        menu.setHeaderTitle(getString(R.string.select_action));
     }
 
     @Override
@@ -168,28 +168,10 @@ public class SourceListActivity extends AppCompatActivity implements NewsListLoa
     private void addSource(final String source, final NewsListLoader.Categories category) throws MalformedURLException {
         SourceModelItem sourceModelItem = new SourceModelItem();
         sourceModelItem.setUrl(source);
+        sourceModelItem.setTitle(source);
         sourceModelItem.setCategory(category);
         NewsListLoader.getInstance().addSource(sourceModelItem);
         NewsListLoader.getInstance().requestUpdateListSource(sourceModelItem);
-
-        //        final SourceNetworkLoader networkLoader = new SourceNetworkLoader(source);
-//        final SourceModelItem item = new SourceModelItem();
-//        Handler handler = new Handler(Looper.getMainLooper()) {
-//            @Override
-//            public void handleMessage(Message msg) {
-//                if (msg.what == NewsNetworkLoader.LoadState.LOAD_OK) {
-//                    item.setTitle(networkLoader.getTitle());
-//                    item.setCategory(category);
-//                    item.setUrl(source);
-//                    NewsListLoader.getInstance().addSource(item);
-//                    listAdapter.notifyDataSetChanged();
-//                    NewsListLoader.getInstance().requestUpdateListSource(item);
-//                }
-//                super.handleMessage(msg);
-//            }
-//        };
-//        networkLoader.setHandler(handler);
-//        networkLoader.start();
     }
 
     @Override
