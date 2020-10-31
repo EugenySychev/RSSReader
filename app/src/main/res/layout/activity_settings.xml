@@ -54,7 +54,8 @@
                 android:layout_gravity="top"
                 android:ems="10"
                 android:textColor="@color/colorText"
-                android:inputType="number" />
+                android:inputType="number"
+                android:autofillHints="@string/number_of_days" />
 
         </LinearLayout>
     </LinearLayout>

@@ -19,11 +19,11 @@ import java.util.List;
 
 public class SourceListAdapter extends BaseExpandableListAdapter {
 
-    private Context context;
+    private final Context context;
 
-    private List<String> expandableListTitle = new ArrayList<>();// = Arrays.asList("News", "Films", "Others");
-    private HashMap<String, List<SourceModelItem>> expandableListDetail = new HashMap<>();
-    private List<SourceModelItem> loadedSourceList;
+    private final List<String> expandableListTitle = new ArrayList<>();// = Arrays.asList("News", "Films", "Others");
+    private final HashMap<String, List<SourceModelItem>> expandableListDetail = new HashMap<>();
+    private final List<SourceModelItem> loadedSourceList;
 
     public SourceListAdapter(Context context, List<SourceModelItem> sourceList) {
         this.context = context;

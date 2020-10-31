@@ -1,28 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="fab_margin">2dp</dimen>
-    <dimen name="activity_horizontal_margin">10dp</dimen>
     <dimen name="activity_vertical_margin">30dp</dimen>
     <dimen name="activity_vertical_padding">10dp</dimen>
-    <dimen name="nav_header_height">100dp</dimen>
     <dimen name="nav_header_vertical_spacing">10dp</dimen>
     <dimen name="text_margin">16dp</dimen>
     <dimen name="setup_source_item_padding">5dp</dimen>
-    <dimen name="share_button_width">100dp</dimen>
-    <dimen name="open_item_button_width">100dp</dimen>
     <dimen name="newsListTitleSize">16sp</dimen>
     <dimen name="newsListDescriptionSize">14sp</dimen>
     <dimen name="newsListTimeSize">10sp</dimen>
-    <dimen name="newsListTitleMaxLines">2</dimen>
-    <dimen name="newsListDescriptionMaxLines">2</dimen>
     <dimen name="box_inset_layout_padding">0dp</dimen>
 
-    <dimen name="inner_frame_layout_padding">5dp</dimen>
     <dimen name="item_list_layout_padding">10dp</dimen>
-    <dimen name="app_bar_height">180dp</dimen>
     <dimen name="text_size">18sp</dimen>
     <dimen name="nav_menu_icon_size">30dp</dimen>
-    <dimen name="elevation_size">4dp</dimen>
     <dimen name="source_icon_settings">30dp</dimen>
     <dimen name="nav_source_item_icon">20dp</dimen>
 </resources>

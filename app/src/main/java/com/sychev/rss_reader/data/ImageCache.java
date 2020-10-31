@@ -14,7 +14,7 @@ import java.util.Calendar;
 public class ImageCache {
 
     private static ImageCache instance;
-    private LruCache<Object, Object> lru;
+    private final LruCache<Object, Object> lru;
     private File cacheDir;
 
     private ImageCache() {
@@ -49,6 +49,7 @@ public class ImageCache {
                 }
             }
         } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -65,6 +66,7 @@ public class ImageCache {
             }
             return bitmap;
         } catch (Exception e) {
+            e.printStackTrace();
         }
         return null;
     }

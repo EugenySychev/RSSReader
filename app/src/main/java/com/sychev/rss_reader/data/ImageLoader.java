@@ -8,7 +8,7 @@ import java.net.URL;
 
 public class ImageLoader extends Thread {
 
-    private NewsModelItem newsModelItem;
+    private final NewsModelItem newsModelItem;
 
     public ImageLoader(NewsModelItem item) {
         newsModelItem = item;

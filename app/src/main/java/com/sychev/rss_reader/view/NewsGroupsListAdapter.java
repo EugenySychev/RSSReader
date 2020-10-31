@@ -24,9 +24,9 @@ import java.util.List;
 public class NewsGroupsListAdapter extends BaseExpandableListAdapter {
     private final int MAX_LINE_LENTGTH = 70;
 
-    private HashMap<SourceModelItem, List<NewsModelItem>> hashMap;
-    private Context context;
-    private boolean onlyNew = false;
+    private final HashMap<SourceModelItem, List<NewsModelItem>> hashMap;
+    private final Context context;
+    private final boolean onlyNew = false;
 
     public NewsGroupsListAdapter(Context context, HashMap<SourceModelItem, List<NewsModelItem>> hashMap) {
         this.context = context;

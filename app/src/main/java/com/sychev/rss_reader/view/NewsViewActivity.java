@@ -2,40 +2,30 @@ package com.sychev.rss_reader.view;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.LevelListDrawable;
-import android.net.Uri;
 import android.os.Bundle;
-import android.text.Html;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.text.HtmlCompat;
+import androidx.viewpager.widget.ViewPager;
 
+import com.sychev.rss_reader.NewsViewAdapter;
 import com.sychev.rss_reader.R;
-import com.sychev.rss_reader.data.ImageCache;
+import com.sychev.rss_reader.data.NewsListLoader;
+import com.sychev.rss_reader.data.NewsModelItem;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-
-import static androidx.core.text.HtmlCompat.FROM_HTML_MODE_LEGACY;
+import java.util.List;
 
 public class NewsViewActivity extends AppCompatActivity {
 
+    private final String title = "";
+    private final String imageUrl = "";
     SharedPreferences pref;
     int font_size;
     private String urlString;
-    private String title = "";
-    private String imageUrl = "";
+    private NewsViewAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,15 +33,12 @@ public class NewsViewActivity extends AppCompatActivity {
         setContentView(R.layout.activity_news_view);
 
         pref = getApplicationContext().getSharedPreferences("ViewPreference", 0);
-        font_size = pref.getInt("DigestFontSize", 10);
+        font_size = pref.getInt("DigestFontSize", 14);
 
         Intent intent = new Intent(this, NewsViewActivity.class);
         Bundle bundle = intent.getExtras();
 
-        String content = getIntent().getStringExtra("content");
         urlString = getIntent().getStringExtra("url");
-        imageUrl = getIntent().getStringExtra("image");
-        title = getIntent().getStringExtra("title");
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.news_view_toolbar);
         toolbar.setTitle(title);
@@ -59,44 +46,23 @@ public class NewsViewActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
+        adapter = new NewsViewAdapter(getSupportFragmentManager(), 0);
+        ViewPager pager = findViewById(R.id.newsViewPager);
+        List<NewsModelItem> newsList = NewsListLoader.getInstance().getLoadedNewsList();
+        adapter.setNewsModelItemList(newsList);
+        pager.setAdapter(adapter);
+        Log.d("NewsFrag", "Open with url " + urlString);
+        int index;
+        for (index = 0; index < newsList.size(); index++) {
 
-        TextView contentTextView = findViewById(R.id.news_text_content);
-        contentTextView.setText(content);
-        contentTextView.setTextSize(font_size);
+            if (newsList.get(index).getUrl().equals(urlString))
+                break;
+        }
 
-        Bitmap bmp = ImageCache.getInstance().retrieveBitmapFromCache(imageUrl);
+        Log.d("NewsFrag", "Found at " + index + " with title " + newsList.get(index).getTitle());
+        if (index < newsList.size())
+            pager.setCurrentItem(index);
 
-        ImageView imageView = findViewById(R.id.imageNewView);
-        if (bmp != null)
-            imageView.setImageBitmap(bmp);
-        else
-            imageView.setVisibility(View.GONE);
-        TextView titleTextView = findViewById(R.id.news_text_title);
-        titleTextView.setText(title);
-        titleTextView.setTextSize(font_size);
-
-        findViewById(R.id.open_site_button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (urlString.length() > 0) {
-                    Intent i = new Intent(Intent.ACTION_VIEW);
-                    i.setData(Uri.parse(urlString));
-                    startActivity(i);
-                }
-            }
-        });
-        findViewById(R.id.share_item_button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (urlString.length() > 0) {
-                    Intent i = new Intent(Intent.ACTION_SEND);
-                    i.setType("text/plain");
-                    i.putExtra(Intent.EXTRA_SUBJECT, "Url:");
-                    i.putExtra(Intent.EXTRA_TEXT, title + " " + urlString);
-                    startActivity(i);
-                }
-            }
-        });
     }
 
     @Override
@@ -123,12 +89,11 @@ public class NewsViewActivity extends AppCompatActivity {
         SharedPreferences.Editor editor = pref.edit();
         editor.putInt("DigestFontSize", font_size);
         editor.commit();
-        TextView content = findViewById(R.id.news_text_content);
-        content.setTextSize(font_size);
 
-        TextView title = findViewById(R.id.news_text_title);
-        title.setTextSize(font_size);
-
+        for (int i = 0; i < adapter.getCount(); i++) {
+            NewsViewFragment fragment = (NewsViewFragment) adapter.getItem(i);
+            fragment.setFontSize(font_size);
+        }
         return super.onOptionsItemSelected(item);
     }
 }

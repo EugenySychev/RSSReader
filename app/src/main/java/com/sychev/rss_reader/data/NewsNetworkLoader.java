@@ -2,14 +2,11 @@ package com.sychev.rss_reader.data;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.LevelListDrawable;
 import android.os.Handler;
 import android.os.Message;
 import android.text.Editable;
 import android.text.Html;
-import android.text.Spannable;
 import android.text.Spanned;
 import android.util.Log;
 
@@ -37,11 +34,9 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import static androidx.core.text.HtmlCompat.FROM_HTML_MODE_LEGACY;
-
 public class NewsNetworkLoader extends Thread {
-    private List<NewsModelItem> loadedList;
-    private SourceModelItem sourceItem;
+    private final List<NewsModelItem> loadedList;
+    private final SourceModelItem sourceItem;
     private URL source;
     private Handler handler;
     private boolean needUpdateSource = false;
@@ -121,7 +116,7 @@ public class NewsNetworkLoader extends Thread {
         Element descrListElement = (Element) descrList.item(0);
         NodeList descrListNodes = descrListElement.getChildNodes();
 
-        for(int i = 0; i < descrListNodes.getLength(); i++) {
+        for (int i = 0; i < descrListNodes.getLength(); i++) {
             descrText += descrListNodes.item(i).getNodeValue();
 
         }
@@ -168,7 +163,7 @@ public class NewsNetworkLoader extends Thread {
 
                         try {
                             String sourceFromDescrString = sourceFromDescr;
-                            if (sourceFromDescrString.substring(0, 2).equals("//")) {
+                            if (sourceFromDescrString.startsWith("//")) {
                                 sourceFromDescrString = "https:" + sourceFromDescrString;
                             }
                             sourceUrl = new URL(sourceFromDescrString);
@@ -190,7 +185,7 @@ public class NewsNetworkLoader extends Thread {
                 }, new Html.TagHandler() {
                     @Override
                     public void handleTag(boolean opening, String tag, Editable output, XMLReader xmlReader) {
-                        Log.d("NETWORK", "Handle " + opening + " " + tag + " " + output.toString() );
+                        Log.d("NETWORK", "Handle " + opening + " " + tag + " " + output.toString());
                     }
                 });
         String descrTextRes = Utils.trimString(descrTextSpan.toString());

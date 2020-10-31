@@ -17,7 +17,7 @@ public class Utils {
             return "Some shit";
         if (source.length() > length) {
             int len = length;
-            while (len > 0 && !source.substring(len - 1, len).equals(" ")) len--;
+            while (len > 0 && !source.startsWith(" ", len - 1)) len--;
 
             return source.substring(0, len) + "...";
         }

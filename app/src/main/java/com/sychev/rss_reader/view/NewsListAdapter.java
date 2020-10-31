@@ -4,8 +4,6 @@ package com.sychev.rss_reader.view;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
-import android.text.Html;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,7 +25,7 @@ import static com.sychev.rss_reader.Utils.cropTextWithPoints;
 
 public class NewsListAdapter extends RecyclerView.Adapter<NewsListAdapter.NewsItemView> {
 
-    private LayoutInflater inflater;
+    private final LayoutInflater inflater;
     private List<NewsModelItem> newsList;
     private ItemClickListener clickListener;
 
@@ -69,7 +67,9 @@ public class NewsListAdapter extends RecyclerView.Adapter<NewsListAdapter.NewsIt
     }
 
     public NewsModelItem getItem(int position) {
-        return newsList.get(position);
+        if (position >= 0)
+            return newsList.get(position);
+        return null;
     }
 
     public void setClickListener(ItemClickListener clickListener) {

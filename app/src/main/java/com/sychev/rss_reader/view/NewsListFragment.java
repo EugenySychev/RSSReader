@@ -2,6 +2,7 @@ package com.sychev.rss_reader.view;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -55,7 +56,6 @@ public class NewsListFragment extends Fragment implements NewsListLoader.UpdateN
             @Override
             public void onRefresh() {
                 try {
-                    swipeRefreshLayout.setRefreshing(true);
                     requestUpdate();
                 } catch (MalformedURLException e) {
                     e.printStackTrace();
@@ -69,6 +69,7 @@ public class NewsListFragment extends Fragment implements NewsListLoader.UpdateN
     }
 
     public void requestUpdate() throws MalformedURLException {
+        swipeRefreshLayout.setRefreshing(true);
         NewsListLoader.getInstance().requestUpdateAllNews();
     }
 
@@ -79,11 +80,10 @@ public class NewsListFragment extends Fragment implements NewsListLoader.UpdateN
     private void openDigest(NewsModelItem item) {
         Intent intent = new Intent(getContext(), NewsViewActivity.class);
         Bundle bundle = new Bundle();
-        bundle.putString("content", item.getDescription());
         bundle.putString("url", item.getUrl());
-        bundle.putString("title", item.getTitle());
-        bundle.putString("image", item.getIconUrl());
         intent.putExtras(bundle);
+
+        Log.d("NEWS_LIST", "Pass to start activity with url " + item.getUrl());
         startActivity(intent);
     }
 
@@ -132,9 +132,12 @@ public class NewsListFragment extends Fragment implements NewsListLoader.UpdateN
 
     @Override
     public void onItemClick(View view, int position) {
+        Log.d("NewsList", "Cliecked " + position);
         NewsModelItem item = adapter.getItem(position);
-        NewsListLoader.getInstance().setItemIsRead(item);
-        openDigest(item);
+        if (item != null) {
+            NewsListLoader.getInstance().setItemIsRead(item);
+            openDigest(item);
+        }
     }
 
     @Override

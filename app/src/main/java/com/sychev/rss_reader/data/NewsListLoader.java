@@ -21,7 +21,7 @@ public class NewsListLoader {
     private NewsDbLoader dbLoader;
     private NewsNetworkLoader networkLoader;
     private static Context context;
-    private HashMap<SourceModelItem, List<NewsModelItem>> loadedHashMap;
+    private final HashMap<SourceModelItem, List<NewsModelItem>> loadedHashMap;
     private List<SourceModelItem> sourceList = new ArrayList<>();
     private static NewsListLoader instance;
     private boolean onlyNotRead;
@@ -173,7 +173,7 @@ public class NewsListLoader {
     }
 
     public void init(Context context) {
-        this.context = context;
+        NewsListLoader.context = context;
         dbLoader = new NewsDbLoader(context);
     }
 

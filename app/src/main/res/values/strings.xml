@@ -2,8 +2,6 @@
     <string name="app_name">RSS Reader</string>
     <string name="loadError">Load Error!!!</string>
     <string name="action_settings">Settings</string>
-    <string name="action_favorite">Favs</string>
-    <string name="menu_home">Home</string>
     <string name="nav_header_desc">image</string>
     <string name="share">Share</string>
     <string name="open_site">Open</string>
@@ -12,20 +10,13 @@
     values-round/strings.xml for round devices.
     -->
     <string name="decrease">decrease</string>
-    <string name="increase" >increase</string>
-    <string name="https_site_rss_xml">https://site/rss.xml</string>
+    <string name="increase">increase</string>
     <string name="save_button_title">Save</string>
-    <string name="enter_url_source_text">Enter source url:</string>
-    <string name="select_category_text">Select category:</string>
-    <string name="add_source">Add source</string>
     <string name="actions_sources">Sources</string>
-    <string name="enter_source_url">Enter source URL</string>
     <string name="cancel_button">Cancel</string>
     <string name="only_new">Only new</string>
     <string name="show_all">Show all</string>
     <string name="filter_title">Filters</string>
-    <string name="sort_title">Sort</string>
-    <string name="edit_context">Edit</string>
     <string name="remove_context">Remove</string>
     <string name="enter_source_title">Enter source URL</string>
     <string name="select_category_title">Select category:</string>
@@ -34,7 +25,6 @@
     <string name="ok_title">OK</string>
     <string name="sources">Sources</string>
     <string name="all_title">All</string>
-    <string name="update_sign">Update ...</string>
     <string name="icon_of_digest">Icon of digest</string>
     <string name="expand_icon">Expand icon</string>
     <string name="use_dark_theme">Use dark theme</string>
@@ -50,6 +40,6 @@
     <string name="mark_all">Mark all as read</string>
     <string name="nothing_to_show">Nothing to show</string>
     <string name="auto_clean_cache_days_period">Cache lifetime, days</string>
-    <string name="days">days</string>
     <string name="select_action">Select the action</string>
+    <string name="number_of_days">Number of days</string>
 </resources>

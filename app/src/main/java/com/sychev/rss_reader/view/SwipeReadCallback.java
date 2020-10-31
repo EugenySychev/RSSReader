@@ -1,7 +1,5 @@
 package com.sychev.rss_reader.view;
 
-import android.annotation.SuppressLint;
-import android.content.ClipData;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -9,7 +7,6 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.View;
-import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
@@ -18,25 +15,16 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.sychev.rss_reader.R;
 
-import java.util.logging.Handler;
-
 public class SwipeReadCallback extends ItemTouchHelper.SimpleCallback {
 
     private final NewsListAdapter adapter;
     private final Paint fontPaint;
     private final int textWidth;
     private final String markReadText;
-
-    private boolean swipeProcessed;
-
     private final Drawable icon;
     private final ColorDrawable background;
-
     private final SwipeActionCallback actor;
-
-    public interface SwipeActionCallback {
-        void processSwipe(int position);
-    }
+    private boolean swipeProcessed;
 
     public SwipeReadCallback(NewsListAdapter adapter, SwipeActionCallback actor) {
         super(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT);
@@ -96,7 +84,7 @@ public class SwipeReadCallback extends ItemTouchHelper.SimpleCallback {
 
             background.draw(c);
             icon.draw(c);
-            c.drawText(markReadText, iconLeft + 10, iconBottom - 10, fontPaint );
+            c.drawText(markReadText, iconLeft + 10, iconBottom - 10, fontPaint);
         } else if (newDx < 0) {
             int iconLeft = itemView.getRight() - iconMargin - icon.getIntrinsicWidth();
             int iconRight = itemView.getRight() - iconMargin;
@@ -107,15 +95,14 @@ public class SwipeReadCallback extends ItemTouchHelper.SimpleCallback {
 
             background.draw(c);
             icon.draw(c);
-            c.drawText(markReadText, iconLeft - textWidth - 10, iconBottom - 10, fontPaint );
+            c.drawText(markReadText, iconLeft - textWidth - 10, iconBottom - 10, fontPaint);
         } else {
             background.setBounds(0, 0, 0, 0);
         }
 
         if (!swipeProcessed && isCurrentlyActive) {
             if ((newDx < 0 && newDx < negativeLimit / 3) ||
-                    (newDx > 0 && newDx > positiveLimit / 3))
-            {
+                    (newDx > 0 && newDx > positiveLimit / 3)) {
                 swipeProcessed = true;
                 android.os.Handler handler = new android.os.Handler();
                 int position = viewHolder.getAdapterPosition();
@@ -134,5 +121,9 @@ public class SwipeReadCallback extends ItemTouchHelper.SimpleCallback {
         if (newDx == 0 && !isCurrentlyActive) {
             adapter.notifyDataSetChanged();
         }
+    }
+
+    public interface SwipeActionCallback {
+        void processSwipe(int position);
     }
 }

@@ -23,8 +23,8 @@ import java.util.Locale;
 
 public class NewsAdapter extends ArrayAdapter<NewsModelItem> {
     private final int MAX_LINE_LENTGTH = 70;
-    private Context mContext;
-    private List<NewsModelItem> mList;
+    private final Context mContext;
+    private final List<NewsModelItem> mList;
 
     public NewsAdapter(Context context,  ArrayList<NewsModelItem> list) {
         super(context, 0, list);
@@ -76,7 +76,7 @@ public class NewsAdapter extends ArrayAdapter<NewsModelItem> {
             return "Some shit";
         if (source.length() > length) {
             int len = length;
-            while (len > 0 && !source.substring(len - 1, len).equals(" ")) len--;
+            while (len > 0 && !source.startsWith(" ", len - 1)) len--;
 
             return source.substring(0, len) + "...";
         }

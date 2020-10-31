@@ -3,27 +3,18 @@
     <string name="app_name">RSS Reader</string>
     <string name="loadError">Ошибка загрузки!!!</string>
     <string name="action_settings">Настройки</string>
-    <string name="action_favorite">Избранное</string>
-    <string name="menu_home">Домой</string>
     <string name="nav_header_desc">Изображение</string>
     <string name="share">Поделиться</string>
     <string name="open_site">Открыть</string>
     <string name="news_image">Изображение статьи</string>
     <string name="decrease">уменьшить</string>
     <string name="increase">увеличить</string>
-    <string name="https_site_rss_xml">https://site/rss.xml</string>
     <string name="save_button_title">Сохранить</string>
-    <string name="enter_url_source_text">Введите адрес источника:</string>
-    <string name="select_category_text">Выберите категорию:</string>
-    <string name="add_source">Добавить источник</string>
     <string name="actions_sources">Источники</string>
-    <string name="enter_source_url">Введите URL источника</string>
     <string name="cancel_button">Отмена</string>
     <string name="only_new">Только новые</string>
     <string name="show_all">Показать все</string>
-    <string name="sort_title">Соритровка</string>
     <string name="filter_title">Фильтры</string>
-    <string name="edit_context">Редактировать</string>
     <string name="remove_context">Удалить</string>
     <string name="enter_source_title">Введите URL источника</string>
     <string name="select_category_title">Выберите категорию</string>
@@ -32,7 +23,6 @@
     <string name="ok_title">ОК</string>
     <string name="sources">Источники</string>
     <string name="all_title">Все</string>
-    <string name="update_sign">Обновление...</string>
     <string name="icon_of_digest">Изображение статьи</string>
     <string name="expand_icon">ExpandIcon</string>
     <string name="use_dark_theme">Использовать темную тему</string>
@@ -47,6 +37,6 @@
     <string name="mark_all">Пометить прочитанным всё</string>
     <string name="nothing_to_show">Здесь ничего нет</string>
     <string name="auto_clean_cache_days_period">Срок жизни кэша, дней</string>
-    <string name="days">дней</string>
     <string name="select_action">Выберете действие</string>
+    <string name="number_of_days">количество дней</string>
 </resources>
