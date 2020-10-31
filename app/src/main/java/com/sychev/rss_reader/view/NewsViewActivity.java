@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -56,6 +58,21 @@ public class NewsViewActivity extends AppCompatActivity {
         List<NewsModelItem> newsList = NewsListLoader.getInstance().getLoadedNewsList();
         adapter.setNewsModelItemList(newsList);
         pager.setAdapter(adapter);
+        pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                NewsModelItem item = newsList.get(position);
+                NewsListLoader.getInstance().setItemIsRead(item);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+            }
+        });
         int index;
         for (index = 0; index < newsList.size(); index++) {
 
