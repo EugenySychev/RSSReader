@@ -11,6 +11,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.viewpager.widget.ViewPager;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.initialization.InitializationStatus;
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 import com.sychev.rss_reader.NewsViewAdapter;
 import com.sychev.rss_reader.R;
 import com.sychev.rss_reader.data.NewsListLoader;
@@ -51,7 +56,6 @@ public class NewsViewActivity extends AppCompatActivity {
         List<NewsModelItem> newsList = NewsListLoader.getInstance().getLoadedNewsList();
         adapter.setNewsModelItemList(newsList);
         pager.setAdapter(adapter);
-        Log.d("NewsFrag", "Open with url " + urlString);
         int index;
         for (index = 0; index < newsList.size(); index++) {
 
@@ -59,9 +63,18 @@ public class NewsViewActivity extends AppCompatActivity {
                 break;
         }
 
-        Log.d("NewsFrag", "Found at " + index + " with title " + newsList.get(index).getTitle());
         if (index < newsList.size())
             pager.setCurrentItem(index);
+
+        MobileAds.initialize(this, new OnInitializationCompleteListener() {
+            @Override
+            public void onInitializationComplete(InitializationStatus initializationStatus) {
+            }
+        });
+
+        AdView mAdView = findViewById(R.id.adNewsView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
 
     }
 
