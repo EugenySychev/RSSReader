@@ -13,12 +13,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-        <activity android:name=".view.SettingsActivity"></activity>
+        <activity android:name=".view.SettingsActivity" />
 
         <meta-data
             android:name="com.google.android.wearable.standalone"
-            android:value="true" />
-
+            android:value="true"
+            />
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-9366467483527776~1576096544"/>
         <activity android:name=".view.SourceListActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
