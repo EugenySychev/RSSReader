@@ -87,7 +87,6 @@ public class NewsViewFragment extends Fragment {
         font_size = pref.getInt("DigestFontSize", 14);
 
         setFontSize(font_size);
-
         return rootView;
     }
 

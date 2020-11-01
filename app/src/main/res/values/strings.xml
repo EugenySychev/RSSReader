@@ -42,5 +42,5 @@
     <string name="auto_clean_cache_days_period">Cache lifetime, days</string>
     <string name="select_action">Select the action</string>
     <string name="number_of_days">Number of days</string>
-    <string name="banner_id" translatable="false">ca-app-pub-9366467483527776/7961046653</string>
+    <string name="banner_id">ca-app-pub-9366467483527776/7961046653</string>
 </resources>

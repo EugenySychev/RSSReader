@@ -47,15 +47,15 @@ import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity implements NewsListLoader.UpdateNotifier {
 
-    private AppBarConfiguration mAppBarConfiguration;
     private static final int SETUP_ACTIVITY_REQUEST_CODE = 0;
+    private AppBarConfiguration mAppBarConfiguration;
     private DrawerLayout drawerLayout;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         int nightMode = getSharedPreferences(Utils.APP_SETTINGS, 0).getInt(Utils.NIGHT_MODE_SETTINGS_NAME, AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
-        AppCompatDelegate.setDefaultNightMode( nightMode );
+        AppCompatDelegate.setDefaultNightMode(nightMode);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
 
@@ -241,7 +241,7 @@ public class MainActivity extends AppCompatActivity implements NewsListLoader.Up
         arrayList.add(hashMap);
 
         String[] from = {"title", "image"};
-        int[] to = {R.id.nav_menu_item_title, R.id.nav_menu_item_icon };//int array of views id's
+        int[] to = {R.id.nav_menu_item_title, R.id.nav_menu_item_icon};//int array of views id's
         SimpleAdapter simpleAdapter = new SimpleAdapter(this, arrayList, R.layout.nav_menu_list_item_view, from, to);//Create object and set the parameters for simpleAdapter
         final Activity activity = this;
         ListView navListView = findViewById(R.id.nav_menu_list);
@@ -249,8 +249,7 @@ public class MainActivity extends AppCompatActivity implements NewsListLoader.Up
         navListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                if (i == 0)
-                {
+                if (i == 0) {
                     drawerLayout.close();
 
                     Intent intent = new Intent(getBaseContext(), SettingsActivity.class);
