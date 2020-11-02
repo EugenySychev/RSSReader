@@ -5,7 +5,9 @@ import android.app.ActivityOptions;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -50,7 +52,7 @@ public class MainActivity extends AppCompatActivity implements NewsListLoader.Up
     private static final int SETUP_ACTIVITY_REQUEST_CODE = 0;
     private AppBarConfiguration mAppBarConfiguration;
     private DrawerLayout drawerLayout;
-
+    private SourceNavAdapter navAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -188,17 +190,17 @@ public class MainActivity extends AppCompatActivity implements NewsListLoader.Up
     }
 
     void createNavigationList() {
-        final SourceNavAdapter adapter = new SourceNavAdapter(this, NewsListLoader.getInstance().getListSource());
+        navAdapter = new SourceNavAdapter(this, NewsListLoader.getInstance().getListSource());
         ExpandableListView listView = findViewById(R.id.nav_list_view);
-        listView.setAdapter(adapter);
-        for (int i = 0; i < adapter.getGroupCount(); i++)
+        listView.setAdapter(navAdapter);
+        for (int i = 0; i < navAdapter.getGroupCount(); i++)
             listView.expandGroup(i);
 
         listView.setGroupIndicator(null);
         listView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
                                              @Override
                                              public boolean onChildClick(ExpandableListView expandableListView, View view, int i, int i1, long l) {
-                                                 SourceModelItem source = (SourceModelItem) adapter.getChild(i, i1);
+                                                 SourceModelItem source = (SourceModelItem) navAdapter.getChild(i, i1);
 
                                                  NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
                                                  NewsListFragment fragment = null;
@@ -214,6 +216,15 @@ public class MainActivity extends AppCompatActivity implements NewsListLoader.Up
                                              }
                                          }
         );
+        registerForContextMenu(listView);
+        listView.setOnCreateContextMenuListener(new View.OnCreateContextMenuListener() {
+            @Override
+            public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+                MenuInflater inflater = getMenuInflater();
+                inflater.inflate(R.menu.source_context_menu, menu);
+                menu.setHeaderTitle(getString(R.string.select_action));
+            }
+        });
         listView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
             @Override
             public boolean onGroupClick(ExpandableListView expandableListView, View view, int i, long l) {
@@ -236,6 +247,11 @@ public class MainActivity extends AppCompatActivity implements NewsListLoader.Up
         ArrayList<HashMap<String, String>> arrayList = new ArrayList<>();
 
         HashMap<String, String> hashMap = new HashMap<>();
+        hashMap.put("title", getString(R.string.action_add));
+        hashMap.put("image", String.valueOf(R.drawable.ic_baseline_add_24));
+        arrayList.add(hashMap);
+
+        hashMap = new HashMap<>();
         hashMap.put("title", getString(R.string.action_settings));
         hashMap.put("image", String.valueOf(R.drawable.ic_baseline_settings_24));
         arrayList.add(hashMap);
@@ -249,15 +265,37 @@ public class MainActivity extends AppCompatActivity implements NewsListLoader.Up
         navListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                if (i == 0) {
+                if (i == 1) {
                     drawerLayout.close();
 
                     Intent intent = new Intent(getBaseContext(), SettingsActivity.class);
                     startActivity(intent,
                             ActivityOptions.makeSceneTransitionAnimation(activity).toBundle());
                 }
+                if (i == 0) {
+                    SourceListActivity.showAddSourceDialog(activity);
+                }
             }
         });
+    }
+
+    @Override
+    public boolean onContextItemSelected(@NonNull MenuItem item) {
+        ExpandableListView.ExpandableListContextMenuInfo info = (ExpandableListView.ExpandableListContextMenuInfo) item.getMenuInfo();
+
+        int groupPos = ExpandableListView.getPackedPositionGroup(info.packedPosition);
+        int childPos = ExpandableListView.getPackedPositionChild(info.packedPosition);
+
+        SourceModelItem selectedSource = (SourceModelItem) navAdapter.getChild(groupPos, childPos);
+
+        if (selectedSource != null) {
+            if (item.getItemId() == R.id.action_remove_source_context) {
+                SourceListActivity.showRemoveDialog(this, selectedSource);
+            } else {
+                return false;
+            }
+        }
+        return true;
     }
 
     @Override

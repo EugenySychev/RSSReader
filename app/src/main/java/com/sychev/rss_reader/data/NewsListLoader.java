@@ -324,15 +324,19 @@ public class NewsListLoader {
         }
     }
 
-    public void requestUpdateAllNews() {
-        if (sourceList.isEmpty())
+    public boolean requestUpdateAllNews() {
+        if (sourceList.isEmpty()) {
             loadSourceListFromDB();
+            if (sourceList.isEmpty())
+                return false;
+        }
         for (SourceModelItem source : sourceList) {
             source.setUpdated(false);
         }
         for (SourceModelItem source : sourceList) {
             requestUpdateListSource(source);
         }
+        return true;
     }
 
     public HashMap<SourceModelItem, List<NewsModelItem>> getLoadedHashMap() {

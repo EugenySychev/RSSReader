@@ -35,9 +35,10 @@
     <string name="mark_older_day_read">Все старее одного дня</string>
     <string name="mark_today_news">Только сегодняшние</string>
     <string name="mark_all">Пометить прочитанным всё</string>
-    <string name="nothing_to_show">Здесь ничего нет</string>
+    <string name="nothing_to_show">Здесь ничего нет\nДобавьте источник</string>
     <string name="auto_clean_cache_days_period">Срок жизни кэша, дней</string>
     <string name="select_action">Выберете действие</string>
     <string name="number_of_days">количество дней</string>
     <string name="banner_id">ca-app-pub-9366467483527776/7961046653</string>
+    <string name="action_add">Добавить источник</string>
 </resources>

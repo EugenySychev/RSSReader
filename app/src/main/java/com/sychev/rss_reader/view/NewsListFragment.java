@@ -70,7 +70,8 @@ public class NewsListFragment extends Fragment implements NewsListLoader.UpdateN
 
     public void requestUpdate() throws MalformedURLException {
         swipeRefreshLayout.setRefreshing(true);
-        NewsListLoader.getInstance().requestUpdateAllNews();
+        if (!NewsListLoader.getInstance().requestUpdateAllNews())
+            swipeRefreshLayout.setRefreshing(false);
     }
 
     public void requestLoad() {

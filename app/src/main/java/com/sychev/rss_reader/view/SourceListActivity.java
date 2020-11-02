@@ -81,8 +81,8 @@ public class SourceListActivity extends AppCompatActivity implements NewsListLoa
         return true;
     }
 
-    private void showAddSourceDialog(Context context) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.AlertDialogCustom));
+    public static void showAddSourceDialog(Context context) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.AlertDialogCustom));
         builder.setTitle(R.string.enter_source_title);
 
         final View v;
@@ -97,11 +97,12 @@ public class SourceListActivity extends AppCompatActivity implements NewsListLoa
                 EditText editText = (EditText) v.findViewById(R.id.enter_source_url_edit_text);
                 Spinner spinner = (Spinner) v.findViewById(R.id.spinner_category);
 
-                try {
-                    addSource(editText.getText().toString(), NewsListLoader.Categories.fromInteger(spinner.getSelectedItemPosition()));
-                } catch (MalformedURLException e) {
-                    e.printStackTrace();
-                }
+                SourceModelItem sourceModelItem = new SourceModelItem();
+                sourceModelItem.setUrl(editText.getText().toString());
+                sourceModelItem.setTitle(editText.getText().toString());
+                sourceModelItem.setCategory(NewsListLoader.Categories.fromInteger(spinner.getSelectedItemPosition()));
+                NewsListLoader.getInstance().addSource(sourceModelItem);
+                NewsListLoader.getInstance().requestUpdateListSource(sourceModelItem);
             }
         });
         builder.setNegativeButton(R.string.cancel_button, new DialogInterface.OnClickListener() {
@@ -125,7 +126,6 @@ public class SourceListActivity extends AppCompatActivity implements NewsListLoa
     @Override
     public boolean onContextItemSelected(MenuItem item) {
 
-        ExpandableListView listView = findViewById(R.id.source_list_view);
         ExpandableListView.ExpandableListContextMenuInfo info = (ExpandableListView.ExpandableListContextMenuInfo) item.getMenuInfo();
 
         int groupPos = ExpandableListView.getPackedPositionGroup(info.packedPosition);
@@ -143,7 +143,7 @@ public class SourceListActivity extends AppCompatActivity implements NewsListLoa
         return true;
     }
 
-    private void showRemoveDialog(Context context, final SourceModelItem selectedSource) {
+    public static void showRemoveDialog(Context context, final SourceModelItem selectedSource) {
         final AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle(R.string.confirm_delete_title)
                 .setMessage(R.string.sure_confirm_delete_message)
@@ -152,7 +152,6 @@ public class SourceListActivity extends AppCompatActivity implements NewsListLoa
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         NewsListLoader.getInstance().removeSource(selectedSource);
-                        listAdapter.notifyDataSetChanged();
                     }
                 })
                 .setNegativeButton(R.string.cancel_button, new DialogInterface.OnClickListener() {
@@ -163,15 +162,6 @@ public class SourceListActivity extends AppCompatActivity implements NewsListLoa
                 });
 
         builder.show();
-    }
-
-    private void addSource(final String source, final NewsListLoader.Categories category) throws MalformedURLException {
-        SourceModelItem sourceModelItem = new SourceModelItem();
-        sourceModelItem.setUrl(source);
-        sourceModelItem.setTitle(source);
-        sourceModelItem.setCategory(category);
-        NewsListLoader.getInstance().addSource(sourceModelItem);
-        NewsListLoader.getInstance().requestUpdateListSource(sourceModelItem);
     }
 
     @Override
