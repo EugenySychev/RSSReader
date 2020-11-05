@@ -64,6 +64,7 @@ public class NewsViewActivity extends AppCompatActivity {
             public void onPageSelected(int position) {
                 NewsModelItem item = newsList.get(position);
                 NewsListLoader.getInstance().setItemIsRead(item);
+                toolbar.setTitle(item.getTitle());
             }
 
             @Override

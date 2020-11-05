@@ -8,8 +8,8 @@ android {
         applicationId "com.sychev.rss_reader"
         minSdkVersion 26
         targetSdkVersion 30
-        versionCode 3
-        versionName "0.0.14"
+        versionCode 4
+        versionName "0.0.15"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }

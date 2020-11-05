@@ -38,7 +38,7 @@ public class SourceNavAdapter extends BaseExpandableListAdapter {
         String allTitle = context.getResources().getString(R.string.all_title);
         expandableListTitle.add(allTitle);
         expandableListDetail.put(allTitle, new ArrayList<Pair<String, Integer>>());
-        for(SourceModelItem item: loadedSourceList) {
+        for (SourceModelItem item : loadedSourceList) {
             String categoryString = NewsListLoader.Categories.toString(item.getCategory());
             if (expandableListDetail.get(categoryString) == null)
                 expandableListDetail.put(categoryString, new ArrayList<Pair<String, Integer>>());
@@ -74,10 +74,10 @@ public class SourceNavAdapter extends BaseExpandableListAdapter {
 
     @Override
     public Object getChild(int i, int i1) {
-        for(SourceModelItem item: loadedSourceList) {
+        for (SourceModelItem item : loadedSourceList) {
             if (NewsListLoader.Categories.toString(item.getCategory()).equals(getGroup(i)) &&
                     item.getTitle().equals(expandableListDetail.get(this.expandableListTitle.get(i)).get(i1).first))
-                return  item;
+                return item;
         }
         return null;
     }
@@ -115,8 +115,10 @@ public class SourceNavAdapter extends BaseExpandableListAdapter {
             imageView.setImageResource(R.drawable.ic_baseline_arrow_drop_down_24);
         else
             imageView.setImageResource(R.drawable.ic_baseline_arrow_right_24);
-    if (i == 0)
-        imageView.setVisibility(View.GONE);
+        if (i == 0)
+            imageView.setVisibility(View.GONE);
+        else
+            imageView.setVisibility(View.VISIBLE);
         return view;
     }
 
