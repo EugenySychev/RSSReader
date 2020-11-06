@@ -123,10 +123,10 @@ public class NewsNetworkLoader extends Thread {
 
         String urlString = "";
 
-        if (fstElmnt.getElementsByTagName("guid").item(0) != null)
-            urlString = getValueFromElement(fstElmnt, "guid");
-        else if (fstElmnt.getElementsByTagName("link").item(0) != null)
+        if (fstElmnt.getElementsByTagName("link").item(0) != null)
             urlString = getValueFromElement(fstElmnt, "link");
+        else if (fstElmnt.getElementsByTagName("guid").item(0) != null)
+            urlString = getValueFromElement(fstElmnt, "guid");
 
         NewsModelItem item = new NewsModelItem(titleText, descrText);
 

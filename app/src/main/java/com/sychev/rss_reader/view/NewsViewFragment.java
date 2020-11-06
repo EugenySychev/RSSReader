@@ -77,7 +77,7 @@ public class NewsViewFragment extends Fragment {
                     Intent i = new Intent(Intent.ACTION_SEND);
                     i.setType("text/plain");
                     i.putExtra(Intent.EXTRA_SUBJECT, "Url:");
-                    i.putExtra(Intent.EXTRA_TEXT, item.getTitle() + " " + item.getUrl());
+                    i.putExtra(Intent.EXTRA_TEXT, item.getTitle() + " " + item.getUrl().toString());
                     startActivity(i);
                 }
             }

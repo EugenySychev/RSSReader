@@ -5,9 +5,11 @@ buildscript {
     repositories {
         google()
         jcenter()
+        maven { url 'https://developer.huawei.com/repo/' }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:4.2.0-alpha13'
+        classpath 'com.android.tools.build:gradle:4.2.0-alpha15'
+        classpath 'com.huawei.agconnect:agcp:1.4.1.300'
 
 
         // NOTE: Do not place your application dependencies here; they belong
@@ -19,6 +21,7 @@ allprojects {
     repositories {
         google()
         jcenter()
+        maven {url 'https://developer.huawei.com/repo/'}
     }
 }
 
