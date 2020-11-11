@@ -78,8 +78,10 @@ public class NewsViewActivity extends AppCompatActivity {
                 break;
         }
 
-        if (index < newsList.size())
+        if (index < newsList.size()) {
             pager.setCurrentItem(index);
+            toolbar.setTitle(newsList.get(index).getTitle());
+        }
 
         MobileAds.initialize(this, new OnInitializationCompleteListener() {
             @Override

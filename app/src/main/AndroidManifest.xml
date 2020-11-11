@@ -13,6 +13,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:hardwareAccelerated="true"
+        android:usesCleartextTraffic="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         <activity android:name=".view.SettingsActivity" />
         <meta-data
@@ -32,6 +33,7 @@
         <activity
             android:name=".view.NewsViewActivity"
             android:hardwareAccelerated="true"/>
+
     </application>
 
 </manifest>

@@ -360,6 +360,8 @@ public class NewsListLoader {
     }
 
     public boolean removeSource(SourceModelItem source) {
+        if (filterSource == source)
+            filterSource = null;
         if (dbLoader.removeSource(source) && dbLoader.removeNews(source)) {
             for(NewsModelItem item : loadedHashMap.get(source))
                 ImageCache.getInstance().removeBitmap(item.getIconUrl());

@@ -30,6 +30,7 @@ public class NewsListFragment extends Fragment implements NewsListLoader.UpdateN
     private View rootView;
     private HashMap<SourceModelItem, List<NewsModelItem>> loadedNewsMap;
     private NewsListAdapter adapter;
+    private SourceModelItem selectedSource = null;
     private SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
@@ -70,8 +71,12 @@ public class NewsListFragment extends Fragment implements NewsListLoader.UpdateN
 
     public void requestUpdate() throws MalformedURLException {
         swipeRefreshLayout.setRefreshing(true);
-        if (!NewsListLoader.getInstance().requestUpdateAllNews())
-            swipeRefreshLayout.setRefreshing(false);
+        if (selectedSource == null) {
+            if (!NewsListLoader.getInstance().requestUpdateAllNews())
+                swipeRefreshLayout.setRefreshing(false);
+        } else {
+            NewsListLoader.getInstance().requestUpdateListSource(selectedSource);
+        }
     }
 
     public void requestLoad() {
@@ -102,6 +107,7 @@ public class NewsListFragment extends Fragment implements NewsListLoader.UpdateN
 
     @Override
     public void update() {
+        selectedSource = NewsListLoader.getInstance().getFilterSource();
         adapter.setList(NewsListLoader.getInstance().getLoadedNewsList());
         adapter.notifyDataSetChanged();
 
@@ -128,6 +134,7 @@ public class NewsListFragment extends Fragment implements NewsListLoader.UpdateN
     }
 
     public void setFilterSource(SourceModelItem source) {
+        selectedSource = source;
         NewsListLoader.getInstance().setFilterSource(source);
     }
 
