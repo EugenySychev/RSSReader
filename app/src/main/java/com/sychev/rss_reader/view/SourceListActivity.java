@@ -3,6 +3,8 @@ package com.sychev.rss_reader.view;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.ContextMenu;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
@@ -10,6 +12,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.webkit.URLUtil;
 import android.widget.EditText;
 import android.widget.ExpandableListView;
 import android.widget.Spinner;
@@ -24,7 +27,6 @@ import com.sychev.rss_reader.Utils;
 import com.sychev.rss_reader.data.NewsListLoader;
 import com.sychev.rss_reader.data.SourceModelItem;
 
-import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,6 +34,81 @@ public class SourceListActivity extends AppCompatActivity implements NewsListLoa
 
     private List<SourceModelItem> sourceList = new ArrayList<>();
     private SourceListAdapter listAdapter;
+
+    public static void showAddSourceDialog(Context context) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.AlertDialogCustom));
+        builder.setTitle(R.string.enter_source_title);
+
+        final View v;
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        v = inflater.inflate(R.layout.source_dialog, null);
+
+        builder.setView(v);
+
+        builder.setPositiveButton(R.string.save_button_title, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                EditText editText = (EditText) v.findViewById(R.id.enter_source_url_edit_text);
+                Spinner spinner = (Spinner) v.findViewById(R.id.spinner_category);
+
+                SourceModelItem sourceModelItem = new SourceModelItem();
+                sourceModelItem.setUrl(editText.getText().toString());
+                sourceModelItem.setTitle(editText.getText().toString());
+                sourceModelItem.setCategory(NewsListLoader.Categories.fromInteger(spinner.getSelectedItemPosition()));
+                NewsListLoader.getInstance().addSource(sourceModelItem);
+                NewsListLoader.getInstance().requestUpdateListSource(sourceModelItem);
+            }
+        });
+        builder.setNegativeButton(R.string.cancel_button, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        AlertDialog d = builder.show();
+        d.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
+        EditText editText = v.findViewById(R.id.enter_source_url_edit_text);
+        editText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (URLUtil.isValidUrl(editText.getText().toString()))
+                    d.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(true);
+                else
+                    d.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
+    }
+
+    public static void showRemoveDialog(Context context, final SourceModelItem selectedSource) {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle(R.string.confirm_delete_title)
+                .setMessage(R.string.sure_confirm_delete_message)
+                .setIcon(R.drawable.ic_baseline_warning_24)
+                .setPositiveButton(R.string.ok_title, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        NewsListLoader.getInstance().removeSource(selectedSource);
+                    }
+                })
+                .setNegativeButton(R.string.cancel_button, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.cancel();
+                    }
+                });
+
+        builder.show();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,7 +143,6 @@ public class SourceListActivity extends AppCompatActivity implements NewsListLoa
         return true;
     }
 
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
@@ -79,40 +155,6 @@ public class SourceListActivity extends AppCompatActivity implements NewsListLoa
             showAddSourceDialog(this);
         }
         return true;
-    }
-
-    public static void showAddSourceDialog(Context context) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.AlertDialogCustom));
-        builder.setTitle(R.string.enter_source_title);
-
-        final View v;
-        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        v = inflater.inflate(R.layout.source_dialog, null);
-
-        builder.setView(v);
-
-        builder.setPositiveButton(R.string.save_button_title, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                EditText editText = (EditText) v.findViewById(R.id.enter_source_url_edit_text);
-                Spinner spinner = (Spinner) v.findViewById(R.id.spinner_category);
-
-                SourceModelItem sourceModelItem = new SourceModelItem();
-                sourceModelItem.setUrl(editText.getText().toString());
-                sourceModelItem.setTitle(editText.getText().toString());
-                sourceModelItem.setCategory(NewsListLoader.Categories.fromInteger(spinner.getSelectedItemPosition()));
-                NewsListLoader.getInstance().addSource(sourceModelItem);
-                NewsListLoader.getInstance().requestUpdateListSource(sourceModelItem);
-            }
-        });
-        builder.setNegativeButton(R.string.cancel_button, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-            }
-        });
-
-        builder.show();
     }
 
     @Override
@@ -141,27 +183,6 @@ public class SourceListActivity extends AppCompatActivity implements NewsListLoa
             }
         }
         return true;
-    }
-
-    public static void showRemoveDialog(Context context, final SourceModelItem selectedSource) {
-        final AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setTitle(R.string.confirm_delete_title)
-                .setMessage(R.string.sure_confirm_delete_message)
-                .setIcon(R.drawable.ic_baseline_warning_24)
-                .setPositiveButton(R.string.ok_title, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        NewsListLoader.getInstance().removeSource(selectedSource);
-                    }
-                })
-                .setNegativeButton(R.string.cancel_button, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        dialogInterface.cancel();
-                    }
-                });
-
-        builder.show();
     }
 
     @Override

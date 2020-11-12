@@ -18,7 +18,7 @@
             android:autofillHints="https://source.org/rss.xml"
             android:inputType="textWebEditText"
             android:labelFor="@id/enter_source_url_edit_text"
-            android:text="https://source.site/rss.xml"
+            android:hint="@string/https_source_site_rss_xml"
             tools:ignore="TextFields" />
 
         <TextView
