@@ -61,6 +61,8 @@ public class ImageCache {
             Bitmap bitmap = (Bitmap) ImageCache.getInstance().getLru().get(key);
             if (bitmap == null && cacheDir.getAbsolutePath() != "/") {
                 String imageName = cacheDir.getAbsolutePath() + "/" + key.replace("/", "").replace(":", "");
+                if (!new File(imageName).exists())
+                    return  null;
                 bitmap = BitmapFactory.decodeFile(imageName);
                 System.out.println("Read from cache " + imageName);
             }
@@ -88,7 +90,7 @@ public class ImageCache {
     }
 
     public void cleanCacheDir(int timePeriod) {
-        long timePeriodMilli = timePeriod * 1000 * 60 * 60 * 24;
+        final long timePeriodMilli = timePeriod * 1000 * 60 * 60 * 24;
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {

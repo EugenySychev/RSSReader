@@ -106,12 +106,11 @@ public class NewsListAdapter extends RecyclerView.Adapter<NewsListAdapter.NewsIt
         }
 
         public void setNewsModelItem(NewsModelItem item) {
-            Bitmap icon = item.getIcon();
-            if (icon == null)
+            if (item.getIconUrl() == null || item.getIconUrl().isEmpty())
                 imageView.setVisibility(View.GONE);
             else {
                 imageView.setVisibility(View.VISIBLE);
-                imageView.setImageBitmap(icon);
+                imageView.setImageBitmap(item.getIcon());
             }
 
             titleView.setText(item.getTitle());

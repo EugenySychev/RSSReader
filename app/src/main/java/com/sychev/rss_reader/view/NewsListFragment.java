@@ -152,4 +152,9 @@ public class NewsListFragment extends Fragment implements NewsListLoader.UpdateN
     public void processSwipe(int position) {
         NewsListLoader.getInstance().setItemIsReadWithoutUpdate(adapter.getItem(position));
     }
+
+    public void scrollListUp() {
+        final RecyclerView listView = rootView.findViewById(R.id.lvMain);
+        listView.scrollToPosition(0);
+    }
 }

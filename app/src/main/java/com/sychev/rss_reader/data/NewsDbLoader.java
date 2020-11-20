@@ -69,6 +69,11 @@ public class NewsDbLoader {
             } else {
                 ImageLoader loader = new ImageLoader(item);
                 loader.start();
+                try {
+                    loader.join();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
         }  else {
             Log.d("LOADER", "Load empty iconUrl for " + item.getTitle());
@@ -150,6 +155,7 @@ public class NewsDbLoader {
             item.setUrl(cursor.getString(cursor.getColumnIndexOrThrow(NewsDbHelper.SourceEntry.COLUMN_NAME_URL)));
             item.setTitle(cursor.getString(cursor.getColumnIndexOrThrow(NewsDbHelper.SourceEntry.COLUMN_NAME_TITLE)));
             item.setIconUrl(cursor.getString(cursor.getColumnIndexOrThrow(NewsDbHelper.SourceEntry.COLUMN_NAME_ICON_URL)));
+            item.setLastUpdated(cursor.getLong(cursor.getColumnIndexOrThrow(NewsDbHelper.SourceEntry.COLUMN_NAME_LAST_UPDATED)));
             if (item.getTitle() == null)
                 item.setTitle(item.getUrl());
             if (item.getIconUrl() != null) {
@@ -173,6 +179,7 @@ public class NewsDbLoader {
         values.put(NewsDbHelper.SourceEntry.COLUMN_NAME_CATEGORY, NewsListLoader.Categories.toInt(item.getCategory()));
         values.put(NewsDbHelper.SourceEntry.COLUMN_NAME_URL, item.getUrl());
         values.put(NewsDbHelper.SourceEntry.COLUMN_NAME_ICON_URL, item.getIconUrl());
+        values.put(NewsDbHelper.SourceEntry.COLUMN_NAME_LAST_UPDATED, item.getLastUpdated());
 
         long newRowId = db.insert(NewsDbHelper.SourceEntry.TABLE_NAME, null, values);
         sourceModelItems.add(item);
@@ -204,6 +211,7 @@ public class NewsDbLoader {
         values.put(NewsDbHelper.SourceEntry.COLUMN_NAME_CATEGORY, NewsListLoader.Categories.toInt(source.getCategory()));
         values.put(NewsDbHelper.SourceEntry.COLUMN_NAME_URL, source.getUrl());
         values.put(NewsDbHelper.SourceEntry.COLUMN_NAME_ICON_URL, source.getIconUrl());
+        values.put(NewsDbHelper.SourceEntry.COLUMN_NAME_LAST_UPDATED, source.getLastUpdated());
 
         String selection = NewsDbHelper.SourceEntry.COLUMN_NAME_URL + " LIKE ?";
         String[] selectionArgs = { source.getUrl() };

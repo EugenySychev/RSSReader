@@ -105,7 +105,7 @@ public class SwipeReadCallback extends ItemTouchHelper.SimpleCallback {
                     (newDx > 0 && newDx > positiveLimit / 3)) {
                 swipeProcessed = true;
                 android.os.Handler handler = new android.os.Handler();
-                int position = viewHolder.getAdapterPosition();
+                final int position = viewHolder.getAdapterPosition();
                 handler.post(new Runnable() {
                     @Override
                     public void run() {

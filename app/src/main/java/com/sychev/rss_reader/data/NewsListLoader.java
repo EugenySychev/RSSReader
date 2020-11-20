@@ -15,18 +15,31 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 public class NewsListLoader {
 
+    private static final String TAG = "NewsLoader";
+    private static Context context;
+    private static NewsListLoader instance;
+    private final HashMap<SourceModelItem, List<NewsModelItem>> loadedHashMap;
+    List<UpdateNotifier> notifierList;
     private NewsDbLoader dbLoader;
     private NewsNetworkLoader networkLoader;
-    private static Context context;
-    private final HashMap<SourceModelItem, List<NewsModelItem>> loadedHashMap;
     private List<SourceModelItem> sourceList = new ArrayList<>();
-    private static NewsListLoader instance;
     private boolean onlyNotRead;
     private SourceModelItem filterSource = null;
-    List<UpdateNotifier> notifierList;
+
+    public NewsListLoader() {
+        loadedHashMap = new HashMap<>();
+        notifierList = new ArrayList<>();
+    }
+
+    public static synchronized NewsListLoader getInstance() {
+        if (instance == null)
+            instance = new NewsListLoader();
+        return instance;
+    }
 
     public void setCurrentNewsListAsRead() {
         List<NewsModelItem> list = getLoadedNewsList();
@@ -72,61 +85,6 @@ public class NewsListLoader {
         updateAllNotifiers();
     }
 
-    public enum Categories {
-        NEWS_CATEGORY,
-        FILMS_CATEGORY,
-        OTHER_CATEGORY;
-
-        public static Categories fromInteger(int val) {
-            switch (val) {
-                case 0:
-                    return NEWS_CATEGORY;
-                case 1:
-                    return FILMS_CATEGORY;
-                case 2:
-                    return OTHER_CATEGORY;
-            }
-            return OTHER_CATEGORY;
-        }
-
-        public static int toInt(Categories cat) {
-            switch (cat) {
-                case NEWS_CATEGORY:
-                    return 0;
-                case FILMS_CATEGORY:
-                    return 1;
-                case OTHER_CATEGORY:
-                    return 2;
-            }
-            return 2;
-        }
-
-        public static String toString(Categories cat) {
-            if (context != null) {
-                switch (cat) {
-                    case NEWS_CATEGORY:
-                        return context.getResources().getString(R.string.news_category_string);
-                    case FILMS_CATEGORY:
-                        return context.getResources().getString(R.string.films_category_title);
-                    case OTHER_CATEGORY:
-                        return context.getResources().getString(R.string.others_category_title);
-                }
-            } else {
-                switch (cat) {
-                    case NEWS_CATEGORY:
-                        return "News";
-                    case FILMS_CATEGORY:
-                        return "Films";
-                    case OTHER_CATEGORY:
-                        return "Other";
-                }
-            }
-            return "";
-        }
-
-    }
-
-
     public SourceModelItem getFilterSource() {
         return filterSource;
     }
@@ -152,24 +110,6 @@ public class NewsListLoader {
             fullList.addAll(loadedHashMap.get(source));
         }
         return fullList;
-    }
-
-
-    public interface UpdateNotifier {
-        void update();
-
-        void updateState(int state);
-    }
-
-    public static synchronized NewsListLoader getInstance() {
-        if (instance == null)
-            instance = new NewsListLoader();
-        return instance;
-    }
-
-    public NewsListLoader() {
-        loadedHashMap = new HashMap<>();
-        notifierList = new ArrayList<>();
     }
 
     public void init(Context context) {
@@ -207,32 +147,32 @@ public class NewsListLoader {
                 if (msg.what == NewsNetworkLoader.LoadState.LOAD_OK) {
                     NewsNetworkLoader loader = (NewsNetworkLoader) msg.obj;
                     if (((NewsNetworkLoader) msg.obj).isNeedUpdateSource()) {
-                        dbLoader.updateSource(source);
-                        boolean updated = false;
                         for (SourceModelItem item : sourceList) {
-                            if (item.getUrl() == source.getUrl()) {
+                            if (item.getUrl().equals(source.getUrl())) {
                                 sourceList.set(sourceList.indexOf(item), source);
-                                updated = true;
                             }
                         }
-
-//                        if (!updated)
-//                            sourceList.add(source);
                     }
                     List<NewsModelItem> notSavedList = new ArrayList<>();
                     for (NewsModelItem item : loader.getLoadedList()) {
                         boolean notInList = true;
                         if (loadedHashMap.get(source) != null) {
-                            for (NewsModelItem dbItem : loadedHashMap.get(source)) {
-                                if (dbItem.getUrl().equals(item.getUrl())) {
+                            if (source.getLastUpdated() == 0) {
+                                for (NewsModelItem dbItem : Objects.requireNonNull(loadedHashMap.get(source))) {
+                                    if (dbItem.getUrl().equals(item.getUrl())) {
+                                        notInList = false;
+                                        break;
+                                    }
+                                }
+                            } else {
+                                if (item.getTime() < source.getLastUpdated()) {
                                     notInList = false;
-                                    break;
                                 }
                             }
                         } else {
                             loadedHashMap.put(source, new ArrayList<NewsModelItem>());
                         }
-                        if (notInList) {
+                        if (notInList && item != null) {
                             loadedHashMap.get(source).add(item);
                             notSavedList.add(item);
                         }
@@ -241,6 +181,8 @@ public class NewsListLoader {
                         dbLoader.storeList(notSavedList);
                     }
                     source.setUpdated(true);
+                    source.setLastUpdated(Calendar.getInstance().getTimeInMillis());
+                    dbLoader.updateSource(source);
 
                     List<NewsModelItem> list = loadedHashMap.get(source);
                     if (list != null) {
@@ -281,7 +223,6 @@ public class NewsListLoader {
             notifier.update();
         }
     }
-
 
     private void updateAllNotifiersState(int state) {
         for (UpdateNotifier notifier : notifierList) {
@@ -363,7 +304,7 @@ public class NewsListLoader {
         if (filterSource == source)
             filterSource = null;
         if (dbLoader.removeSource(source) && dbLoader.removeNews(source)) {
-            for(NewsModelItem item : loadedHashMap.get(source))
+            for (NewsModelItem item : loadedHashMap.get(source))
                 ImageCache.getInstance().removeBitmap(item.getIconUrl());
             loadedHashMap.remove(source);
             sourceList.remove(source);
@@ -371,5 +312,65 @@ public class NewsListLoader {
             return true;
         }
         return false;
+    }
+
+    public enum Categories {
+        NEWS_CATEGORY,
+        FILMS_CATEGORY,
+        OTHER_CATEGORY;
+
+        public static Categories fromInteger(int val) {
+            switch (val) {
+                case 0:
+                    return NEWS_CATEGORY;
+                case 1:
+                    return FILMS_CATEGORY;
+                case 2:
+                    return OTHER_CATEGORY;
+            }
+            return OTHER_CATEGORY;
+        }
+
+        public static int toInt(Categories cat) {
+            switch (cat) {
+                case NEWS_CATEGORY:
+                    return 0;
+                case FILMS_CATEGORY:
+                    return 1;
+                case OTHER_CATEGORY:
+                    return 2;
+            }
+            return 2;
+        }
+
+        public static String toString(Categories cat) {
+            if (context != null) {
+                switch (cat) {
+                    case NEWS_CATEGORY:
+                        return context.getResources().getString(R.string.news_category_string);
+                    case FILMS_CATEGORY:
+                        return context.getResources().getString(R.string.films_category_title);
+                    case OTHER_CATEGORY:
+                        return context.getResources().getString(R.string.others_category_title);
+                }
+            } else {
+                switch (cat) {
+                    case NEWS_CATEGORY:
+                        return "News";
+                    case FILMS_CATEGORY:
+                        return "Films";
+                    case OTHER_CATEGORY:
+                        return "Other";
+                }
+            }
+            return "";
+        }
+
+    }
+
+    public interface UpdateNotifier {
+        void update();
+
+        void updateState(int state);
     }
 }

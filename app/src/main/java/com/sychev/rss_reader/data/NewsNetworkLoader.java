@@ -8,7 +8,6 @@ import android.os.Message;
 import android.text.Editable;
 import android.text.Html;
 import android.text.Spanned;
-import android.util.Log;
 
 import com.sychev.rss_reader.Utils;
 
@@ -128,7 +127,7 @@ public class NewsNetworkLoader extends Thread {
         else if (fstElmnt.getElementsByTagName("guid").item(0) != null)
             urlString = getValueFromElement(fstElmnt, "guid");
 
-        NewsModelItem item = new NewsModelItem(titleText, descrText);
+        final NewsModelItem item = new NewsModelItem(titleText, descrText);
 
         Bitmap loadedBitmap = null;
         NodeList iconList = fstElmnt.getElementsByTagName("enclosure");
@@ -153,7 +152,7 @@ public class NewsNetworkLoader extends Thread {
             item.setTime(timeMils);
         }
 
-        Bitmap finalLoadedBitmap = loadedBitmap;
+        final Bitmap finalLoadedBitmap = loadedBitmap;
         Spanned descrTextSpan = Html.fromHtml(descrText,
                 Html.FROM_HTML_MODE_LEGACY,
                 new Html.ImageGetter() {
@@ -185,7 +184,6 @@ public class NewsNetworkLoader extends Thread {
                 }, new Html.TagHandler() {
                     @Override
                     public void handleTag(boolean opening, String tag, Editable output, XMLReader xmlReader) {
-                        Log.d("NETWORK", "Handle " + opening + " " + tag + " " + output.toString());
                     }
                 });
         String descrTextRes = Utils.trimString(descrTextSpan.toString());

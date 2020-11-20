@@ -44,7 +44,7 @@ public class NewsViewActivity extends AppCompatActivity {
 
         urlString = getIntent().getStringExtra("url");
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.news_view_toolbar);
+        final Toolbar toolbar = (Toolbar) findViewById(R.id.news_view_toolbar);
         toolbar.setTitle(title);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -52,7 +52,7 @@ public class NewsViewActivity extends AppCompatActivity {
 
         adapter = new NewsViewAdapter(getSupportFragmentManager(), 0);
         ViewPager pager = findViewById(R.id.newsViewPager);
-        List<NewsModelItem> newsList = NewsListLoader.getInstance().getLoadedNewsList();
+        final List<NewsModelItem> newsList = NewsListLoader.getInstance().getLoadedNewsList();
         adapter.setNewsModelItemList(newsList);
         pager.setAdapter(adapter);
         pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {

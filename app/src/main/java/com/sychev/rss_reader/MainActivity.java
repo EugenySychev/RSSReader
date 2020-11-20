@@ -191,7 +191,7 @@ public class MainActivity extends AppCompatActivity implements NewsListLoader.Up
 
     void createNavigationList() {
         navAdapter = new SourceNavAdapter(this, NewsListLoader.getInstance().getListSource());
-        ExpandableListView listView = findViewById(R.id.nav_list_view);
+        final ExpandableListView listView = findViewById(R.id.nav_list_view);
         listView.setAdapter(navAdapter);
         for (int i = 0; i < navAdapter.getGroupCount(); i++)
             listView.expandGroup(i);
@@ -210,6 +210,7 @@ public class MainActivity extends AppCompatActivity implements NewsListLoader.Up
                                                  if (fragment != null) {
                                                      fragment.setFilterSource(source);
                                                      drawerLayout.close();
+                                                     fragment.scrollListUp();
                                                      return true;
                                                  }
                                                  return false;

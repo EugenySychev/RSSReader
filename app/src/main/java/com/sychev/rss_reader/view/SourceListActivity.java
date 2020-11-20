@@ -66,9 +66,9 @@ public class SourceListActivity extends AppCompatActivity implements NewsListLoa
             }
         });
 
-        AlertDialog d = builder.show();
+        final AlertDialog d = builder.show();
         d.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
-        EditText editText = v.findViewById(R.id.enter_source_url_edit_text);
+        final EditText editText = v.findViewById(R.id.enter_source_url_edit_text);
         editText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -137,25 +137,25 @@ public class SourceListActivity extends AppCompatActivity implements NewsListLoa
         NewsListLoader.getInstance().addNotifier(this);
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.source_list_view_menu, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        if (id == android.R.id.home) {
-            onBackPressed();
-            return super.onOptionsItemSelected(item);
+        @Override
+        public boolean onCreateOptionsMenu(Menu menu) {
+            getMenuInflater().inflate(R.menu.source_list_view_menu, menu);
+            return true;
         }
-        if (id == R.id.action_add_source) {
-            showAddSourceDialog(this);
+
+        @Override
+        public boolean onOptionsItemSelected(MenuItem item) {
+            int id = item.getItemId();
+
+            if (id == android.R.id.home) {
+                onBackPressed();
+                return super.onOptionsItemSelected(item);
+            }
+            if (id == R.id.action_add_source) {
+                showAddSourceDialog(this);
+            }
+            return true;
         }
-        return true;
-    }
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {

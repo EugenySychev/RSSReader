@@ -13,6 +13,7 @@ public class SourceModelItem implements Serializable {
     private String iconUrl;
     private int unreadCount;
     private boolean updated;
+    private long lastUpdated;
 
     public String getUrl() {
         return url;
@@ -68,5 +69,13 @@ public class SourceModelItem implements Serializable {
 
     public void setIconUrl(String iconUrl) {
         this.iconUrl = iconUrl;
+    }
+
+    public long getLastUpdated() {
+        return lastUpdated;
+    }
+
+    public void setLastUpdated(long lastUpdated) {
+        this.lastUpdated = lastUpdated;
     }
 }
