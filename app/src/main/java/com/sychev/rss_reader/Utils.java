@@ -14,7 +14,7 @@ public class Utils {
 
     public static String cropTextWithPoints(String source, int length) {
         if (source == null)
-            return "Some shit";
+            return " ";
         if (source.length() > length) {
             int len = length;
             while (len > 0 && !source.startsWith(" ", len - 1)) len--;

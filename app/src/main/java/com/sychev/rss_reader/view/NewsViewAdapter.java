@@ -1,4 +1,4 @@
-package com.sychev.rss_reader;
+package com.sychev.rss_reader.view;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;

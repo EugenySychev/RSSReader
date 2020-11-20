@@ -15,7 +15,6 @@ import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.initialization.InitializationStatus;
 import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
-import com.sychev.rss_reader.NewsViewAdapter;
 import com.sychev.rss_reader.R;
 import com.sychev.rss_reader.data.NewsListLoader;
 import com.sychev.rss_reader.data.NewsModelItem;

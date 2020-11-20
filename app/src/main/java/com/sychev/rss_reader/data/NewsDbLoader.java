@@ -75,9 +75,8 @@ public class NewsDbLoader {
                     e.printStackTrace();
                 }
             }
-        }  else {
-            Log.d("LOADER", "Load empty iconUrl for " + item.getTitle());
         }
+
         return item;
     }
 

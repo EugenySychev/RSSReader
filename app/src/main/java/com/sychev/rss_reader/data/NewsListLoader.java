@@ -20,12 +20,11 @@ import java.util.Objects;
 public class NewsListLoader {
 
     private static final String TAG = "NewsLoader";
-    private static Context context;
+    private static Context context = null;
     private static NewsListLoader instance;
     private final HashMap<SourceModelItem, List<NewsModelItem>> loadedHashMap;
     List<UpdateNotifier> notifierList;
     private NewsDbLoader dbLoader;
-    private NewsNetworkLoader networkLoader;
     private List<SourceModelItem> sourceList = new ArrayList<>();
     private boolean onlyNotRead;
     private SourceModelItem filterSource = null;
@@ -39,6 +38,10 @@ public class NewsListLoader {
         if (instance == null)
             instance = new NewsListLoader();
         return instance;
+    }
+
+    public boolean isReady() {
+        return context != null;
     }
 
     public void setCurrentNewsListAsRead() {
@@ -312,6 +315,10 @@ public class NewsListLoader {
             return true;
         }
         return false;
+    }
+
+    public void requestUpdateAllNewsTimer() {
+        //TODO add logic check what needed to update and update feeds
     }
 
     public enum Categories {

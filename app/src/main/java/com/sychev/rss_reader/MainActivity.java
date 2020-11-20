@@ -38,6 +38,7 @@ import com.google.android.material.navigation.NavigationView;
 import com.sychev.rss_reader.data.ImageCache;
 import com.sychev.rss_reader.data.NewsListLoader;
 import com.sychev.rss_reader.data.SourceModelItem;
+import com.sychev.rss_reader.service.UpdateWorker;
 import com.sychev.rss_reader.view.NewsListFragment;
 import com.sychev.rss_reader.view.SettingsActivity;
 import com.sychev.rss_reader.view.SourceListActivity;
@@ -92,6 +93,9 @@ public class MainActivity extends AppCompatActivity implements NewsListLoader.Up
         AdView mAdView = findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
+
+        UpdateWorker.setContext(this);
+        UpdateWorker.enqueueSelf();
     }
 
     @Override
