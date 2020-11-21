@@ -42,4 +42,7 @@
     <string name="banner_id">ca-app-pub-9366467483527776/7961046653</string>
     <string name="action_add">Добавить источник</string>
     <string name="update_startup">Обновлять при запуске если есть WiFi</string>
+    <string name="auto_updates_every">Автообновление каждые:</string>
+    <string name="update_only_when_wifi_enabled">Автообновление только по WiFi</string>
+    <string name="show_notification">Показывать уведомления</string>
 </resources>

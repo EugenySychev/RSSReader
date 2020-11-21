@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="update_intervals">
+        <item>Off</item>
+        <item>15 minutes</item>
+        <item>30 minutes</item>
+        <item>1 hour</item>
+        <item>2 hour</item>
+        <item>6 hour</item>
+        <item>12 hour</item>
+        <item>1 day</item>
+    </string-array>
+</resources>

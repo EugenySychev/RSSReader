@@ -17,6 +17,7 @@
     <style name="newsListTitleText" parent="Widget.AppCompat.ListView">
         <item name="android:textColor">@color/colorText</item>
         <item name="android:textSize">@dimen/newsListTitleSize</item>
+        <item name="android:textColorHint">@color/colorTextHint</item>
     </style>
 
     <style name="newsListUnreadCounter" parent="Widget.AppCompat.TextView">
