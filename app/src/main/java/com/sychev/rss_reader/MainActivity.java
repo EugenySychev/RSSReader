@@ -80,6 +80,8 @@ public class MainActivity extends AppCompatActivity implements NewsListLoader.Up
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
 
+        NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
+
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_baseline_menu_24);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         createNavigationList();
@@ -104,7 +106,7 @@ public class MainActivity extends AppCompatActivity implements NewsListLoader.Up
         getMenuInflater().inflate(R.menu.main_settings_menu, menu);
         MenuCompat.setGroupDividerEnabled(menu, true);
 
-        MenuItem item_filter = menu.findItem(R.id.filter_all);
+        MenuItem item_filter = menu.findItem(R.id.filter_only_new);
         item_filter.setChecked(true);
         return true;
     }

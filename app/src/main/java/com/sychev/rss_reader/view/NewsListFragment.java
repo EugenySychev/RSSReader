@@ -43,6 +43,7 @@ public class NewsListFragment extends Fragment implements NewsListLoader.UpdateN
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.news_list_fragment, container, false);
+        NewsListLoader.getInstance().setOnlyNotRead(true);
         NewsListLoader.getInstance().getAllNewsFromDB();
 
         final RecyclerView listView = rootView.findViewById(R.id.lvMain);
