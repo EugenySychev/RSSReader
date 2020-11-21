@@ -33,6 +33,14 @@
             android:padding="@dimen/activity_vertical_padding"
             android:text="@string/use_dark_theme"
             android:textSize="@dimen/text_size" />
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/update_startup_switcher"
+            style="@style/newsListTitleText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/activity_vertical_padding"
+            android:text="@string/update_startup"
+            android:textSize="@dimen/text_size" />
 
         <LinearLayout
             android:layout_width="match_parent"

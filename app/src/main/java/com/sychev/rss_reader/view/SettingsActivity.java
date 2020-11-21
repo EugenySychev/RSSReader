@@ -27,6 +27,7 @@ public class SettingsActivity extends AppCompatActivity {
     private boolean useDarkTheme;
     private SharedPreferences preferences;
     private int timeDistance;
+    private boolean updateStartupEnabled;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -55,6 +56,18 @@ public class SettingsActivity extends AppCompatActivity {
                 int nightMode = getSharedPreferences(Utils.APP_SETTINGS, 0).getInt(Utils.NIGHT_MODE_SETTINGS_NAME, AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
                 AppCompatDelegate.setDefaultNightMode(nightMode);
                 restartActivity(activity);
+                updateReference();
+            }
+        });
+
+
+        final SwitchCompat switchCompatUpdate = findViewById(R.id.update_startup_switcher);
+        switchCompatUpdate.setChecked(updateStartupEnabled);
+
+        switchCompatUpdate.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                updateStartupEnabled = switchCompatUpdate.isChecked();
                 updateReference();
             }
         });
@@ -88,6 +101,7 @@ public class SettingsActivity extends AppCompatActivity {
         SharedPreferences.Editor editor = preferences.edit();
         editor.putInt(Utils.NIGHT_MODE_SETTINGS_NAME, useDarkTheme ? AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO);
         editor.putInt(Utils.CLEAN_PERIOD_TIME_DISTANCE, timeDistance);
+        editor.putBoolean(Utils.UPDATE_ON_STARTUP, updateStartupEnabled);
         editor.apply();
 
     }
@@ -95,6 +109,7 @@ public class SettingsActivity extends AppCompatActivity {
     private void loadReference() {
         useDarkTheme = preferences.getInt(Utils.NIGHT_MODE_SETTINGS_NAME, AppCompatDelegate.MODE_NIGHT_NO) == AppCompatDelegate.MODE_NIGHT_YES;
         timeDistance = preferences.getInt(Utils.CLEAN_PERIOD_TIME_DISTANCE, Utils.defaultTimeDistanceCleaning);
+        updateStartupEnabled = preferences.getBoolean(Utils.UPDATE_ON_STARTUP, true);
     }
 
     @Override

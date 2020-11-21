@@ -45,4 +45,5 @@
     <string name="banner_id">ca-app-pub-9366467483527776/7961046653</string>
     <string name="action_add">Add source</string>
     <string name="https_source_site_rss_xml" translatable="false">https://source.site/rss.xml</string>
+    <string name="update_startup">Update on startup if WiFi enabled</string>
 </resources>

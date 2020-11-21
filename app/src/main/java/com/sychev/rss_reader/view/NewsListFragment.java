@@ -1,6 +1,9 @@
 package com.sychev.rss_reader.view;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.sychev.rss_reader.R;
+import com.sychev.rss_reader.Utils;
 import com.sychev.rss_reader.data.NewsListLoader;
 import com.sychev.rss_reader.data.NewsModelItem;
 import com.sychev.rss_reader.data.NewsNetworkLoader;
@@ -67,7 +71,25 @@ public class NewsListFragment extends Fragment implements NewsListLoader.UpdateN
 
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new SwipeReadCallback(adapter, this));
         itemTouchHelper.attachToRecyclerView(listView);
+
+        checkNetworkAndUpdate();
+
         return rootView;
+    }
+
+    private void checkNetworkAndUpdate() {
+        ConnectivityManager cm = (ConnectivityManager) rootView.getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo info = cm.getActiveNetworkInfo();
+        if (info == null || !info.isConnected())
+            return;
+        boolean updateEnabled = rootView.getContext().getSharedPreferences(Utils.APP_SETTINGS, 0).getBoolean(Utils.UPDATE_ON_STARTUP, true);
+        if (info.getType() == ConnectivityManager.TYPE_WIFI && updateEnabled) {
+            try {
+                requestUpdate();
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public void requestUpdate() throws MalformedURLException {
