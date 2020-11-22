@@ -14,6 +14,7 @@ import android.widget.AdapterView;
 import android.widget.ExpandableListView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -37,6 +38,7 @@ import com.google.android.gms.ads.initialization.OnInitializationCompleteListene
 import com.google.android.material.navigation.NavigationView;
 import com.sychev.rss_reader.data.ImageCache;
 import com.sychev.rss_reader.data.NewsListLoader;
+import com.sychev.rss_reader.data.NewsNetworkLoader;
 import com.sychev.rss_reader.data.SourceModelItem;
 import com.sychev.rss_reader.service.UpdateWorker;
 import com.sychev.rss_reader.view.NewsListFragment;
@@ -96,8 +98,8 @@ public class MainActivity extends AppCompatActivity implements NewsListLoader.Up
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
 
-        UpdateWorker.setContext(this);
-        UpdateWorker.enqueueSelf();
+//        UpdateWorker.setContext(this);
+//        UpdateWorker.enqueueSelf();
     }
 
     @Override
@@ -316,5 +318,7 @@ public class MainActivity extends AppCompatActivity implements NewsListLoader.Up
 
     @Override
     public void updateState(int state) {
+        if (state == NewsNetworkLoader.LoadState.LOAD_ERROR)
+            Toast.makeText(this, getString(R.string.loadError), Toast.LENGTH_LONG).show();
     }
 }

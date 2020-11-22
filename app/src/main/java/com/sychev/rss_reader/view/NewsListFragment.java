@@ -124,7 +124,6 @@ public class NewsListFragment extends Fragment implements NewsListLoader.UpdateN
                 swipeRefreshLayout.setRefreshing(true);
         } else { // Error loading
             swipeRefreshLayout.setRefreshing(false);
-            Toast.makeText(getContext(), getString(R.string.loadError), Toast.LENGTH_LONG).show();
         }
     }
 
