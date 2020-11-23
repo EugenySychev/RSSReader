@@ -70,6 +70,8 @@ public class SourceListAdapter extends BaseExpandableListAdapter {
 
     @Override
     public Object getChild(int i, int i1) {
+        if (expandableListTitle.isEmpty() || expandableListDetail.isEmpty())
+            return null;
         return expandableListDetail.get(this.expandableListTitle.get(i))
                 .get(i1);
     }
@@ -120,6 +122,8 @@ public class SourceListAdapter extends BaseExpandableListAdapter {
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = layoutInflater.inflate(R.layout.source_setup_item_view, null);
         }
+        if (item == null)
+            return convertView;
 
         if (item.getIcon() != null) {
             ImageView imageView = convertView.findViewById(R.id.source_setup_icon_view);

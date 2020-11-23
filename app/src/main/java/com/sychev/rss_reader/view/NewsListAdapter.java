@@ -53,13 +53,15 @@ public class NewsListAdapter extends RecyclerView.Adapter<NewsListAdapter.NewsIt
 
     public void setList(List<NewsModelItem> loadedNewsList) {
         newsList = loadedNewsList;
-        Collections.sort(newsList, new Comparator<NewsModelItem>() {
-            @Override
-            public int compare(NewsModelItem t1, NewsModelItem t2) {
-                return Long.compare(t1.getTime(), t2.getTime());
-            }
-        });
-        Collections.reverse(newsList);
+        if (loadedNewsList != null) {
+            Collections.sort(newsList, new Comparator<NewsModelItem>() {
+                @Override
+                public int compare(NewsModelItem t1, NewsModelItem t2) {
+                    return Long.compare(t1.getTime(), t2.getTime());
+                }
+            });
+            Collections.reverse(newsList);
+        }
     }
 
     public Context getContext() {

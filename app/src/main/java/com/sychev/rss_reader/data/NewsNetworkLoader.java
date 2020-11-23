@@ -105,7 +105,7 @@ public class NewsNetworkLoader extends Thread {
         String titleText = getValueFromElement(fstElmnt, "title");
         String timeString = getValueFromElement(fstElmnt, "pubDate");
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEE, d MMM yyyy HH:mm:ss Z", Locale.ENGLISH); //Mon, 14 Sep 2020 17:10:06 +0300
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEE, d LLL yyyy HH:mm:ss Z", Locale.ENGLISH); //Mon, 14 Sep 2020 17:10:06 +0300
         LocalDateTime d = LocalDateTime.parse(timeString, formatter);
         long timeMils = d.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
 
@@ -198,10 +198,15 @@ public class NewsNetworkLoader extends Thread {
     }
 
     private String getValueFromElement(Element element, String name) {
-        NodeList nodeList = element.getElementsByTagName(name);
-        Element nodeElement = (Element) nodeList.item(0);
-        nodeList = nodeElement.getChildNodes();
-        return nodeList.item(0).getNodeValue();
+        if (element != null) {
+            NodeList nodeList = element.getElementsByTagName(name);
+            if (nodeList != null) {
+                Element nodeElement = (Element) nodeList.item(0);
+                nodeList = nodeElement.getChildNodes();
+                return nodeList.item(0).getNodeValue();
+            }
+        }
+        return "";
     }
 
     public void setHandler(Handler handler) {
