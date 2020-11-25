@@ -7,4 +7,5 @@
     <color name="colorBackground">#FFFFFF</color>
     <color name="colorTextHint">#777777</color>
     <color name="counterBackground">#BBBBBB</color>
+    <color name="colorSplashBackground">#FFFFFF</color>
 </resources>
