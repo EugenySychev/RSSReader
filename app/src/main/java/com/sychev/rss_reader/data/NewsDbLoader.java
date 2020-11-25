@@ -6,7 +6,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.provider.BaseColumns;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +13,7 @@ import java.util.List;
 public class NewsDbLoader {
     NewsDbHelper dbHelper;
     List<SourceModelItem> sourceModelItems = new ArrayList<>();
-    List<NewsModelItem>  newsModelItems= new ArrayList<>();
+    List<NewsModelItem> newsModelItems = new ArrayList<>();
 
     public NewsDbLoader(Context context) {
         dbHelper = new NewsDbHelper(context);
@@ -91,6 +90,7 @@ public class NewsDbLoader {
         cursor.close();
         return newsModelItems;
     }
+
     public List<NewsModelItem> getNewsListForSourceAndTime(String sourceUrl, long begin, long end) {
         return getNewsListForSourceAndTime(sourceUrl, begin, end, false);
     }
@@ -118,7 +118,7 @@ public class NewsDbLoader {
         String havingFilter = "";
         if (begin > 0 && end > 0)
             havingFilter = NewsDbHelper.FeedEntry.COLUMN_NAME_TIME + " > " + begin + " AND " +
-                NewsDbHelper.FeedEntry.COLUMN_NAME_TIME + " < " + end;
+                    NewsDbHelper.FeedEntry.COLUMN_NAME_TIME + " < " + end;
 
         if (onlyNotRead) {
             selection += " AND " + NewsDbHelper.FeedEntry.COLUMN_NAME_ISREAD + " = ? ";
@@ -189,7 +189,7 @@ public class NewsDbLoader {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         String selection = NewsDbHelper.SourceEntry.COLUMN_NAME_URL + " LIKE ?";
 
-        String[] selectionArgs = { item.getUrl() };
+        String[] selectionArgs = {item.getUrl()};
         sourceModelItems.remove(item);
         return db.delete(NewsDbHelper.SourceEntry.TABLE_NAME, selection, selectionArgs) >= 0;
     }
@@ -198,13 +198,13 @@ public class NewsDbLoader {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         String selection = NewsDbHelper.FeedEntry.COLUMN_NAME_SOURCE + " LIKE ?";
 
-        String[] selectionArgs = { source.getUrl() };
+        String[] selectionArgs = {source.getUrl()};
 
         return db.delete(NewsDbHelper.FeedEntry.TABLE_NAME, selection, selectionArgs) >= 0;
     }
 
     public boolean updateSource(SourceModelItem source) {
-        SQLiteDatabase db =  dbHelper.getWritableDatabase();
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(NewsDbHelper.SourceEntry.COLUMN_NAME_TITLE, source.getTitle());
         values.put(NewsDbHelper.SourceEntry.COLUMN_NAME_CATEGORY, NewsListLoader.Categories.toInt(source.getCategory()));
@@ -213,9 +213,10 @@ public class NewsDbLoader {
         values.put(NewsDbHelper.SourceEntry.COLUMN_NAME_LAST_UPDATED, source.getLastUpdated());
 
         String selection = NewsDbHelper.SourceEntry.COLUMN_NAME_URL + " LIKE ?";
-        String[] selectionArgs = { source.getUrl() };
+        String[] selectionArgs = {source.getUrl()};
         long newRowId = db.update(NewsDbHelper.SourceEntry.TABLE_NAME, values, selection, selectionArgs);
 
         return newRowId > 0;
     }
+
 }

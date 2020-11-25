@@ -4,14 +4,14 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
-import android.util.Log;
 
 import androidx.annotation.Nullable;
 
-import java.util.Calendar;
 
 public class NewsDbHelper extends SQLiteOpenHelper {
-    public static final int DATABASE_VERSION = 2;
+
+
+    public static final int DATABASE_VERSION = 3;
     public static final String DATABASE_NAME = "News.db";
     private static final String SQL_CREATE_FEED_ENTRIES =
             "CREATE TABLE " + FeedEntry.TABLE_NAME + " (" +
@@ -32,10 +32,15 @@ public class NewsDbHelper extends SQLiteOpenHelper {
                     SourceEntry.COLUMN_NAME_TITLE + " TEXT," +
                     SourceEntry.COLUMN_NAME_ICON_URL + " TEXT," +
                     SourceEntry.COLUMN_NAME_LAST_UPDATED + " INTEGER," +
+                    SourceEntry.COLUMN_NAME_UPDATE_PERIOD + " INTEGER," +
+                    SourceEntry.COLUMN_NAME_UPDATE_WIFI_ONLY + " INTEGER," +
+                    SourceEntry.COLUMN_NAME_SHOW_NOTIFICATION + " INTEGER," +
                     SourceEntry.COLUMN_NAME_CATEGORY + " INTEGER)";
+
     private static final String SQL_DELETE_SOURCE_ENTRIES =
             "DROP TABLE IF EXISTS " + SourceEntry.TABLE_NAME;
     private String TAG = "DB Helper";
+    private boolean isReady = false;
 
     public NewsDbHelper(@Nullable Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -49,10 +54,29 @@ public class NewsDbHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
-        if (i1 > i) {
-            sqLiteDatabase.execSQL("ALTER TABLE " + SourceEntry.TABLE_NAME + " ADD COLUMN " +
-                    SourceEntry.COLUMN_NAME_LAST_UPDATED + " INTEGER DEFAULT " + 0);
-        }
+//        sqLiteDatabase.execSQL(SQL_DELETE_SOURCE_ENTRIES);
+//        sqLiteDatabase.execSQL(SQL_DELETE_FEED_ENTRIES);
+//
+//        sqLiteDatabase.execSQL(SQL_CREATE_FEED_ENTRIES);
+//        sqLiteDatabase.execSQL(SQL_CREATE_SOURCE_ENTRIES);
+
+        String updateTo2Version = "ALTER TABLE " + SourceEntry.TABLE_NAME + " ADD COLUMN " +
+                SourceEntry.COLUMN_NAME_LAST_UPDATED + " INTEGER DEFAULT 0";
+        String updateTo3Version =
+                "ALTER TABLE " + SourceEntry.TABLE_NAME +
+                " ADD COLUMN  " + SourceEntry.COLUMN_NAME_UPDATE_PERIOD + " INTEGER DEFAULT 0;" +
+                "ALTER TABLE " + SourceEntry.TABLE_NAME +
+                " ADD COLUMN " + SourceEntry.COLUMN_NAME_UPDATE_WIFI_ONLY + " INTEGER DEFAULT 0;" +
+                "ALTER TABLE " + SourceEntry.TABLE_NAME +
+                " ADD COLUMN" + SourceEntry.COLUMN_NAME_SHOW_NOTIFICATION + " INTEGER DEFAULT 0;";
+
+        if (i == 1 && i1 == 2)
+            sqLiteDatabase.execSQL(updateTo2Version);
+        else if (i == 1 && i1 == 3)
+            sqLiteDatabase.execSQL(updateTo2Version);
+        else if (i == 2 && i1 == 3)
+            sqLiteDatabase.execSQL(updateTo3Version);
+        isReady = true;
     }
 
     public static class FeedEntry implements BaseColumns {
@@ -73,11 +97,10 @@ public class NewsDbHelper extends SQLiteOpenHelper {
         public static final String COLUMN_NAME_CATEGORY = "category";
         public static final String COLUMN_NAME_ICON_URL = "iconUrl";
         public static final String COLUMN_NAME_LAST_UPDATED = "lastupdated";
+        public static final String COLUMN_NAME_UPDATE_PERIOD = "update_period";
+        public static final String COLUMN_NAME_UPDATE_WIFI_ONLY = "wifionly";
+        public static final String COLUMN_NAME_SHOW_NOTIFICATION = "shownotification";
     }
-
-    //        sqLiteDatabase.execSQL(SQL_DELETE_FEED_ENTRIES);
-//        sqLiteDatabase.execSQL(SQL_DELETE_SOURCE_ENTRIES);
-//        onCreate(sqLiteDatabase);
 }
 
 

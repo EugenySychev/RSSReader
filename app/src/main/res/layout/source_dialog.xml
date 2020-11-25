@@ -29,29 +29,29 @@
 <!--            android:paddingVertical="@dimen/activity_vertical_padding"-->
 <!--            android:text="@string/show_notification" />-->
 
-<!--        <androidx.appcompat.widget.SwitchCompat-->
-<!--            android:id="@+id/update_wifi_only"-->
-<!--            style="@style/newsListTitleText"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:paddingVertical="@dimen/activity_vertical_padding"-->
-<!--            android:text="@string/update_only_when_wifi_enabled" />-->
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/update_wifi_only"
+            style="@style/newsListTitleText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingVertical="@dimen/activity_vertical_padding"
+            android:text="@string/update_only_when_wifi_enabled" />
 
-<!--        <TextView-->
-<!--            style="@style/newsListTitleText"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:text="@string/auto_updates_every" />-->
+        <TextView
+            style="@style/newsListTitleText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/auto_updates_every" />
 
-<!--        <androidx.appcompat.widget.AppCompatSpinner-->
-<!--            android:id="@+id/update_interval_spinner"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="0dp"-->
-<!--            android:layout_weight="1"-->
-<!--            android:entries="@array/update_intervals"-->
-<!--            android:paddingVertical="@dimen/activity_vertical_padding"-->
-<!--            android:popupTheme="@style/ThemeOverlay.AppCompat.Light"-->
-<!--            android:theme="@style/ThemeOverlay.AppCompat.DayNight.ActionBar" />-->
+        <androidx.appcompat.widget.AppCompatSpinner
+            android:id="@+id/update_interval_spinner"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:entries="@array/update_intervals"
+            android:paddingVertical="@dimen/activity_vertical_padding"
+            android:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+            android:theme="@style/ThemeOverlay.AppCompat.DayNight.ActionBar" />
 
         <TextView
             style="@style/newsListTitleText"

@@ -20,6 +20,7 @@ import android.widget.Spinner;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.appcompat.widget.Toolbar;
 
 import com.sychev.rss_reader.R;
@@ -50,11 +51,44 @@ public class SourceListActivity extends AppCompatActivity implements NewsListLoa
             public void onClick(DialogInterface dialog, int which) {
                 EditText editText = (EditText) v.findViewById(R.id.enter_source_url_edit_text);
                 Spinner spinner = (Spinner) v.findViewById(R.id.spinner_category);
+                Spinner updatePeriod = (Spinner) v.findViewById(R.id.update_interval_spinner);
+                SwitchCompat onlyWifiSwitcher = (SwitchCompat) v.findViewById(R.id.update_wifi_only);
+
+                long updatePeriodValue = 0; // ATTENTION: this is hardcoded enum from resources
+                switch (updatePeriod.getSelectedItemPosition()) {
+                    case 0:
+                        updatePeriodValue = 0;
+                        break;
+                    case 1:
+                        updatePeriodValue = 15;
+                        break;
+                    case 2:
+                        updatePeriodValue = 30;
+                        break;
+                    case 3:
+                        updatePeriodValue = 60;
+                        break;
+                    case 4:
+                        updatePeriodValue = 120;
+                        break;
+                    case 5:
+                        updatePeriodValue = 360;
+                        break;
+                    case 6:
+                        updatePeriodValue = 720;
+                        break;
+                    case 7:
+                        updatePeriodValue = 1440;
+                        break;
+                }
 
                 SourceModelItem sourceModelItem = new SourceModelItem();
                 sourceModelItem.setUrl(editText.getText().toString());
                 sourceModelItem.setTitle(editText.getText().toString());
                 sourceModelItem.setCategory(NewsListLoader.Categories.fromInteger(spinner.getSelectedItemPosition()));
+                sourceModelItem.setUpdateTimePeriod(updatePeriodValue * 60 * 1000);
+                sourceModelItem.setUpdateOnlyWifi(onlyWifiSwitcher.isChecked());
+
                 NewsListLoader.getInstance().addSource(sourceModelItem);
                 NewsListLoader.getInstance().requestUpdateListSource(sourceModelItem);
             }
@@ -137,25 +171,25 @@ public class SourceListActivity extends AppCompatActivity implements NewsListLoa
         NewsListLoader.getInstance().addNotifier(this);
     }
 
-        @Override
-        public boolean onCreateOptionsMenu(Menu menu) {
-            getMenuInflater().inflate(R.menu.source_list_view_menu, menu);
-            return true;
-        }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.source_list_view_menu, menu);
+        return true;
+    }
 
-        @Override
-        public boolean onOptionsItemSelected(MenuItem item) {
-            int id = item.getItemId();
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
 
-            if (id == android.R.id.home) {
-                onBackPressed();
-                return super.onOptionsItemSelected(item);
-            }
-            if (id == R.id.action_add_source) {
-                showAddSourceDialog(this);
-            }
-            return true;
+        if (id == android.R.id.home) {
+            onBackPressed();
+            return super.onOptionsItemSelected(item);
         }
+        if (id == R.id.action_add_source) {
+            showAddSourceDialog(this);
+        }
+        return true;
+    }
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
