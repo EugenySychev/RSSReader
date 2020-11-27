@@ -279,7 +279,7 @@ public class MainActivity extends AppCompatActivity implements NewsListLoader.Up
                             ActivityOptions.makeSceneTransitionAnimation(activity).toBundle());
                 }
                 if (i == 0) {
-                    SourceListActivity.showAddSourceDialog(activity);
+                    SourceListActivity.showAddSourceDialog(activity, null);
                 }
             }
         });

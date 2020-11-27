@@ -17,6 +17,7 @@ import android.widget.EditText;
 import android.widget.ExpandableListView;
 import android.widget.Spinner;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
@@ -37,7 +38,7 @@ public class SourceListActivity extends AppCompatActivity implements NewsListLoa
     private List<SourceModelItem> sourceList = new ArrayList<>();
     private SourceListAdapter listAdapter;
 
-    public static void showAddSourceDialog(Context context) {
+    public static void showAddSourceDialog(Context context, @Nullable SourceModelItem source) {
         AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.AlertDialogCustom));
         builder.setTitle(R.string.enter_source_title);
 
@@ -47,51 +48,42 @@ public class SourceListActivity extends AppCompatActivity implements NewsListLoa
 
         builder.setView(v);
 
+        final EditText editText = (EditText) v.findViewById(R.id.enter_source_url_edit_text);
+        final Spinner spinner = (Spinner) v.findViewById(R.id.spinner_category);
+        final Spinner updatePeriod = (Spinner) v.findViewById(R.id.update_interval_spinner);
+        final SwitchCompat onlyWifiSwitcher = (SwitchCompat) v.findViewById(R.id.update_wifi_only);
+        final SourceModelItem finalSource;
+        boolean update = false;
+        if (source == null)
+            finalSource = new SourceModelItem();
+        else {
+            finalSource = source;
+            editText.setText(source.getUrl());
+            editText.setEnabled(false);
+            spinner.setSelection(NewsListLoader.Categories.toInt(source.getCategory()));
+            updatePeriod.setSelection(Utils.getIndexFromUpdatePeriod(source.getUpdateTimePeriod() / 60000));
+            onlyWifiSwitcher.setChecked(source.isUpdateOnlyWifi());
+            update = true;
+        }
+
+        final boolean finalUpdate = update;
         builder.setPositiveButton(R.string.save_button_title, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                EditText editText = (EditText) v.findViewById(R.id.enter_source_url_edit_text);
-                Spinner spinner = (Spinner) v.findViewById(R.id.spinner_category);
-                Spinner updatePeriod = (Spinner) v.findViewById(R.id.update_interval_spinner);
-                SwitchCompat onlyWifiSwitcher = (SwitchCompat) v.findViewById(R.id.update_wifi_only);
+                long updatePeriodValue = Utils.getTimePeriodFromIndex(updatePeriod.getSelectedItemPosition());
+                finalSource.setCategory(NewsListLoader.Categories.fromInteger(spinner.getSelectedItemPosition()));
+                finalSource.setUpdateTimePeriod(updatePeriodValue * 60 * 1000);
+                finalSource.setUpdateOnlyWifi(onlyWifiSwitcher.isChecked());
 
-                long updatePeriodValue = 0; // ATTENTION: this is hardcoded enum from resources
-                switch (updatePeriod.getSelectedItemPosition()) {
-                    case 0:
-                        updatePeriodValue = 0;
-                        break;
-                    case 1:
-                        updatePeriodValue = 15;
-                        break;
-                    case 2:
-                        updatePeriodValue = 30;
-                        break;
-                    case 3:
-                        updatePeriodValue = 60;
-                        break;
-                    case 4:
-                        updatePeriodValue = 120;
-                        break;
-                    case 5:
-                        updatePeriodValue = 360;
-                        break;
-                    case 6:
-                        updatePeriodValue = 720;
-                        break;
-                    case 7:
-                        updatePeriodValue = 1440;
-                        break;
+                if (finalUpdate)
+                    NewsListLoader.getInstance().updateSource(finalSource);
+                else
+                {
+                    finalSource.setUrl(editText.getText().toString());
+                    finalSource.setTitle(editText.getText().toString());
+                    NewsListLoader.getInstance().addSource(finalSource);
+                    NewsListLoader.getInstance().requestUpdateListSource(finalSource);
                 }
-
-                SourceModelItem sourceModelItem = new SourceModelItem();
-                sourceModelItem.setUrl(editText.getText().toString());
-                sourceModelItem.setTitle(editText.getText().toString());
-                sourceModelItem.setCategory(NewsListLoader.Categories.fromInteger(spinner.getSelectedItemPosition()));
-                sourceModelItem.setUpdateTimePeriod(updatePeriodValue * 60 * 1000);
-                sourceModelItem.setUpdateOnlyWifi(onlyWifiSwitcher.isChecked());
-
-                NewsListLoader.getInstance().addSource(sourceModelItem);
-                NewsListLoader.getInstance().requestUpdateListSource(sourceModelItem);
             }
         });
         builder.setNegativeButton(R.string.cancel_button, new DialogInterface.OnClickListener() {
@@ -102,26 +94,27 @@ public class SourceListActivity extends AppCompatActivity implements NewsListLoa
         });
 
         final AlertDialog d = builder.show();
-        d.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
-        final EditText editText = v.findViewById(R.id.enter_source_url_edit_text);
-        editText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
+        if (!update) {
+            d.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
+            editText.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                }
 
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (URLUtil.isValidUrl(editText.getText().toString()))
-                    d.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(true);
-                else
-                    d.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    if (URLUtil.isValidUrl(editText.getText().toString()))
+                        d.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(true);
+                    else
+                        d.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
 
-            }
+                }
 
-            @Override
-            public void afterTextChanged(Editable s) {
-            }
-        });
+                @Override
+                public void afterTextChanged(Editable s) {
+                }
+            });
+        }
     }
 
     public static void showRemoveDialog(Context context, final SourceModelItem selectedSource) {
@@ -146,7 +139,7 @@ public class SourceListActivity extends AppCompatActivity implements NewsListLoa
     }
 
     public static void showEditDialog(Context context, SourceModelItem selectedSource) {
-        showAddSourceDialog(context);
+        showAddSourceDialog(context, selectedSource);
     }
 
     @Override
@@ -191,7 +184,7 @@ public class SourceListActivity extends AppCompatActivity implements NewsListLoa
             return super.onOptionsItemSelected(item);
         }
         if (id == R.id.action_add_source) {
-            showAddSourceDialog(this);
+            showAddSourceDialog(this, null);
         }
         return true;
     }
@@ -217,6 +210,8 @@ public class SourceListActivity extends AppCompatActivity implements NewsListLoa
         if (selectedSource != null) {
             if (item.getItemId() == R.id.action_remove_source_context) {
                 showRemoveDialog(this, selectedSource);
+            } else if (item.getItemId() == R.id.action_edit_source_context) {
+                showAddSourceDialog(this, selectedSource);
             } else {
                 return false;
             }

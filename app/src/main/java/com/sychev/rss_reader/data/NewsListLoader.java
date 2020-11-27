@@ -347,6 +347,13 @@ public class NewsListLoader {
         }
     }
 
+    public void updateSource(SourceModelItem source) {
+        if (dbLoader != null)
+            if (dbLoader.updateSource(source)) {
+                updateAllNotifiers();
+            }
+    }
+
     public enum Categories {
         NEWS_CATEGORY,
         FILMS_CATEGORY,
