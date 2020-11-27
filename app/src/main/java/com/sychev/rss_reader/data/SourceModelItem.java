@@ -18,6 +18,8 @@ public class SourceModelItem implements Serializable {
     private long updateTimePeriod;
     private boolean showNotifications;
 
+    private long lastDigestTime;
+
     public String getUrl() {
         return url;
     }
@@ -104,5 +106,13 @@ public class SourceModelItem implements Serializable {
 
     public void setShowNotifications(boolean showNotifications) {
         this.showNotifications = showNotifications;
+    }
+
+    public long getLastDigestTime() {
+        return lastDigestTime;
+    }
+
+    public void setLastDigestTime(long lastDigestTime) {
+        this.lastDigestTime = lastDigestTime;
     }
 }

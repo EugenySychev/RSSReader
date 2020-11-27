@@ -1,6 +1,8 @@
 package com.sychev.rss_reader.data;
 
 import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
@@ -157,9 +159,15 @@ public class NewsListLoader {
                         }
                     }
                     List<NewsModelItem> notSavedList = new ArrayList<>();
+
+                    long lastDigestTime = source.getLastDigestTime();
+
                     for (NewsModelItem item : loader.getLoadedList()) {
                         boolean notInList = true;
                         if (loadedHashMap.get(source) != null) {
+
+                            Log.d(TAG, "Check digest " + item.getTitle() + " from " + item.getTime());
+                            Log.d(TAG, "Source loaded last time at " + source.getLastUpdated());
                             if (source.getLastUpdated() == 0) {
                                 for (NewsModelItem dbItem : Objects.requireNonNull(loadedHashMap.get(source))) {
                                     if (dbItem.getUrl().equals(item.getUrl())) {
@@ -168,10 +176,13 @@ public class NewsListLoader {
                                     }
                                 }
                             } else {
-                                if (item.getTime() < source.getLastUpdated()) {
+                                if (item.getTime() <= source.getLastDigestTime()) {
                                     notInList = false;
+                                    if (item.getTime() > lastDigestTime)
+                                        lastDigestTime = item.getTime();
                                 }
                             }
+                            Log.d(TAG, "Item not in list is " + notInList);
                         } else {
                             loadedHashMap.put(source, new ArrayList<NewsModelItem>());
                         }
@@ -185,6 +196,7 @@ public class NewsListLoader {
                     }
                     source.setUpdated(true);
                     source.setLastUpdated(Calendar.getInstance().getTimeInMillis());
+                    source.setLastDigestTime(lastDigestTime);
                     dbLoader.updateSource(source);
 
                     List<NewsModelItem> list = loadedHashMap.get(source);
@@ -198,7 +210,7 @@ public class NewsListLoader {
 
                         Collections.reverse(list);
                         loadedHashMap.replace(source, list);
-                        updateUnreadCounter(source);
+                        updateUnreadCounterAndLastTime(source);
                     }
                     boolean allUpdated = true;
                     for (SourceModelItem sourceItem : loadedHashMap.keySet()) {
@@ -235,14 +247,16 @@ public class NewsListLoader {
 
     private void updateAllUnreadCounters() {
         for (SourceModelItem source : sourceList)
-            updateUnreadCounter(source);
+            updateUnreadCounterAndLastTime(source);
     }
 
-    public void updateUnreadCounter(SourceModelItem source) {
+    public void updateUnreadCounterAndLastTime(SourceModelItem source) {
         int count = 0;
         for (NewsModelItem item : loadedHashMap.get(source)) {
             if (item.getIsRead() == 0)
                 count++;
+            if (item.getTime() > source.getLastDigestTime())
+                source.setLastDigestTime(item.getTime());
         }
         source.setUnreadCount(count);
     }
@@ -252,7 +266,7 @@ public class NewsListLoader {
             loadedHashMap.put(source, dbLoader.getNewsListForSourceAndTime(source.getUrl(), 0, 0, onlyNotRead));
         else
             loadedHashMap.replace(source, dbLoader.getNewsListForSourceAndTime(source.getUrl(), 0, 0, onlyNotRead));
-        updateUnreadCounter(source);
+        updateUnreadCounterAndLastTime(source);
     }
 
     public void setOnlyNotRead(boolean onlyNotRead) {
@@ -318,7 +332,19 @@ public class NewsListLoader {
     }
 
     public void requestUpdateAllNewsTimer() {
-        //TODO add logic check what needed to update and update feeds
+        if (sourceList.isEmpty())
+            loadSourceListFromDB();
+
+        long current = Calendar.getInstance().getTimeInMillis();
+        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo info = cm.getActiveNetworkInfo();
+        for (SourceModelItem item : sourceList) {
+            Log.d(TAG, "Checking " + item.getTitle() + " last updated " + (current - item.getLastUpdated()) / 60000 + " minutes ");
+            Log.d(TAG, "UpdatePeriod is " + (item.getUpdateTimePeriod() - 120000) / 60000);
+            if ((current - item.getLastUpdated() > item.getUpdateTimePeriod() - 120000) &&
+                    (info.getType() == ConnectivityManager.TYPE_WIFI || !item.isUpdateOnlyWifi()))
+                requestUpdateListSource(item);
+        }
     }
 
     public enum Categories {

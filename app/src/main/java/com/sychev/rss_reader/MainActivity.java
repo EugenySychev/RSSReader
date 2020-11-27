@@ -19,7 +19,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.core.view.MenuCompat;
@@ -96,8 +95,8 @@ public class MainActivity extends AppCompatActivity implements NewsListLoader.Up
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
 
-//        UpdateWorker.setContext(this);
-//        UpdateWorker.enqueueSelf();
+        UpdateWorker.setContext(this);
+        UpdateWorker.enqueueSelf();
     }
 
     @Override

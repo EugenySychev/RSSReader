@@ -62,11 +62,11 @@ public class NewsDbHelper extends SQLiteOpenHelper {
 
         String updateTo2Version = "ALTER TABLE " + SourceEntry.TABLE_NAME + " ADD COLUMN " +
                 SourceEntry.COLUMN_NAME_LAST_UPDATED + " INTEGER DEFAULT 0";
-        String updateTo3Version =
-                "ALTER TABLE " + SourceEntry.TABLE_NAME +
-                " ADD COLUMN  " + SourceEntry.COLUMN_NAME_UPDATE_PERIOD + " INTEGER DEFAULT 0;" +
-                "ALTER TABLE " + SourceEntry.TABLE_NAME +
-                " ADD COLUMN " + SourceEntry.COLUMN_NAME_UPDATE_WIFI_ONLY + " INTEGER DEFAULT 0;" +
+        String updateTo3Version = "ALTER TABLE " + SourceEntry.TABLE_NAME +
+                " ADD COLUMN  " + SourceEntry.COLUMN_NAME_UPDATE_PERIOD + " INTEGER DEFAULT 0;";
+        String updateTo3Version1 = "ALTER TABLE " + SourceEntry.TABLE_NAME +
+                " ADD COLUMN " + SourceEntry.COLUMN_NAME_UPDATE_WIFI_ONLY + " INTEGER DEFAULT 0;";
+        String updateTo3Version2 =
                 "ALTER TABLE " + SourceEntry.TABLE_NAME +
                 " ADD COLUMN" + SourceEntry.COLUMN_NAME_SHOW_NOTIFICATION + " INTEGER DEFAULT 0;";
 
@@ -74,8 +74,11 @@ public class NewsDbHelper extends SQLiteOpenHelper {
             sqLiteDatabase.execSQL(updateTo2Version);
         else if (i == 1 && i1 == 3)
             sqLiteDatabase.execSQL(updateTo2Version);
-        else if (i == 2 && i1 == 3)
+        else if (i == 2 && i1 == 3) {
             sqLiteDatabase.execSQL(updateTo3Version);
+            sqLiteDatabase.execSQL(updateTo3Version1);
+            sqLiteDatabase.execSQL(updateTo3Version2);
+        }
         isReady = true;
     }
 

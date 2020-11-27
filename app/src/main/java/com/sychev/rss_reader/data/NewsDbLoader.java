@@ -155,6 +155,9 @@ public class NewsDbLoader {
             item.setTitle(cursor.getString(cursor.getColumnIndexOrThrow(NewsDbHelper.SourceEntry.COLUMN_NAME_TITLE)));
             item.setIconUrl(cursor.getString(cursor.getColumnIndexOrThrow(NewsDbHelper.SourceEntry.COLUMN_NAME_ICON_URL)));
             item.setLastUpdated(cursor.getLong(cursor.getColumnIndexOrThrow(NewsDbHelper.SourceEntry.COLUMN_NAME_LAST_UPDATED)));
+            item.setUpdateOnlyWifi(cursor.getInt(cursor.getColumnIndexOrThrow(NewsDbHelper.SourceEntry.COLUMN_NAME_UPDATE_WIFI_ONLY)) > 0);
+            item.setUpdateTimePeriod(cursor.getLong(cursor.getColumnIndexOrThrow(NewsDbHelper.SourceEntry.COLUMN_NAME_UPDATE_PERIOD)));
+            item.setShowNotifications(cursor.getLong(cursor.getColumnIndexOrThrow(NewsDbHelper.SourceEntry.COLUMN_NAME_SHOW_NOTIFICATION)) > 0);
             if (item.getTitle() == null)
                 item.setTitle(item.getUrl());
             if (item.getIconUrl() != null) {
@@ -179,6 +182,9 @@ public class NewsDbLoader {
         values.put(NewsDbHelper.SourceEntry.COLUMN_NAME_URL, item.getUrl());
         values.put(NewsDbHelper.SourceEntry.COLUMN_NAME_ICON_URL, item.getIconUrl());
         values.put(NewsDbHelper.SourceEntry.COLUMN_NAME_LAST_UPDATED, item.getLastUpdated());
+        values.put(NewsDbHelper.SourceEntry.COLUMN_NAME_UPDATE_WIFI_ONLY, item.isUpdateOnlyWifi());
+        values.put(NewsDbHelper.SourceEntry.COLUMN_NAME_UPDATE_PERIOD, item.getUpdateTimePeriod());
+        values.put(NewsDbHelper.SourceEntry.COLUMN_NAME_SHOW_NOTIFICATION, item.isShowNotifications());
 
         long newRowId = db.insert(NewsDbHelper.SourceEntry.TABLE_NAME, null, values);
         sourceModelItems.add(item);
@@ -211,6 +217,9 @@ public class NewsDbLoader {
         values.put(NewsDbHelper.SourceEntry.COLUMN_NAME_URL, source.getUrl());
         values.put(NewsDbHelper.SourceEntry.COLUMN_NAME_ICON_URL, source.getIconUrl());
         values.put(NewsDbHelper.SourceEntry.COLUMN_NAME_LAST_UPDATED, source.getLastUpdated());
+        values.put(NewsDbHelper.SourceEntry.COLUMN_NAME_UPDATE_WIFI_ONLY, source.isUpdateOnlyWifi());
+        values.put(NewsDbHelper.SourceEntry.COLUMN_NAME_UPDATE_PERIOD, source.getUpdateTimePeriod());
+        values.put(NewsDbHelper.SourceEntry.COLUMN_NAME_SHOW_NOTIFICATION, source.isShowNotifications());
 
         String selection = NewsDbHelper.SourceEntry.COLUMN_NAME_URL + " LIKE ?";
         String[] selectionArgs = {source.getUrl()};
