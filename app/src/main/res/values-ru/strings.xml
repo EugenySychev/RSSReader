@@ -45,4 +45,5 @@
     <string name="auto_updates_every">Автообновление каждые:</string>
     <string name="update_only_when_wifi_enabled">Автообновление только по WiFi</string>
     <string name="show_notification">Показывать уведомления</string>
+    <string name="edit_context">Править</string>
 </resources>

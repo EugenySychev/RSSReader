@@ -23,6 +23,7 @@ import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.appcompat.widget.Toolbar;
 
+import com.sychev.rss_reader.MainActivity;
 import com.sychev.rss_reader.R;
 import com.sychev.rss_reader.Utils;
 import com.sychev.rss_reader.data.NewsListLoader;
@@ -142,6 +143,10 @@ public class SourceListActivity extends AppCompatActivity implements NewsListLoa
                 });
 
         builder.show();
+    }
+
+    public static void showEditDialog(Context context, SourceModelItem selectedSource) {
+        showAddSourceDialog(context);
     }
 
     @Override

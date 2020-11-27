@@ -297,6 +297,8 @@ public class MainActivity extends AppCompatActivity implements NewsListLoader.Up
         if (selectedSource != null) {
             if (item.getItemId() == R.id.action_remove_source_context) {
                 SourceListActivity.showRemoveDialog(this, selectedSource);
+            } else if (item.getItemId() == R.id.action_edit_source_context) {
+                SourceListActivity.showEditDialog(this, selectedSource);
             } else {
                 return false;
             }
