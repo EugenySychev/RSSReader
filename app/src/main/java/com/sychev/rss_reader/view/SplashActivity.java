@@ -12,6 +12,8 @@ import androidx.appcompat.app.AppCompatDelegate;
 import com.sychev.rss_reader.MainActivity;
 import com.sychev.rss_reader.R;
 import com.sychev.rss_reader.Utils;
+import com.sychev.rss_reader.data.NewsListLoader;
+import com.sychev.rss_reader.data.NewsNetworkLoader;
 
 public class SplashActivity extends AppCompatActivity {
 
@@ -31,17 +33,16 @@ public class SplashActivity extends AppCompatActivity {
             imageView.setImageResource(R.mipmap.ic_app_logo);
         else
             imageView.setImageResource(R.mipmap.ic_app_logo_white);
+        final AppCompatActivity activity = this;
         Thread thread = new Thread(){
             @Override
             public void run() {
-                try {
-                    sleep(3000);
-                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                    startActivity(intent);
-                    finish();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+                NewsListLoader.getInstance().init(activity);
+                NewsListLoader.getInstance().setOnlyNotRead(true);
+                NewsListLoader.getInstance().getAllNewsFromDB();
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(intent);
+                finish();
             }
         };
         thread.start();

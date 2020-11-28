@@ -64,7 +64,6 @@ public class MainActivity extends AppCompatActivity implements NewsListLoader.Up
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        NewsListLoader.getInstance().init(this);
         NewsListLoader.getInstance().addNotifier(this);
         ImageCache.getInstance().setCacheDir(getCacheDir());
 
@@ -97,6 +96,9 @@ public class MainActivity extends AppCompatActivity implements NewsListLoader.Up
 
         UpdateWorker.setContext(this);
         UpdateWorker.enqueueSelf();
+
+        NewsListLoader.getInstance().checkNetworkAndUpdate();
+
     }
 
     @Override

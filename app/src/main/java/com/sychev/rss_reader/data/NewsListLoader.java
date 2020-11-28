@@ -9,6 +9,7 @@ import android.os.Message;
 import android.util.Log;
 
 import com.sychev.rss_reader.R;
+import com.sychev.rss_reader.Utils;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -54,6 +55,21 @@ public class NewsListLoader {
         }
         updateAllUnreadCounters();
         updateAllNotifiers();
+    }
+
+    public void checkNetworkAndUpdate() {
+        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo info = cm.getActiveNetworkInfo();
+        if (info == null || !info.isConnected())
+            return;
+        boolean updateEnabled = context.getSharedPreferences(Utils.APP_SETTINGS, 0).getBoolean(Utils.UPDATE_ON_STARTUP, true);
+        if (info.getType() == ConnectivityManager.TYPE_WIFI && updateEnabled) {
+            if (filterSource == null) {
+                NewsListLoader.getInstance().requestUpdateAllNews();
+            } else {
+                NewsListLoader.getInstance().requestUpdateListSource(filterSource);
+            }
+        }
     }
 
     public void setTodayNewsListAsRead() {

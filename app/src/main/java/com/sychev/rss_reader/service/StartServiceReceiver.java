@@ -14,7 +14,6 @@ public class StartServiceReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        Toast.makeText(context, "Rec start job RSS reader", Toast.LENGTH_LONG).show();
         UpdateWorker.setContext(context);
         UpdateWorker.enqueueSelf();
     }

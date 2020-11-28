@@ -47,8 +47,7 @@ public class NewsListFragment extends Fragment implements NewsListLoader.UpdateN
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.news_list_fragment, container, false);
-        NewsListLoader.getInstance().setOnlyNotRead(true);
-        NewsListLoader.getInstance().getAllNewsFromDB();
+
 
         final RecyclerView listView = rootView.findViewById(R.id.lvMain);
         listView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -72,24 +71,7 @@ public class NewsListFragment extends Fragment implements NewsListLoader.UpdateN
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new SwipeReadCallback(adapter, this));
         itemTouchHelper.attachToRecyclerView(listView);
 
-        checkNetworkAndUpdate();
-
         return rootView;
-    }
-
-    private void checkNetworkAndUpdate() {
-        ConnectivityManager cm = (ConnectivityManager) rootView.getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo info = cm.getActiveNetworkInfo();
-        if (info == null || !info.isConnected())
-            return;
-        boolean updateEnabled = rootView.getContext().getSharedPreferences(Utils.APP_SETTINGS, 0).getBoolean(Utils.UPDATE_ON_STARTUP, true);
-        if (info.getType() == ConnectivityManager.TYPE_WIFI && updateEnabled) {
-            try {
-                requestUpdate();
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            }
-        }
     }
 
     public void requestUpdate() throws MalformedURLException {
