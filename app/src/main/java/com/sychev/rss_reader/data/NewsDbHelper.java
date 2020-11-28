@@ -68,7 +68,7 @@ public class NewsDbHelper extends SQLiteOpenHelper {
                 " ADD COLUMN " + SourceEntry.COLUMN_NAME_UPDATE_WIFI_ONLY + " INTEGER DEFAULT 0;";
         String updateTo3Version2 =
                 "ALTER TABLE " + SourceEntry.TABLE_NAME +
-                " ADD COLUMN" + SourceEntry.COLUMN_NAME_SHOW_NOTIFICATION + " INTEGER DEFAULT 0;";
+                " ADD COLUMN " + SourceEntry.COLUMN_NAME_SHOW_NOTIFICATION + " INTEGER DEFAULT 0;";
 
         if (i == 1 && i1 == 2)
             sqLiteDatabase.execSQL(updateTo2Version);
