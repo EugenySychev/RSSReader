@@ -1,5 +1,5 @@
 {
-  "version": 2,
+  "version": 3,
   "artifactType": {
     "type": "APK",
     "kind": "Directory"
@@ -10,8 +10,8 @@
     {
       "type": "SINGLE",
       "filters": [],
-      "versionCode": 1,
-      "versionName": "0.0.12",
+      "versionCode": 12,
+      "versionName": "0.1.1_huawei",
       "outputFile": "app-release.apk"
     }
   ]
