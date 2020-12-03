@@ -5,10 +5,6 @@
     <string name="nav_header_desc">image</string>
     <string name="share">Share</string>
     <string name="open_site">Open</string>
-    <!--
-    This string is used for square devices and overridden by hello_world in
-    values-round/strings.xml for round devices.
-    -->
     <string name="decrease">decrease</string>
     <string name="increase">increase</string>
     <string name="save_button_title">Save</string>
@@ -50,4 +46,6 @@
     <string name="update_only_when_wifi_enabled">Auto-update only when WiFi enabled</string>
     <string name="show_notification">Show notifications</string>
     <string name="edit_context">Edit</string>
+    <string name="clear">Clear</string>
+    <string name="show_logs">Show logs</string>
 </resources>

@@ -13,6 +13,7 @@ import androidx.work.WorkRequest;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
+import com.sychev.rss_reader.Utils;
 import com.sychev.rss_reader.data.NewsListLoader;
 
 import java.util.concurrent.TimeUnit;
@@ -38,6 +39,7 @@ public class UpdateWorker extends Worker {
     }
 
     public static void enqueueSelf() {
+        Utils.addLogText(context,"Enqueue worker ");
         WorkManager.getInstance(context).enqueueUniquePeriodicWork(uniqueWorkName, ExistingPeriodicWorkPolicy.KEEP, getOwnWorkRequest());
     }
 
@@ -48,6 +50,8 @@ public class UpdateWorker extends Worker {
 
     @SuppressLint("RestrictedApi")
     public Worker.Result doWork() {
+        Utils.addLogText(context,"Call do work");
+
         if (!NewsListLoader.getInstance().isReady())
             NewsListLoader.getInstance().init(context);
         NewsListLoader.getInstance().requestUpdateAllNewsTimer();

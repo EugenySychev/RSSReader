@@ -357,6 +357,7 @@ public class NewsListLoader {
         for (SourceModelItem item : sourceList) {
             Log.d(TAG, "Checking " + item.getTitle() + " last updated " + (current - item.getLastUpdated()) / 60000 + " minutes ");
             Log.d(TAG, "UpdatePeriod is " + (item.getUpdateTimePeriod() - 120000) / 60000);
+            Utils.addLogText(context, "Checking " + item.getTitle() + " last updated " + (current - item.getLastUpdated()) / 60000 + " minutes ");
             if ((current - item.getLastUpdated() > item.getUpdateTimePeriod() - 120000) &&
                     (info.getType() == ConnectivityManager.TYPE_WIFI || !item.isUpdateOnlyWifi()))
                 requestUpdateListSource(item);

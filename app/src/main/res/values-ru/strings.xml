@@ -46,4 +46,6 @@
     <string name="update_only_when_wifi_enabled">Автообновление только по WiFi</string>
     <string name="show_notification">Показывать уведомления</string>
     <string name="edit_context">Править</string>
+    <string name="clear">Очистить</string>
+    <string name="show_logs">Логи</string>
 </resources>

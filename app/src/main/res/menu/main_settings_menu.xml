@@ -51,4 +51,9 @@
             </group>
         </menu>
     </item>
+    <item
+        android:id="@+id/showLog"
+        android:icon="@drawable/ic_baseline_cleaning_services_24"
+        android:title="@string/show_logs"
+        app:showAsAction="never"/>
 </menu>

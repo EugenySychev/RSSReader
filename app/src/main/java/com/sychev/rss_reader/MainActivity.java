@@ -40,6 +40,7 @@ import com.sychev.rss_reader.data.NewsListLoader;
 import com.sychev.rss_reader.data.NewsNetworkLoader;
 import com.sychev.rss_reader.data.SourceModelItem;
 import com.sychev.rss_reader.service.UpdateWorker;
+import com.sychev.rss_reader.view.LogViewActivity;
 import com.sychev.rss_reader.view.NewsListFragment;
 import com.sychev.rss_reader.view.SettingsActivity;
 import com.sychev.rss_reader.view.SourceListActivity;
@@ -96,7 +97,7 @@ public class MainActivity extends AppCompatActivity implements NewsListLoader.Up
 
         UpdateWorker.setContext(this);
         UpdateWorker.enqueueSelf();
-
+        Utils.addLogText(this, "Start app");
         NewsListLoader.getInstance().checkNetworkAndUpdate();
 
     }
@@ -156,6 +157,10 @@ public class MainActivity extends AppCompatActivity implements NewsListLoader.Up
                 break;
             case android.R.id.home:
                 drawerLayout.openDrawer(GravityCompat.START);
+                break;
+            case R.id.showLog:
+                intent = new Intent(this, LogViewActivity.class);
+                startActivity(intent);
                 break;
             default:
                 Log.d("Main", "Unexpected value: " + item.getItemId());

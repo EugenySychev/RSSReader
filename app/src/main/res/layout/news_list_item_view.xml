@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:padding="@dimen/item_list_layout_padding"
     android:layout_column="2" >
 
     <ImageView
@@ -12,10 +13,9 @@
         android:contentDescription="@string/icon_of_digest" />
 
     <LinearLayout
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:layout_margin="5dp"
+        android:layout_toEndOf="@+id/pix"
         android:orientation="vertical">
 
         <TextView
@@ -23,20 +23,33 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:maxLines="2"
+            android:text="blabla"
             style="@style/newsListTitleText"/>
 
         <TextView
             android:id="@+id/news_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:text="blabla"
             android:maxLines="2"
             style="@style/newsListDescriptionText" />
-
         <TextView
             android:id="@+id/news_time"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="blabla"
             style="@style/newsListTimeText"/>
+
     </LinearLayout>
 
-</LinearLayout>
+<!--    <TextView-->
+<!--        android:id="@+id/news_source_title"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_below="@+id/pix"-->
+<!--        android:layout_toEndOf="@id/news_time"-->
+<!--        android:layout_marginStart="@dimen/item_list_layout_padding"-->
+<!--        android:text="blabla"-->
+<!--        style="@style/newsListTimeText"/>-->
+
+</RelativeLayout>

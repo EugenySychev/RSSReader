@@ -1,9 +1,22 @@
 package com.sychev.rss_reader;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 
+import com.sychev.rss_reader.view.LogViewActivity;
+
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 public class Utils {
 
@@ -11,6 +24,7 @@ public class Utils {
     public static final String APP_SETTINGS = "RSSReadSettings";
     public static final String CLEAN_PERIOD_TIME_DISTANCE = "CleanCacheTimePeriod";
     public static final String UPDATE_ON_STARTUP = "UpdateOnStartup";
+    private static final String FILE_LOG_NAME = "logdata.txt";
     public static int defaultTimeDistanceCleaning = 30;
 
     public static String cropTextWithPoints(String source, int length) {
@@ -83,5 +97,54 @@ public class Utils {
         if (period > 0)
             return 1;
         return 0;
+    }
+
+    public static String getLogText(Context context) {
+        StringBuilder sb = new StringBuilder();
+        FileInputStream fIn = null;
+        try {
+            fIn = context.openFileInput(FILE_LOG_NAME);
+            InputStreamReader isr = new InputStreamReader(fIn);
+            BufferedReader reader = new BufferedReader(isr);
+
+            String line = null;
+            while ((line = reader.readLine()) != null) {
+                sb.append(line).append("\n");
+            }
+            reader.close();
+            isr.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return sb.toString();
+    }
+
+    public static void addLogText(Context context, String text) {
+        FileOutputStream fOut = null;
+        try {
+            fOut = context.openFileOutput(FILE_LOG_NAME,
+                    Context.MODE_APPEND);
+            OutputStreamWriter osw = new OutputStreamWriter(fOut);
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss", Locale.getDefault());
+            String currentDateandTime = sdf.format(new Date());
+            osw.write(currentDateandTime + ": " + text + "\n");
+            osw.flush();
+            osw.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public static void clearLog(Context context) {
+        FileOutputStream fOut = null;
+        try {
+            fOut = context.openFileOutput(FILE_LOG_NAME, Context.MODE_PRIVATE);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        PrintWriter writer = new PrintWriter(fOut);
+        writer.print("");
+        writer.close();
     }
 }

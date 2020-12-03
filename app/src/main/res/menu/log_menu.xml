@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".view.NewsViewActivity">
+
+    <item
+        android:id="@+id/action_clear_logs"
+        android:orderInCategory="300"
+        android:icon="@drawable/ic_baseline_cleaning_services_24"
+        app:showAsAction="ifRoom"
+        android:title="@string/clear" />
+</menu>
