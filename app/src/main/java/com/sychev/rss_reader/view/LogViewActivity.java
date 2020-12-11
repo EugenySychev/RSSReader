@@ -40,10 +40,10 @@ public class LogViewActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.action_clear_logs)
-            Utils.clearLog(this);
-        else if (item.getItemId() == android.R.id.home)
-            onBackPressed();
+//        if (item.getItemId() == R.id.action_clear_logs)
+//            Utils.clearLog(this);
+//        else if (item.getItemId() == android.R.id.home)
+//            onBackPressed();
         return super.onOptionsItemSelected(item);
     }
 }

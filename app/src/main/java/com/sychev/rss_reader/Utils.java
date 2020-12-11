@@ -119,32 +119,32 @@ public class Utils {
         return sb.toString();
     }
 
-    public static void addLogText(Context context, String text) {
-        FileOutputStream fOut = null;
-        try {
-            fOut = context.openFileOutput(FILE_LOG_NAME,
-                    Context.MODE_APPEND);
-            OutputStreamWriter osw = new OutputStreamWriter(fOut);
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss", Locale.getDefault());
-            String currentDateandTime = sdf.format(new Date());
-            osw.write(currentDateandTime + ": " + text + "\n");
-            osw.flush();
-            osw.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-    }
-
-    public static void clearLog(Context context) {
-        FileOutputStream fOut = null;
-        try {
-            fOut = context.openFileOutput(FILE_LOG_NAME, Context.MODE_PRIVATE);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        PrintWriter writer = new PrintWriter(fOut);
-        writer.print("");
-        writer.close();
-    }
+//    public static void addLogText(Context context, String text) {
+//        FileOutputStream fOut = null;
+//        try {
+//            fOut = context.openFileOutput(FILE_LOG_NAME,
+//                    Context.MODE_APPEND);
+//            OutputStreamWriter osw = new OutputStreamWriter(fOut);
+//            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss", Locale.getDefault());
+//            String currentDateandTime = sdf.format(new Date());
+//            osw.write(currentDateandTime + ": " + text + "\n");
+//            osw.flush();
+//            osw.close();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//
+//    }
+//
+//    public static void clearLog(Context context) {
+//        FileOutputStream fOut = null;
+//        try {
+//            fOut = context.openFileOutput(FILE_LOG_NAME, Context.MODE_PRIVATE);
+//        } catch (FileNotFoundException e) {
+//            e.printStackTrace();
+//        }
+//        PrintWriter writer = new PrintWriter(fOut);
+//        writer.print("");
+//        writer.close();
+//    }
 }

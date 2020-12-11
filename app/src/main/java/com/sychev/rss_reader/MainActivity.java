@@ -29,8 +29,10 @@ import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.initialization.InitializationStatus;
 import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
@@ -45,6 +47,9 @@ import com.sychev.rss_reader.view.NewsListFragment;
 import com.sychev.rss_reader.view.SettingsActivity;
 import com.sychev.rss_reader.view.SourceListActivity;
 import com.sychev.rss_reader.view.SourceNavAdapter;
+import com.yandex.mobile.ads.AdEventListener;
+import com.yandex.mobile.ads.AdRequestError;
+import com.yandex.mobile.ads.AdSize;
 
 import java.net.MalformedURLException;
 import java.util.ArrayList;
@@ -94,12 +99,56 @@ public class MainActivity extends AppCompatActivity implements NewsListLoader.Up
         AdView mAdView = findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
+        mAdView.setAdListener(new AdListener() {
+            @Override
+            public void onAdFailedToLoad(LoadAdError adError) {
+                super.onAdFailedToLoad(adError);
+                mAdView.setVisibility(View.GONE);
+                LoadYandexAds();
+            }
+        });
 
         UpdateWorker.setContext(this);
         UpdateWorker.enqueueSelf();
-        Utils.addLogText(this, "Start app");
+//        Utils.addLogText(this, "Start app");
         NewsListLoader.getInstance().checkNetworkAndUpdate();
 
+    }
+
+    private void LoadYandexAds() {
+
+        com.yandex.mobile.ads.AdView ad_view = findViewById(R.id.yandex_ad_view);
+
+        ad_view.setBlockId("R-M-682789-3");
+        ad_view.setAdSize(AdSize.BANNER_320x50);
+        ad_view.loadAd(new com.yandex.mobile.ads.AdRequest.Builder().build());
+        ad_view.setAdEventListener(new AdEventListener() {
+            @Override
+            public void onAdClosed() {
+                Toast.makeText(MainActivity.this, "Ad closed", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onAdFailedToLoad(@NonNull AdRequestError adRequestError) {
+                Toast.makeText(MainActivity.this, "Ad onAdFailedToLoad " + adRequestError.getDescription(), Toast.LENGTH_SHORT).show();
+
+            }
+
+            @Override
+            public void onAdLeftApplication() {
+
+            }
+
+            @Override
+            public void onAdLoaded() {
+
+            }
+
+            @Override
+            public void onAdOpened() {
+
+            }
+        });
     }
 
     @Override
@@ -158,10 +207,10 @@ public class MainActivity extends AppCompatActivity implements NewsListLoader.Up
             case android.R.id.home:
                 drawerLayout.openDrawer(GravityCompat.START);
                 break;
-            case R.id.showLog:
-                intent = new Intent(this, LogViewActivity.class);
-                startActivity(intent);
-                break;
+//            case R.id.showLog:
+//                intent = new Intent(this, LogViewActivity.class);
+//                startActivity(intent);
+//                break;
             default:
                 Log.d("Main", "Unexpected value: " + item.getItemId());
         }

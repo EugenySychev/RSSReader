@@ -39,5 +39,9 @@
             android:layout_height="wrap_content"
             ads:adSize="BANNER"
             ads:adUnitId="@string/banner_id" />
+        <com.yandex.mobile.ads.AdView
+            android:id="@+id/yandex_news_ad_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
     </LinearLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

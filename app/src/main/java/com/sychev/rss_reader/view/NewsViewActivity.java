@@ -5,19 +5,23 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.viewpager.widget.ViewPager;
 
+import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.initialization.InitializationStatus;
 import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 import com.sychev.rss_reader.R;
 import com.sychev.rss_reader.data.NewsListLoader;
 import com.sychev.rss_reader.data.NewsModelItem;
+import com.yandex.mobile.ads.AdSize;
 
 import java.util.List;
 
@@ -91,7 +95,24 @@ public class NewsViewActivity extends AppCompatActivity {
         AdView mAdView = findViewById(R.id.adNewsView);
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
+        mAdView.setAdListener(new AdListener() {
+            @Override
+            public void onAdFailedToLoad(LoadAdError loadAdError) {
+                super.onAdFailedToLoad(loadAdError);
+                mAdView.setVisibility(View.GONE);
+                LoadYandexAds();
+            }
+        });
 
+    }
+
+    private void LoadYandexAds() {
+
+        com.yandex.mobile.ads.AdView ad_view = findViewById(R.id.yandex_news_ad_view);
+
+        ad_view.setBlockId("R-M-682789-3");
+        ad_view.setAdSize(AdSize.BANNER_320x50);
+        ad_view.loadAd(new com.yandex.mobile.ads.AdRequest.Builder().build());
     }
 
     @Override

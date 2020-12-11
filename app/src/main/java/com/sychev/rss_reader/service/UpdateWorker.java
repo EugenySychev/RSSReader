@@ -39,7 +39,7 @@ public class UpdateWorker extends Worker {
     }
 
     public static void enqueueSelf() {
-        Utils.addLogText(context,"Enqueue worker ");
+//        Utils.addLogText(context,"Enqueue worker ");
         WorkManager.getInstance(context).enqueueUniquePeriodicWork(uniqueWorkName, ExistingPeriodicWorkPolicy.KEEP, getOwnWorkRequest());
     }
 
@@ -50,7 +50,7 @@ public class UpdateWorker extends Worker {
 
     @SuppressLint("RestrictedApi")
     public Worker.Result doWork() {
-        Utils.addLogText(context,"Call do work");
+//        Utils.addLogText(context,"Call do work");
 
         if (!NewsListLoader.getInstance().isReady())
             NewsListLoader.getInstance().init(context);
