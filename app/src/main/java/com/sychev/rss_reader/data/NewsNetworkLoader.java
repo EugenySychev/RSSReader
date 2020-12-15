@@ -104,10 +104,33 @@ public class NewsNetworkLoader extends Thread {
 
         String titleText = getValueFromElement(fstElmnt, "title");
         String timeString = getValueFromElement(fstElmnt, "pubDate");
+        long timeMils = 0;
+        try {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEE, d LLL yyyy HH:mm:ss Z", Locale.ENGLISH); //Mon, 14 Sep 2020 17:10:06 +0300
+            LocalDateTime d = LocalDateTime.parse(timeString, formatter);
+            timeMils = d.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (timeMils == 0) {
+            try {
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss", Locale.ENGLISH); //Mon, 14 Sep 2020 17:10:06 +0300
+                LocalDateTime d = LocalDateTime.parse(timeString, formatter);
+                timeMils = d.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEE, d LLL yyyy HH:mm:ss Z", Locale.ENGLISH); //Mon, 14 Sep 2020 17:10:06 +0300
-        LocalDateTime d = LocalDateTime.parse(timeString, formatter);
-        long timeMils = d.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+        if (timeMils == 0) {
+            try {
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH); //Mon, 14 Sep 2020 17:10:06 +0300
+                LocalDateTime d = LocalDateTime.parse(timeString, formatter);
+                timeMils = d.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
 
 //        String descrText = getValueFromElement(fstElmnt, "description");
         String descrText = "";
