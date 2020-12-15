@@ -48,4 +48,10 @@
     <string name="edit_context">Править</string>
     <string name="clear">Очистить</string>
     <string name="show_logs">Логи</string>
+    <string name="update_parameters">Дополнительные параметры</string>
+
+    <string name="only_last_day">1 день</string>
+    <string name="only_last_week">1 неделя</string>
+    <string name="all_days">Всё загруженное</string>
+
 </resources>

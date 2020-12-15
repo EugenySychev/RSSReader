@@ -19,16 +19,46 @@
             android:hint="@string/https_source_site_rss_xml"
             android:inputType="textWebEditText"
             android:labelFor="@id/enter_source_url_edit_text"
+            android:text="https://www.huawei.com/en/rss-feeds/huawei-updates/rss"
             tools:ignore="TextFields" />
 
-<!--        <androidx.appcompat.widget.SwitchCompat-->
-<!--            android:id="@+id/show_notification"-->
-<!--            style="@style/newsListTitleText"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:paddingVertical="@dimen/activity_vertical_padding"-->
-<!--            android:text="@string/show_notification" />-->
+        <TextView
+            style="@style/newsListTitleText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:text="@string/select_category_title" />
 
+        <Spinner
+            android:id="@+id/spinner_category"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:entries="@array/categories"
+            android:paddingVertical="@dimen/activity_vertical_padding"
+            android:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+            android:theme="@style/ThemeOverlay.AppCompat.DayNight.ActionBar" />
+
+        <androidx.appcompat.widget.AppCompatCheckBox
+            android:id="@+id/updParametersShown"
+            style="@style/Theme.AppCompat.DayNight"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/abc_text_size_menu_material"
+            android:text="@string/update_parameters" />
+
+        <!--        <androidx.appcompat.widget.SwitchCompat-->
+        <!--            android:id="@+id/show_notification"-->
+        <!--            style="@style/newsListTitleText"-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:paddingVertical="@dimen/activity_vertical_padding"-->
+        <!--            android:text="@string/show_notification" />-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:id="@+id/updParametersLayout">
         <androidx.appcompat.widget.SwitchCompat
             android:id="@+id/update_wifi_only"
             style="@style/newsListTitleText"
@@ -52,23 +82,7 @@
             android:paddingVertical="@dimen/activity_vertical_padding"
             android:popupTheme="@style/ThemeOverlay.AppCompat.Light"
             android:theme="@style/ThemeOverlay.AppCompat.DayNight.ActionBar" />
-
-        <TextView
-            style="@style/newsListTitleText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:text="@string/select_category_title" />
-
-        <Spinner
-            android:id="@+id/spinner_category"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:entries="@array/categories"
-            android:paddingVertical="@dimen/activity_vertical_padding"
-            android:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-            android:theme="@style/ThemeOverlay.AppCompat.DayNight.ActionBar" />
+        </LinearLayout>
 
     </LinearLayout>
 </RelativeLayout>

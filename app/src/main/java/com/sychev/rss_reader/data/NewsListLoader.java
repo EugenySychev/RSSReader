@@ -31,6 +31,7 @@ public class NewsListLoader {
     private List<SourceModelItem> sourceList = new ArrayList<>();
     private boolean onlyNotRead;
     private SourceModelItem filterSource = null;
+    private long timeDistance = 0;
 
     public NewsListLoader() {
         loadedHashMap = new HashMap<>();
@@ -161,7 +162,7 @@ public class NewsListLoader {
             sourceList.add(source);
 
         final NewsNetworkLoader loader = new NewsNetworkLoader(source);
-        getNewsFromDB(source);
+        getNewsFromDB(source, 0);
         Handler handler = new Handler(Looper.getMainLooper()) {
             @Override
             public void handleMessage(Message msg) {
@@ -277,7 +278,7 @@ public class NewsListLoader {
         source.setUnreadCount(count);
     }
 
-    public void getNewsFromDB(SourceModelItem source) {
+    public void getNewsFromDB(SourceModelItem source, long dist) {
         if (loadedHashMap.get(source) == null)
             loadedHashMap.put(source, dbLoader.getNewsListForSourceAndTime(source.getUrl(), 0, 0, onlyNotRead));
         else
@@ -289,12 +290,12 @@ public class NewsListLoader {
         this.onlyNotRead = onlyNotRead;
     }
 
-    public void getAllNewsFromDB() {
+    public void getAllNewsFromDB(long dist) {
         if (filterSource == null) {
             for (SourceModelItem source : getListSource())
-                getNewsFromDB(source);
+                getNewsFromDB(source, dist);
         } else {
-            getNewsFromDB(filterSource);
+            getNewsFromDB(filterSource, dist);
         }
     }
 

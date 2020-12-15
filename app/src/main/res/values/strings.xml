@@ -48,4 +48,8 @@
     <string name="edit_context">Edit</string>
     <string name="clear">Clear</string>
     <string name="show_logs">Show logs</string>
+    <string name="update_parameters">Additional parameters</string>
+    <string name="only_last_day">1 day</string>
+    <string name="only_last_week">1 week</string>
+    <string name="all_days">All loaded</string>
 </resources>

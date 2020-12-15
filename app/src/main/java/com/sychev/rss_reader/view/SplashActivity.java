@@ -1,7 +1,6 @@
 package com.sychev.rss_reader.view;
 
 import android.content.Intent;
-import android.media.Image;
 import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -13,7 +12,6 @@ import com.sychev.rss_reader.MainActivity;
 import com.sychev.rss_reader.R;
 import com.sychev.rss_reader.Utils;
 import com.sychev.rss_reader.data.NewsListLoader;
-import com.sychev.rss_reader.data.NewsNetworkLoader;
 
 public class SplashActivity extends AppCompatActivity {
 
@@ -39,7 +37,7 @@ public class SplashActivity extends AppCompatActivity {
             public void run() {
                 NewsListLoader.getInstance().init(activity);
                 NewsListLoader.getInstance().setOnlyNotRead(true);
-                NewsListLoader.getInstance().getAllNewsFromDB();
+                NewsListLoader.getInstance().getAllNewsFromDB(24 * 60 * 60 * 1000);
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(intent);
                 finish();

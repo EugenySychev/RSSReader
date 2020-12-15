@@ -1,16 +1,12 @@
 package com.sychev.rss_reader.view;
 
-import android.content.Context;
 import android.content.Intent;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.ItemTouchHelper;
@@ -19,7 +15,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.sychev.rss_reader.R;
-import com.sychev.rss_reader.Utils;
 import com.sychev.rss_reader.data.NewsListLoader;
 import com.sychev.rss_reader.data.NewsModelItem;
 import com.sychev.rss_reader.data.NewsNetworkLoader;
@@ -84,10 +79,6 @@ public class NewsListFragment extends Fragment implements NewsListLoader.UpdateN
         }
     }
 
-    public void requestLoad() {
-        NewsListLoader.getInstance().getAllNewsFromDB();
-    }
-
     private void openDigest(NewsModelItem item) {
         Intent intent = new Intent(getContext(), NewsViewActivity.class);
         Bundle bundle = new Bundle();
@@ -133,7 +124,7 @@ public class NewsListFragment extends Fragment implements NewsListLoader.UpdateN
 
     public void setFilterOnlyNew(boolean onlyNew) {
         NewsListLoader.getInstance().setOnlyNotRead(onlyNew);
-        NewsListLoader.getInstance().getAllNewsFromDB();
+        NewsListLoader.getInstance().getAllNewsFromDB(-1);
         update();
     }
 

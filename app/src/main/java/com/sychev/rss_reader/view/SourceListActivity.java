@@ -13,14 +13,17 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.webkit.URLUtil;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ExpandableListView;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.appcompat.widget.AppCompatCheckBox;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.appcompat.widget.Toolbar;
 
@@ -53,6 +56,17 @@ public class SourceListActivity extends AppCompatActivity implements NewsListLoa
         final Spinner updatePeriod = (Spinner) v.findViewById(R.id.update_interval_spinner);
         final SwitchCompat onlyWifiSwitcher = (SwitchCompat) v.findViewById(R.id.update_wifi_only);
         final SourceModelItem finalSource;
+        final AppCompatCheckBox updParams = (AppCompatCheckBox) v.findViewById(R.id.updParametersShown);
+        final LinearLayout updLayout = (LinearLayout) v.findViewById(R.id.updParametersLayout);
+
+        updParams.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                updLayout.setVisibility(isChecked ? View.VISIBLE : View.GONE);
+            }
+        });
+        updLayout.setVisibility(View.GONE);
+
         boolean update = false;
         if (source == null)
             finalSource = new SourceModelItem();
