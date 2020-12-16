@@ -37,7 +37,7 @@ public class SplashActivity extends AppCompatActivity {
             public void run() {
                 NewsListLoader.getInstance().init(activity);
                 NewsListLoader.getInstance().setOnlyNotRead(true);
-                NewsListLoader.getInstance().getAllNewsFromDB(24 * 60 * 60 * 1000);
+                NewsListLoader.getInstance().getAllNewsFromDB();
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(intent);
                 finish();

@@ -124,7 +124,7 @@ public class NewsListFragment extends Fragment implements NewsListLoader.UpdateN
 
     public void setFilterOnlyNew(boolean onlyNew) {
         NewsListLoader.getInstance().setOnlyNotRead(onlyNew);
-        NewsListLoader.getInstance().getAllNewsFromDB(-1);
+        NewsListLoader.getInstance().getAllNewsFromDB();
         update();
     }
 

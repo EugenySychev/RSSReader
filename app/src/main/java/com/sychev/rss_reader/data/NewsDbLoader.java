@@ -7,7 +7,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.provider.BaseColumns;
 
+import java.sql.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class NewsDbLoader {
@@ -115,15 +117,19 @@ public class NewsDbLoader {
 
         String sortOrder =
                 NewsDbHelper.FeedEntry.COLUMN_NAME_TIME + " DESC";
-        String havingFilter = "";
-        if (begin > 0 && end > 0)
-            havingFilter = NewsDbHelper.FeedEntry.COLUMN_NAME_TIME + " > " + begin + " AND " +
-                    NewsDbHelper.FeedEntry.COLUMN_NAME_TIME + " < " + end;
 
         if (onlyNotRead) {
             selection += " AND " + NewsDbHelper.FeedEntry.COLUMN_NAME_ISREAD + " = ? ";
             selectionArgs = new String[]{sourceUrl, " 0 "};
         }
+        if (begin > 0 && end > 0) {
+            selection += " AND " + NewsDbHelper.FeedEntry.COLUMN_NAME_TIME + " > ? AND " +
+                    NewsDbHelper.FeedEntry.COLUMN_NAME_TIME + " < ? ";
+            selectionArgs = Arrays.copyOf(selectionArgs, selectionArgs.length + 2);
+            selectionArgs[selectionArgs.length - 2] = String.valueOf(begin);
+            selectionArgs[selectionArgs.length - 1] = String.valueOf(end);
+        }
+
 
         Cursor cursor = db.query(
                 NewsDbHelper.FeedEntry.TABLE_NAME,   // The table to query
@@ -131,7 +137,7 @@ public class NewsDbLoader {
                 selection,              // The columns for the WHERE clause
                 selectionArgs,          // The values for the WHERE clause
                 null,                   // don't group the rows
-                havingFilter,                   // don't filter by row groups
+                null,                   // don't filter by row groups
                 sortOrder               // The sort order
         );
 

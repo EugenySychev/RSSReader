@@ -205,13 +205,13 @@ public class MainActivity extends AppCompatActivity implements NewsListLoader.Up
                 NewsListLoader.getInstance().setTodayNewsListAsRead();
                 break;
             case R.id.last_day:
-                NewsListLoader.getInstance().getAllNewsFromDB(24*60*60 * 1000);
+                NewsListLoader.getInstance().changeTimePeriod(1);
                 break;
             case R.id.last_week:
-                NewsListLoader.getInstance().getAllNewsFromDB(7 * 24*60*60 * 1000);
+                NewsListLoader.getInstance().changeTimePeriod(7);
                 break;
             case R.id.all_days:
-                NewsListLoader.getInstance().getAllNewsFromDB(0);
+                NewsListLoader.getInstance().changeTimePeriod(0);
                 break;
 
             case android.R.id.home:

@@ -31,7 +31,7 @@ public class NewsListLoader {
     private List<SourceModelItem> sourceList = new ArrayList<>();
     private boolean onlyNotRead;
     private SourceModelItem filterSource = null;
-    private long timeDistance = 0;
+    private int timePeriod = 1; // default value is a day
 
     public NewsListLoader() {
         loadedHashMap = new HashMap<>();
@@ -162,7 +162,7 @@ public class NewsListLoader {
             sourceList.add(source);
 
         final NewsNetworkLoader loader = new NewsNetworkLoader(source);
-        getNewsFromDB(source, 0);
+        getAllNewsFromDB(source);
         Handler handler = new Handler(Looper.getMainLooper()) {
             @Override
             public void handleMessage(Message msg) {
@@ -195,9 +195,9 @@ public class NewsListLoader {
                             } else {
                                 if (item.getTime() <= source.getLastDigestTime()) {
                                     notInList = false;
-                                    if (item.getTime() > lastDigestTime)
-                                        lastDigestTime = item.getTime();
                                 }
+                                if (item.getTime() > lastDigestTime)
+                                    lastDigestTime = item.getTime();
                             }
                             Log.d(TAG, "Item not in list is " + notInList);
                         } else {
@@ -215,24 +215,27 @@ public class NewsListLoader {
                     source.setLastUpdated(Calendar.getInstance().getTimeInMillis());
                     source.setLastDigestTime(lastDigestTime);
                     dbLoader.updateSource(source);
-
-                    List<NewsModelItem> list = loadedHashMap.get(source);
-                    if (list != null) {
-                        Collections.sort(list, new Comparator<NewsModelItem>() {
-                            @Override
-                            public int compare(NewsModelItem t1, NewsModelItem t2) {
-                                return Long.compare(t1.getTime(), t2.getTime());
-                            }
-                        });
-
-                        Collections.reverse(list);
-                        loadedHashMap.replace(source, list);
-                        updateUnreadCounterAndLastTime(source);
-                    }
+//
+//                    List<NewsModelItem> list = loadedHashMap.get(source);
+//                    if (list != null) {
+//                        Collections.sort(list, new Comparator<NewsModelItem>() {
+//                            @Override
+//                            public int compare(NewsModelItem t1, NewsModelItem t2) {
+//                                return Long.compare(t1.getTime(), t2.getTime());
+//                            }
+//                        });
+//
+//                        Collections.reverse(list);
+//                        loadedHashMap.replace(source, list);
+//                        updateUnreadCounterAndLastTime(source);
+//                    }
+                    getNewsFromDB(source);
                     boolean allUpdated = true;
                     for (SourceModelItem sourceItem : loadedHashMap.keySet()) {
-                        if (!sourceItem.isUpdated())
+                        if (!sourceItem.isUpdated()) {
                             allUpdated = false;
+                            break;
+                        }
                     }
                     updateAllNotifiers();
                     updateAllNotifiersState(allUpdated ? NewsNetworkLoader.LoadState.LOAD_OK : NewsNetworkLoader.LoadState.LOAD_PROCESSING);
@@ -278,7 +281,7 @@ public class NewsListLoader {
         source.setUnreadCount(count);
     }
 
-    public void getNewsFromDB(SourceModelItem source, long dist) {
+    public void getNewsFromDB(SourceModelItem source) {
         if (loadedHashMap.get(source) == null)
             loadedHashMap.put(source, dbLoader.getNewsListForSourceAndTime(source.getUrl(), 0, 0, onlyNotRead));
         else
@@ -286,16 +289,26 @@ public class NewsListLoader {
         updateUnreadCounterAndLastTime(source);
     }
 
+    public void getAllNewsFromDB(SourceModelItem source) {
+        if (loadedHashMap.get(source) == null)
+            loadedHashMap.put(source, dbLoader.getNewsListForSourceAndTime(source.getUrl(), 0, 0, false));
+        else
+            loadedHashMap.replace(source, dbLoader.getNewsListForSourceAndTime(source.getUrl(), 0, 0, false));
+        updateUnreadCounterAndLastTime(source);
+    }
+
+
+
     public void setOnlyNotRead(boolean onlyNotRead) {
         this.onlyNotRead = onlyNotRead;
     }
 
-    public void getAllNewsFromDB(long dist) {
+    public void getAllNewsFromDB() {
         if (filterSource == null) {
             for (SourceModelItem source : getListSource())
-                getNewsFromDB(source, dist);
+                getNewsFromDB(source);
         } else {
-            getNewsFromDB(filterSource, dist);
+            getNewsFromDB(filterSource);
         }
     }
 
@@ -370,6 +383,11 @@ public class NewsListLoader {
             if (dbLoader.updateSource(source)) {
                 updateAllNotifiers();
             }
+    }
+
+    public void changeTimePeriod(int periodInDay) {
+        timePeriod = periodInDay;
+        getAllNewsFromDB();
     }
 
     public enum Categories {
