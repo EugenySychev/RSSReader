@@ -384,11 +384,6 @@ public class MainActivity extends AppCompatActivity implements NewsListLoader.Up
     }
 
     @Override
-    public void callMarkAsRead() {
-        NewsListLoader.getInstance().setCurrentNewsListAsRead();
-    }
-
-    @Override
     public void callAddSourceDialog() {
         SourceListActivity.showAddSourceDialog(this, null);
     }

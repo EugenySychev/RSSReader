@@ -8,7 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.TextView;
+import android.widget.ScrollView;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.ItemTouchHelper;
@@ -40,7 +40,6 @@ public class NewsListFragment extends Fragment implements NewsListLoader.UpdateN
     }
 
     public interface ListActions {
-        void callMarkAsRead();
         void callAddSourceDialog();
     }
 
@@ -95,6 +94,13 @@ public class NewsListFragment extends Fragment implements NewsListLoader.UpdateN
             }
         });
 
+        Button markReadButton = rootView.findViewById(R.id.mark_asread_button);
+        markReadButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                NewsListLoader.getInstance().setCurrentNewsListAsRead();
+            }
+        });
         return rootView;
     }
 
@@ -138,7 +144,7 @@ public class NewsListFragment extends Fragment implements NewsListLoader.UpdateN
 //        RecyclerView listView = rootView.findViewById(R.id.lvMain);
 //        TextView errorText = rootView.findViewById(R.id.textView);
         LinearLayout emptyLayout = rootView.findViewById(R.id.nothingToShowLayout);
-        LinearLayout newsListLayout = rootView.findViewById(R.id.newsListLayout);
+        ScrollView newsListLayout = rootView.findViewById(R.id.newsListLayout);
         Button showReadButton = rootView.findViewById(R.id.buttonShowReadNewsList);
         Button addSourceButton = rootView.findViewById(R.id.buttonAddSourceNewsList);
         if (adapter.getItemCount() == 0) {
