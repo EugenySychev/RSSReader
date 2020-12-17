@@ -52,4 +52,6 @@
     <string name="only_last_day">1 day</string>
     <string name="only_last_week">1 week</string>
     <string name="all_days">All loaded</string>
+    <string name="show_read">Show read</string>
+    <string name="mark_as_read">Mark as read</string>
 </resources>

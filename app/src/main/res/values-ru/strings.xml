@@ -53,5 +53,7 @@
     <string name="only_last_day">1 день</string>
     <string name="only_last_week">1 неделя</string>
     <string name="all_days">Всё загруженное</string>
+    <string name="show_read">Показать прочитанное</string>
+    <string name="mark_as_read">Прочитано</string>
 
 </resources>

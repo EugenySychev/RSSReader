@@ -55,7 +55,7 @@ import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class MainActivity extends AppCompatActivity implements NewsListLoader.UpdateNotifier {
+public class MainActivity extends AppCompatActivity implements NewsListLoader.UpdateNotifier, NewsListFragment.ListActions {
 
     private static final int SETUP_ACTIVITY_REQUEST_CODE = 0;
     private AppBarConfiguration mAppBarConfiguration;
@@ -85,6 +85,12 @@ public class MainActivity extends AppCompatActivity implements NewsListLoader.Up
         NavigationUI.setupWithNavController(navigationView, navController);
 
         NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
+
+        if (navHostFragment != null) {
+            NewsListFragment fragment = (NewsListFragment) navHostFragment.getChildFragmentManager().findFragmentById(R.id.nav_host_fragment);
+            if (fragment != null)
+                fragment.setListActionsHandler(this);
+        }
 
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_baseline_menu_24);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -204,16 +210,6 @@ public class MainActivity extends AppCompatActivity implements NewsListLoader.Up
             case R.id.mark_read_today:
                 NewsListLoader.getInstance().setTodayNewsListAsRead();
                 break;
-            case R.id.last_day:
-                NewsListLoader.getInstance().changeTimePeriod(1);
-                break;
-            case R.id.last_week:
-                NewsListLoader.getInstance().changeTimePeriod(7);
-                break;
-            case R.id.all_days:
-                NewsListLoader.getInstance().changeTimePeriod(0);
-                break;
-
             case android.R.id.home:
                 drawerLayout.openDrawer(GravityCompat.START);
                 break;
@@ -385,5 +381,15 @@ public class MainActivity extends AppCompatActivity implements NewsListLoader.Up
     public void updateState(int state) {
         if (state == NewsNetworkLoader.LoadState.LOAD_ERROR)
             Toast.makeText(this, getString(R.string.loadError), Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void callMarkAsRead() {
+        NewsListLoader.getInstance().setCurrentNewsListAsRead();
+    }
+
+    @Override
+    public void callAddSourceDialog() {
+        SourceListActivity.showAddSourceDialog(this, null);
     }
 }

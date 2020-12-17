@@ -123,8 +123,8 @@ public class NewsDbLoader {
             selectionArgs = new String[]{sourceUrl, " 0 "};
         }
         if (begin > 0 && end > 0) {
-            selection += " AND " + NewsDbHelper.FeedEntry.COLUMN_NAME_TIME + " > ? AND " +
-                    NewsDbHelper.FeedEntry.COLUMN_NAME_TIME + " < ? ";
+            selection += " AND " + NewsDbHelper.FeedEntry.COLUMN_NAME_TIME + " >= ? AND " +
+                    NewsDbHelper.FeedEntry.COLUMN_NAME_TIME + " <= ? ";
             selectionArgs = Arrays.copyOf(selectionArgs, selectionArgs.length + 2);
             selectionArgs[selectionArgs.length - 2] = String.valueOf(begin);
             selectionArgs[selectionArgs.length - 1] = String.valueOf(end);

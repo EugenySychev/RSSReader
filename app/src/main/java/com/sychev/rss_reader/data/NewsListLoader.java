@@ -31,7 +31,6 @@ public class NewsListLoader {
     private List<SourceModelItem> sourceList = new ArrayList<>();
     private boolean onlyNotRead;
     private SourceModelItem filterSource = null;
-    private int timePeriod = 1; // default value is a day
 
     public NewsListLoader() {
         loadedHashMap = new HashMap<>();
@@ -162,7 +161,7 @@ public class NewsListLoader {
             sourceList.add(source);
 
         final NewsNetworkLoader loader = new NewsNetworkLoader(source);
-        getAllNewsFromDB(source);
+        getNewsFromDB(source);
         Handler handler = new Handler(Looper.getMainLooper()) {
             @Override
             public void handleMessage(Message msg) {
@@ -176,33 +175,53 @@ public class NewsListLoader {
                         }
                     }
                     List<NewsModelItem> notSavedList = new ArrayList<>();
+                    List<NewsModelItem> loadedList = loader.getLoadedList();
+                    long lastDigestTime = Calendar.getInstance().getTimeInMillis();//source.getLastDigestTime();
+                    long firstDigestTime = Calendar.getInstance().getTimeInMillis();
 
-                    long lastDigestTime = source.getLastDigestTime();
+                    for (NewsModelItem item : loadedList) {
+                        if (lastDigestTime < item.getTime()) {
+                            lastDigestTime = item.getTime();
+                        }
+                        if (firstDigestTime > item.getTime())
+                            firstDigestTime = item.getTime();
+                    }
+
+                    List<NewsModelItem> localList = getNewsFromDBTime(source, firstDigestTime, lastDigestTime);
 
                     for (NewsModelItem item : loader.getLoadedList()) {
                         boolean notInList = true;
-                        if (loadedHashMap.get(source) != null) {
-
-                            Log.d(TAG, "Check digest " + item.getTitle() + " from " + item.getTime());
-                            Log.d(TAG, "Source loaded last time at " + source.getLastUpdated());
-                            if (source.getLastUpdated() == 0) {
-                                for (NewsModelItem dbItem : Objects.requireNonNull(loadedHashMap.get(source))) {
-                                    if (dbItem.getUrl().equals(item.getUrl())) {
-                                        notInList = false;
-                                        break;
-                                    }
-                                }
-                            } else {
-                                if (item.getTime() <= source.getLastDigestTime()) {
+                        if (localList != null) {
+                            for (NewsModelItem localItem : localList) {
+                                if (localItem.getUrl().equals(item.getUrl())) {
                                     notInList = false;
+                                    break;
                                 }
-                                if (item.getTime() > lastDigestTime)
-                                    lastDigestTime = item.getTime();
                             }
-                            Log.d(TAG, "Item not in list is " + notInList);
-                        } else {
-                            loadedHashMap.put(source, new ArrayList<NewsModelItem>());
                         }
+
+//                        if (loadedHashMap.get(source) != null) {
+//
+//                            Log.d(TAG, "Check digest " + item.getTitle() + " from " + item.getTime());
+//                            Log.d(TAG, "Source loaded last time at " + source.getLastUpdated());
+//                            if (source.getLastUpdated() == 0) {
+//                                for (NewsModelItem dbItem : Objects.requireNonNull(loadedHashMap.get(source))) {
+//                                    if (dbItem.getUrl().equals(item.getUrl())) {
+//                                        notInList = false;
+//                                        break;
+//                                    }
+//                                }
+//                            } else {
+//                                if (item.getTime() <= source.getLastDigestTime()) {
+//                                    notInList = false;
+//                                }
+//                                if (item.getTime() > lastDigestTime)
+//                                    lastDigestTime = item.getTime();
+//                            }
+//                            Log.d(TAG, "Item not in list is " + notInList);
+//                        } else {
+//                            loadedHashMap.put(source, new ArrayList<NewsModelItem>());
+//                        }
                         if (notInList && item != null) {
                             loadedHashMap.get(source).add(item);
                             notSavedList.add(item);
@@ -289,12 +308,8 @@ public class NewsListLoader {
         updateUnreadCounterAndLastTime(source);
     }
 
-    public void getAllNewsFromDB(SourceModelItem source) {
-        if (loadedHashMap.get(source) == null)
-            loadedHashMap.put(source, dbLoader.getNewsListForSourceAndTime(source.getUrl(), 0, 0, false));
-        else
-            loadedHashMap.replace(source, dbLoader.getNewsListForSourceAndTime(source.getUrl(), 0, 0, false));
-        updateUnreadCounterAndLastTime(source);
+    public List<NewsModelItem> getNewsFromDBTime(SourceModelItem source, long begin, long end) {
+        return dbLoader.getNewsListForSourceAndTime(source.getUrl(), begin, end, false);
     }
 
 
@@ -383,11 +398,6 @@ public class NewsListLoader {
             if (dbLoader.updateSource(source)) {
                 updateAllNotifiers();
             }
-    }
-
-    public void changeTimePeriod(int periodInDay) {
-        timePeriod = periodInDay;
-        getAllNewsFromDB();
     }
 
     public enum Categories {

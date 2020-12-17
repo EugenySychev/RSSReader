@@ -6,6 +6,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
@@ -31,6 +33,16 @@ public class NewsListFragment extends Fragment implements NewsListLoader.UpdateN
     private NewsListAdapter adapter;
     private SourceModelItem selectedSource = null;
     private SwipeRefreshLayout swipeRefreshLayout;
+    private ListActions listActionsHandler = null;
+
+    public void setListActionsHandler(ListActions listActionsHandler) {
+        this.listActionsHandler = listActionsHandler;
+    }
+
+    public interface ListActions {
+        void callMarkAsRead();
+        void callAddSourceDialog();
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -65,6 +77,23 @@ public class NewsListFragment extends Fragment implements NewsListLoader.UpdateN
 
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new SwipeReadCallback(adapter, this));
         itemTouchHelper.attachToRecyclerView(listView);
+
+        Button showReadButton = rootView.findViewById(R.id.buttonShowReadNewsList);
+        showReadButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setFilterOnlyNew(false);
+            }
+        });
+
+        Button addSourceButton = rootView.findViewById(R.id.buttonAddSourceNewsList);
+        addSourceButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (listActionsHandler != null)
+                    listActionsHandler.callAddSourceDialog();
+            }
+        });
 
         return rootView;
     }
@@ -106,14 +135,25 @@ public class NewsListFragment extends Fragment implements NewsListLoader.UpdateN
         adapter.setList(NewsListLoader.getInstance().getLoadedNewsList());
         adapter.notifyDataSetChanged();
 
-        RecyclerView listView = rootView.findViewById(R.id.lvMain);
-        TextView errorText = rootView.findViewById(R.id.textView);
+//        RecyclerView listView = rootView.findViewById(R.id.lvMain);
+//        TextView errorText = rootView.findViewById(R.id.textView);
+        LinearLayout emptyLayout = rootView.findViewById(R.id.nothingToShowLayout);
+        LinearLayout newsListLayout = rootView.findViewById(R.id.newsListLayout);
+        Button showReadButton = rootView.findViewById(R.id.buttonShowReadNewsList);
+        Button addSourceButton = rootView.findViewById(R.id.buttonAddSourceNewsList);
         if (adapter.getItemCount() == 0) {
-            listView.setVisibility(View.GONE);
-            errorText.setVisibility(View.VISIBLE);
+            newsListLayout.setVisibility(View.GONE);
+            emptyLayout.setVisibility(View.VISIBLE);
+            if (NewsListLoader.getInstance().getListSource().size() > 0) {
+                showReadButton.setVisibility(View.VISIBLE);
+                addSourceButton.setVisibility(View.GONE);
+            } else {
+                showReadButton.setVisibility(View.GONE);
+                addSourceButton.setVisibility(View.VISIBLE);
+            }
         } else {
-            listView.setVisibility(View.VISIBLE);
-            errorText.setVisibility(View.GONE);
+            newsListLayout.setVisibility(View.VISIBLE);
+            emptyLayout.setVisibility(View.GONE);
         }
     }
 

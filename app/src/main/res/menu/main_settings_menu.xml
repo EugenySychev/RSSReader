@@ -49,17 +49,6 @@
                     android:id="@+id/filter_all"
                     android:title="@string/show_all" />
             </group>
-            <group android:checkableBehavior="single">
-                <item
-                    android:id="@+id/last_day"
-                    android:title="@string/only_last_day" />
-                <item
-                    android:id="@+id/last_week"
-                    android:title="@string/only_last_week" />
-                <item
-                    android:id="@+id/all_days"
-                    android:title="@string/all_days" />
-            </group>
         </menu>
     </item>
 <!--    <item-->
