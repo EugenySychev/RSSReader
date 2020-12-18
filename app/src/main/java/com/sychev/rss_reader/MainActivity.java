@@ -387,4 +387,9 @@ public class MainActivity extends AppCompatActivity implements NewsListLoader.Up
     public void callAddSourceDialog() {
         SourceListActivity.showAddSourceDialog(this, null);
     }
+
+    @Override
+    public void updateSourceList() {
+        navAdapter.notifyDataSetChanged();
+    }
 }

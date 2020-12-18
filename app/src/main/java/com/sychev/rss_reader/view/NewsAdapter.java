@@ -26,7 +26,7 @@ public class NewsAdapter extends ArrayAdapter<NewsModelItem> {
     private final Context mContext;
     private final List<NewsModelItem> mList;
 
-    public NewsAdapter(Context context,  ArrayList<NewsModelItem> list) {
+    public NewsAdapter(Context context,  List<NewsModelItem> list) {
         super(context, 0, list);
         mContext = context;
         mList = list;

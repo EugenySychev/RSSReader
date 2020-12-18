@@ -41,7 +41,13 @@
             style="@style/newsListTimeText"/>
 
     </LinearLayout>
-
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/pix"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/mark_as_read_button"
+        android:text="@string/mark_as_read"/>
 <!--    <TextView-->
 <!--        android:id="@+id/news_source_title"-->
 <!--        android:layout_width="wrap_content"-->

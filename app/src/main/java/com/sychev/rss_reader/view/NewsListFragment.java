@@ -41,6 +41,7 @@ public class NewsListFragment extends Fragment implements NewsListLoader.UpdateN
 
     public interface ListActions {
         void callAddSourceDialog();
+        void updateSourceList();
     }
 
     @Override
@@ -94,13 +95,6 @@ public class NewsListFragment extends Fragment implements NewsListLoader.UpdateN
             }
         });
 
-        Button markReadButton = rootView.findViewById(R.id.mark_asread_button);
-        markReadButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                NewsListLoader.getInstance().setCurrentNewsListAsRead();
-            }
-        });
         return rootView;
     }
 
@@ -144,7 +138,7 @@ public class NewsListFragment extends Fragment implements NewsListLoader.UpdateN
 //        RecyclerView listView = rootView.findViewById(R.id.lvMain);
 //        TextView errorText = rootView.findViewById(R.id.textView);
         LinearLayout emptyLayout = rootView.findViewById(R.id.nothingToShowLayout);
-        ScrollView newsListLayout = rootView.findViewById(R.id.newsListLayout);
+        LinearLayout newsListLayout = rootView.findViewById(R.id.newsListLayout);
         Button showReadButton = rootView.findViewById(R.id.buttonShowReadNewsList);
         Button addSourceButton = rootView.findViewById(R.id.buttonAddSourceNewsList);
         if (adapter.getItemCount() == 0) {
@@ -190,8 +184,16 @@ public class NewsListFragment extends Fragment implements NewsListLoader.UpdateN
     }
 
     @Override
+    public void onMarkAsReadClick() {
+        NewsListLoader.getInstance().setCurrentNewsListAsRead();
+    }
+
+    @Override
     public void processSwipe(int position) {
         NewsListLoader.getInstance().setItemIsReadWithoutUpdate(adapter.getItem(position));
+        if (listActionsHandler != null)
+            listActionsHandler.updateSourceList();
+
     }
 
     public void scrollListUp() {

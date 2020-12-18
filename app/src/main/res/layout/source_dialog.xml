@@ -19,7 +19,6 @@
             android:hint="@string/https_source_site_rss_xml"
             android:inputType="textWebEditText"
             android:labelFor="@id/enter_source_url_edit_text"
-            android:text="https://www.huawei.com/en/rss-feeds/huawei-updates/rss"
             tools:ignore="TextFields" />
 
         <TextView

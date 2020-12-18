@@ -31,6 +31,7 @@ public class NewsListLoader {
     private List<SourceModelItem> sourceList = new ArrayList<>();
     private boolean onlyNotRead;
     private SourceModelItem filterSource = null;
+    private List<NewsModelItem> loadedList = new ArrayList<>();
 
     public NewsListLoader() {
         loadedHashMap = new HashMap<>();
@@ -125,12 +126,23 @@ public class NewsListLoader {
     public List<NewsModelItem> getLoadedNewsList() {
         if (filterSource != null)
             return loadedHashMap.get(filterSource);
+        return loadedList;
+    }
 
-        List<NewsModelItem> fullList = new ArrayList<>();
+    private void updateLoadedList() {
+        loadedList.clear();
         for (SourceModelItem source : loadedHashMap.keySet()) {
-            fullList.addAll(loadedHashMap.get(source));
+            loadedList.addAll(loadedHashMap.get(source));
         }
-        return fullList;
+
+        if (loadedList != null) {
+            Collections.sort(loadedList, new Comparator<NewsModelItem>() {
+                @Override
+                public int compare(NewsModelItem t1, NewsModelItem t2) {
+                    return Long.compare(t2.getTime(), t1.getTime());
+                }
+            });
+        };
     }
 
     public void init(Context context) {
@@ -150,10 +162,6 @@ public class NewsListLoader {
 
     public void addNotifier(UpdateNotifier notifier) {
         notifierList.add(notifier);
-    }
-
-    public void removeNotifier(UpdateNotifier notifier) {
-        notifierList.remove(notifier);
     }
 
     public void requestUpdateListSource(final SourceModelItem source) {
@@ -305,6 +313,7 @@ public class NewsListLoader {
             loadedHashMap.put(source, dbLoader.getNewsListForSourceAndTime(source.getUrl(), 0, 0, onlyNotRead));
         else
             loadedHashMap.replace(source, dbLoader.getNewsListForSourceAndTime(source.getUrl(), 0, 0, onlyNotRead));
+        updateLoadedList();
         updateUnreadCounterAndLastTime(source);
     }
 
@@ -352,12 +361,14 @@ public class NewsListLoader {
     }
 
     public void setItemIsReadWithoutUpdate(NewsModelItem item) {
-        item.setIsRead(1);
-        dbLoader.setItemIsRead(item, true);
-        for (SourceModelItem source : sourceList) {
-            if (source.getUrl().equals(item.getSource())) {
-                source.setUnreadCount(source.getUnreadCount() - 1);
-                break;
+        if (item.getIsRead() == 0) {
+            item.setIsRead(1);
+            dbLoader.setItemIsRead(item, true);
+            for (SourceModelItem source : sourceList) {
+                if (source.getUrl().equals(item.getSource())) {
+                    source.setUnreadCount(source.getUnreadCount() - 1);
+                    break;
+                }
             }
         }
     }
@@ -370,6 +381,7 @@ public class NewsListLoader {
                 ImageCache.getInstance().removeBitmap(item.getIconUrl());
             loadedHashMap.remove(source);
             sourceList.remove(source);
+            updateLoadedList();
             updateAllNotifiers();
             return true;
         }

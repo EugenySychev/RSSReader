@@ -42,32 +42,19 @@
                 android:text="@string/show_read" />
         </LinearLayout>
 
-        <ScrollView
+        <LinearLayout
             android:id="@+id/newsListLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:gravity="center_horizontal"
             android:orientation="vertical"
             android:visibility="gone">
 
-            <LinearLayout
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/lvMain"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
-                android:orientation="vertical">
+                android:background="@color/colorBackground" />
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/lvMain"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@color/colorBackground" />
-
-                <Button
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/mark_asread_button"
-                    android:text="@string/mark_as_read" />
-            </LinearLayout>
-        </ScrollView>
+        </LinearLayout>
     </LinearLayout>
 </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

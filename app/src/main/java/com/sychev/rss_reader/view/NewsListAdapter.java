@@ -7,6 +7,7 @@ import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -42,26 +43,24 @@ public class NewsListAdapter extends RecyclerView.Adapter<NewsListAdapter.NewsIt
 
     @Override
     public void onBindViewHolder(@NonNull NewsItemView holder, int position) {
-        NewsModelItem item = newsList.get(position);
-        holder.setNewsModelItem(item);
+        if (position < newsList.size()) {
+            NewsModelItem item = newsList.get(position);
+            holder.setNewsModelItem(item);
+        } else {
+            holder.setButtonAsRead();
+        }
     }
 
     @Override
     public int getItemCount() {
-        return newsList.size();
+        if (newsList.size() > 0)
+            return newsList.size() + 1;
+        else
+            return 0;
     }
 
     public void setList(List<NewsModelItem> loadedNewsList) {
         newsList = loadedNewsList;
-        if (loadedNewsList != null) {
-            Collections.sort(newsList, new Comparator<NewsModelItem>() {
-                @Override
-                public int compare(NewsModelItem t1, NewsModelItem t2) {
-                    return Long.compare(t1.getTime(), t2.getTime());
-                }
-            });
-            Collections.reverse(newsList);
-        }
     }
 
     public Context getContext() {
@@ -80,6 +79,8 @@ public class NewsListAdapter extends RecyclerView.Adapter<NewsListAdapter.NewsIt
 
     public interface ItemClickListener {
         void onItemClick(View view, int position);
+
+        void onMarkAsReadClick();
     }
 
     public class NewsItemView extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -88,6 +89,7 @@ public class NewsListAdapter extends RecyclerView.Adapter<NewsListAdapter.NewsIt
         private final TextView titleView;
         private final TextView timeView;
         private final TextView descrView;
+        private final Button markAsReadButton;
 
         public NewsItemView(@NonNull View itemView) {
             super(itemView);
@@ -95,6 +97,14 @@ public class NewsListAdapter extends RecyclerView.Adapter<NewsListAdapter.NewsIt
             titleView = itemView.findViewById(R.id.news_title);
             timeView = itemView.findViewById(R.id.news_time);
             descrView = itemView.findViewById(R.id.news_description);
+            markAsReadButton = itemView.findViewById(R.id.mark_as_read_button);
+            markAsReadButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (clickListener != null)
+                        clickListener.onMarkAsReadClick();
+                }
+            });
             itemView.setOnClickListener(this);
         }
 
@@ -108,6 +118,13 @@ public class NewsListAdapter extends RecyclerView.Adapter<NewsListAdapter.NewsIt
         }
 
         public void setNewsModelItem(NewsModelItem item) {
+
+            titleView.setVisibility(View.VISIBLE);
+            descrView.setVisibility(View.VISIBLE);
+            timeView.setVisibility(View.VISIBLE);
+            imageView.setVisibility(View.VISIBLE);
+            markAsReadButton.setVisibility(View.GONE);
+
             if (item.getIconUrl() == null || item.getIconUrl().isEmpty())
                 imageView.setVisibility(View.GONE);
             else {
@@ -127,6 +144,14 @@ public class NewsListAdapter extends RecyclerView.Adapter<NewsListAdapter.NewsIt
                 descrView.setTypeface(null, Typeface.ITALIC);
             }
 
+        }
+
+        public void setButtonAsRead() {
+            titleView.setVisibility(View.GONE);
+            descrView.setVisibility(View.GONE);
+            timeView.setVisibility(View.GONE);
+            imageView.setVisibility(View.GONE);
+            markAsReadButton.setVisibility(View.VISIBLE);
         }
     }
 }
