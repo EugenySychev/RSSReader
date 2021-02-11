@@ -157,7 +157,8 @@ public class NewsListLoader {
     }
 
     public void loadSourceListFromDB() {
-        sourceList = dbLoader.getListSource();
+        if (dbLoader != null)
+            sourceList = dbLoader.getListSource();
     }
 
     public void addNotifier(UpdateNotifier notifier) {

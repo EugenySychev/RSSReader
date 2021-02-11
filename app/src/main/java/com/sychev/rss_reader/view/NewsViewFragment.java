@@ -45,48 +45,53 @@ public class NewsViewFragment extends Fragment {
         int font_size = rootView.getContext().getSharedPreferences("ViewPreference", 0).getInt("DigestFontSize", 14);
 
         TextView contentTextView = rootView.findViewById(R.id.news_text_content);
-        contentTextView.setText(item.getDescription());
-        contentTextView.setTextSize(font_size);
+        if (item != null) {
+            if (item.getDescription() != null)
+                contentTextView.setText(item.getDescription());
+            contentTextView.setTextSize(font_size);
 
-        Bitmap bmp = ImageCache.getInstance().retrieveBitmapFromCache(item.getIconUrl());
+            Bitmap bmp = null;
+            if (item.getIconUrl() != null)
+                bmp = ImageCache.getInstance().retrieveBitmapFromCache(item.getIconUrl());
 
-        ImageView imageView = rootView.findViewById(R.id.imageNewView);
-        if (bmp != null)
-            imageView.setImageBitmap(bmp);
-        else
-            imageView.setVisibility(View.GONE);
-        TextView titleTextView = rootView.findViewById(R.id.news_text_title);
-        titleTextView.setText(item.getTitle());
-        titleTextView.setTextSize(font_size);
+            ImageView imageView = rootView.findViewById(R.id.imageNewView);
+            if (bmp != null)
+                imageView.setImageBitmap(bmp);
+            else
+                imageView.setVisibility(View.GONE);
+            TextView titleTextView = rootView.findViewById(R.id.news_text_title);
+            titleTextView.setText(item.getTitle());
+            titleTextView.setTextSize(font_size);
 
 
-        rootView.findViewById(R.id.open_site_button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (item.getUrl().length() > 0) {
-                    Intent i = new Intent(Intent.ACTION_VIEW);
-                    i.setData(Uri.parse(item.getUrl()));
-                    startActivity(i);
+            rootView.findViewById(R.id.open_site_button).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (item.getUrl().length() > 0) {
+                        Intent i = new Intent(Intent.ACTION_VIEW);
+                        i.setData(Uri.parse(item.getUrl()));
+                        startActivity(i);
+                    }
                 }
-            }
-        });
-        rootView.findViewById(R.id.share_item_button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (item.getUrl().length() > 0) {
-                    Intent i = new Intent(Intent.ACTION_SEND);
-                    i.setType("text/plain");
-                    i.putExtra(Intent.EXTRA_SUBJECT, "Url:");
-                    i.putExtra(Intent.EXTRA_TEXT, item.getTitle() + " " + item.getUrl().toString());
-                    startActivity(i);
+            });
+            rootView.findViewById(R.id.share_item_button).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (item.getUrl().length() > 0) {
+                        Intent i = new Intent(Intent.ACTION_SEND);
+                        i.setType("text/plain");
+                        i.putExtra(Intent.EXTRA_SUBJECT, "Url:");
+                        i.putExtra(Intent.EXTRA_TEXT, item.getTitle() + " " + item.getUrl().toString());
+                        startActivity(i);
+                    }
                 }
-            }
-        });
+            });
 
-        SharedPreferences pref = rootView.getContext().getSharedPreferences("ViewPreference", 0);
-        font_size = pref.getInt("DigestFontSize", 14);
+            SharedPreferences pref = rootView.getContext().getSharedPreferences("ViewPreference", 0);
+            font_size = pref.getInt("DigestFontSize", 14);
 
-        setFontSize(font_size);
+            setFontSize(font_size);
+        }
         return rootView;
     }
 
