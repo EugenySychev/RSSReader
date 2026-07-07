@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = "org.sychev.data"
+    namespace = "com.sychev.data"
     compileSdk = 37
 
     buildTypes {

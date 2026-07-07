@@ -6,15 +6,15 @@ plugins {
 }
 
 android {
-    namespace = "org.sychev.rssreadernew"
+    namespace = "com.sychev.rss_reader"
     compileSdk = 37
 
     defaultConfig {
-        applicationId = "org.sychev.rssreadernew"
+        applicationId = "com.sychev.rss_reader"
         minSdk = 32
 
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = 15
+        versionName = "0.1.4"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -52,7 +52,7 @@ dependencies {
     implementation(libs.androidx.lifecycle.runtime.compose)
     implementation(libs.coil.compose)
     implementation(libs.hilt.android)
-    implementation(libs.androidx.hilt.navigation.compose)
+    implementation(libs.androidx.hilt.lifecycle.viewmodel.compose)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.compose.material.icons.core)
     ksp(libs.hilt.compiler)

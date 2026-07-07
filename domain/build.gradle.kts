@@ -3,7 +3,7 @@ plugins {
 }
 
 android {
-    namespace = "org.sychev.domain"
+    namespace = "com.sychev.domain"
     compileSdk = 37
 
     buildTypes {
@@ -14,6 +14,10 @@ android {
                 "proguard-rules.pro"
             )
         }
+    }
+    defaultConfig {
+        minSdk = 32
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 }
 
