@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">RssReaderNew</string>
+    <string name="delete_source">Удалить источник?</string>
+    <string name="delete_source_question">Вы уверены, что хотите удалить \"%s\"? Это действие нельзя отменить.</string>
+    <string name="cancel">Отмена</string>
+    <string name="delete">Удалить</string>
+    <string name="add_source">Добавить источник</string>
+    <string name="rss_url">URL RSS-ленты</string>
+    <string name="add">Добавить</string>
+    <string name="destination_news">Новости</string>
+    <string name="destination_sources">Источники</string>
+    <string name="destination_settings">Настройки</string>
+    <string name="destination_article">Статья</string>
+    <string name="destination_news_for_source">Новости источника</string>
+</resources>

@@ -28,7 +28,7 @@ internal class NewsRepositoryImpl @Inject constructor(
 
     override suspend fun fetchLatestNews(url: String): List<NewsItem> = withContext(Dispatchers.IO) {
         val feed = feedFetcher.fetch(url)
-        val sourceId = getOrCreateSourceId(url, feed.imageUrl)
+        val sourceId = getOrCreateSourceId(url, feed.title, feed.imageUrl)
         val entities = feed.items.map { item ->
             val existing = newsDao.getByLink(item.link)
             item.toNewsEntity(
@@ -52,14 +52,18 @@ internal class NewsRepositoryImpl @Inject constructor(
         newsDao.deleteOlderThan(threshold)
     }
 
-    private suspend fun getOrCreateSourceId(url: String, imageUrl: String?): Long {
+    private suspend fun getOrCreateSourceId(url: String, title: String?, imageUrl: String?): Long {
+        val resolvedTitle = title?.ifBlank { null }
         sourceDao.getByUrl(url)?.let { existing ->
-            if (imageUrl != null && existing.imageUrl != imageUrl) {
-                sourceDao.update(existing.copy(imageUrl = imageUrl))
+            val newImageUrl = if (imageUrl != null && existing.imageUrl != imageUrl) imageUrl else existing.imageUrl
+            val newName = if (resolvedTitle != null && existing.name != resolvedTitle) resolvedTitle else existing.name
+            if (newImageUrl != existing.imageUrl || newName != existing.name) {
+                sourceDao.update(existing.copy(name = newName, imageUrl = newImageUrl))
             }
             return existing.id
         }
-        val insertedId = sourceDao.insert(SourceEntity(name = url, url = url, description = null, imageUrl = imageUrl))
+        val name = resolvedTitle ?: url
+        val insertedId = sourceDao.insert(SourceEntity(name = name, url = url, description = null, imageUrl = imageUrl))
         if (insertedId != -1L) return insertedId
         return sourceDao.getByUrl(url)?.id ?: error("Failed to resolve source for $url")
     }

@@ -20,14 +20,15 @@ internal class SourceRepositoryImpl @Inject constructor(
     override fun getSources(): Flow<List<SourceItem>> =
         sourceDao.getAllSources().map { entities -> entities.map { it.toSourceItem() } }
 
-    override suspend fun addSource(name: String, url: String): Boolean = withContext(Dispatchers.IO) {
-        val imageUrl = try {
-            feedFetcher.fetch(url).imageUrl
+    override suspend fun addSource(url: String): Boolean = withContext(Dispatchers.IO) {
+        val feed = try {
+            feedFetcher.fetch(url)
         } catch (e: Exception) {
             null
         }
+        val name = feed?.title?.ifBlank { null } ?: url
         val insertedId = sourceDao.insert(
-            SourceEntity(name = name, url = url, description = null, imageUrl = imageUrl),
+            SourceEntity(name = name, url = url, description = null, imageUrl = feed?.imageUrl),
         )
         insertedId != -1L
     }

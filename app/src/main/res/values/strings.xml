@@ -1,3 +1,15 @@
 <resources>
     <string name="app_name">RssReaderNew</string>
+    <string name="delete_source">Delete source?</string>
+    <string name="delete_source_question">Are you sure you want to delete \"%s\"? This cannot be undone.</string>
+    <string name="cancel">Cancel</string>
+    <string name="delete">Delete</string>
+    <string name="add_source">Add a source</string>
+    <string name="rss_url">RSS URL</string>
+    <string name="add">Add</string>
+    <string name="destination_news">News</string>
+    <string name="destination_sources">Sources</string>
+    <string name="destination_settings">Settings</string>
+    <string name="destination_article">Article</string>
+    <string name="destination_news_for_source">NewsForSource</string>
 </resources>

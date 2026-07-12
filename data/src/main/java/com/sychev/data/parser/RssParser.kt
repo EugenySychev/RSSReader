@@ -9,6 +9,7 @@ import java.util.Locale
 import javax.inject.Inject
 
 internal data class RssFeed(
+    val title: String?,
     val imageUrl: String?,
     val items: List<NewsItem>,
 )
@@ -33,6 +34,7 @@ internal class RssParser @Inject constructor() {
         var author: String? = null
         var category: String? = null
         var channelImageUrl: String? = null
+        var channelTitle: String? = null
 
         var event = parser.eventType
         while (event != XmlPullParser.END_DOCUMENT) {
@@ -74,6 +76,8 @@ internal class RssParser @Inject constructor() {
                             }
                         } else if (inChannelImage && currentTag == "url" && channelImageUrl == null) {
                             channelImageUrl = text
+                        } else if (!inChannelImage && currentTag == "title" && channelTitle == null) {
+                            channelTitle = text
                         }
                     }
                 }
@@ -104,7 +108,7 @@ internal class RssParser @Inject constructor() {
             event = parser.next()
         }
 
-        return RssFeed(imageUrl = channelImageUrl, items = items)
+        return RssFeed(title = channelTitle, imageUrl = channelImageUrl, items = items)
     }
 
     private fun parseDate(dateStr: String): Long = try {

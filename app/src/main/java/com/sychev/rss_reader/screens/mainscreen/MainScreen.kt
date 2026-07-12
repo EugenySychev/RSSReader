@@ -44,6 +44,7 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavType
@@ -95,7 +96,7 @@ internal fun MainScreen(
             drawerContent = {
                 ModalDrawerSheet {
                     NavigationDrawerItem(
-                        label = { Text(Destination.News.label) },
+                        label = { Text(stringResource(Destination.News.label)) },
                         selected = currentRoute == Destination.News.route,
                         shape = RectangleShape,
                         onClick = {
@@ -136,7 +137,7 @@ internal fun MainScreen(
                     }
                     drawerDestinations.forEach { destination ->
                         NavigationDrawerItem(
-                            label = { Text(destination.label) },
+                            label = { Text(stringResource(destination.label)) },
                             selected = currentRoute == destination.route,
                             shape = RectangleShape,
                             onClick = {
@@ -187,12 +188,12 @@ internal fun MainScreen(
                                     ),
                                 )
                             } else {
-                                val title = when {
+                                val titleRes = when {
                                     isDetailRoute -> Destination.NewsDetail.label
                                     currentRoute == Destination.News.route || currentRoute?.startsWith("news/") == true -> Destination.News.label
-                                    else -> drawerDestinations.firstOrNull { it.route == currentRoute }?.label.orEmpty()
+                                    else -> drawerDestinations.firstOrNull { it.route == currentRoute }?.label
                                 }
-                                Text(title)
+                                Text(titleRes?.let { stringResource(it) }.orEmpty())
                             }
                         },
                         navigationIcon = {

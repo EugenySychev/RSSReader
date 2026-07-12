@@ -7,7 +7,7 @@ interface SourceRepository {
 
     fun getSources(): Flow<List<SourceItem>>
 
-    suspend fun addSource(name: String, url: String): Boolean
+    suspend fun addSource(url: String): Boolean
 
     suspend fun deleteSource(source: SourceItem)
 

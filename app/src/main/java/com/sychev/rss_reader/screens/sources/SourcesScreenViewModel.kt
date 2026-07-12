@@ -30,19 +30,21 @@ internal class SourcesScreenViewModel @Inject constructor(
         initialValue = SourcesScreenUiState(isLoading = true),
     )
 
-    fun addSource(name: String, url: String) {
+    suspend fun addSource(url: String): Boolean {
         val trimmedUrl = url.trim()
         if (trimmedUrl.isBlank()) {
             error.value = "Enter an RSS URL"
-            return
+            return false
         }
-        viewModelScope.launch {
-            val added = sourceRepository.addSource(
-                name = name.trim().ifBlank { trimmedUrl },
-                url = trimmedUrl,
-            )
-            error.value = if (added) null else "This source is already added"
-        }
+        val added = sourceRepository.addSource(
+            url = trimmedUrl,
+        )
+        error.value = if (added) null else "This source is already added"
+        return added
+    }
+
+    fun clearError() {
+        error.value = null
     }
 
     fun deleteSource(source: SourceItem) {
