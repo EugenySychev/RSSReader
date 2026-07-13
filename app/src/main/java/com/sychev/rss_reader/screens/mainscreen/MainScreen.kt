@@ -1,12 +1,15 @@
 package com.sychev.rss_reader
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -36,15 +39,18 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavType
@@ -90,50 +96,89 @@ internal fun MainScreen(
         val emitAppEvent = rememberAppEventEmitter()
         var isSearchActive by remember { mutableStateOf(false) }
         var searchQuery by remember { mutableStateOf("") }
+        var sourceListExpanded by rememberSaveable { mutableStateOf(true) }
 
         ModalNavigationDrawer(
             drawerState = drawerState,
             drawerContent = {
                 ModalDrawerSheet {
                     NavigationDrawerItem(
-                        label = { Text(stringResource(Destination.News.label)) },
-                        selected = currentRoute == Destination.News.route,
+                        label = {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                            ) {
+                                Text(stringResource(Destination.News.label))
+                                Spacer(modifier = Modifier.width(16.dp))
+                                Icon(
+                                    painter = painterResource(
+                                        id = if (sourceListExpanded) {
+                                            R.drawable.baseline_keyboard_arrow_up_24
+                                        } else {
+                                            R.drawable.baseline_keyboard_arrow_down_24
+                                        },
+                                    ),
+                                    contentDescription = null,
+                                    modifier = Modifier
+                                        .size(dimensionResource(R.dimen.icon_expand_size)),
+                                )
+                            }
+                        },
+                        selected = false,
                         shape = RectangleShape,
                         onClick = {
-                            scope.launch { drawerState.close() }
-                            navController.navigate(Destination.News.route)
+                            sourceListExpanded = !sourceListExpanded
                         }
                     )
-                    uiState.sourceList.forEach { sourceItem ->
+                    if (sourceListExpanded) {
                         NavigationDrawerItem(
                             label = {
-                                Row(
-                                    horizontalArrangement = Arrangement.spacedBy(
-                                        dimensionResource(R.dimen.news_item_padding),
-                                    ),
-                                    verticalAlignment = Alignment.CenterVertically,
-                                ) {
-                                    if (sourceItem.imageUrl != null) {
-                                        AsyncImage(
-                                            model = sourceItem.imageUrl,
-                                            contentDescription = sourceItem.name,
-                                            modifier = Modifier
-                                                .height(dimensionResource(R.dimen.source_item_image_height))
-                                                .width(dimensionResource(R.dimen.source_item_image_width))
-                                                .background(MaterialTheme.colorScheme.surfaceVariant),
-                                            contentScale = ContentScale.Fit,
-                                        )
-                                    }
-                                    Text(sourceItem.name)
-                                }
+                                Text(stringResource(R.string.all))
                             },
-                            selected = currentRoute == Destination.NewsSource.route && backStackEntry?.arguments?.getString("link") == sourceItem.url,
+                            selected = currentRoute == Destination.News.route,
                             shape = RectangleShape,
                             onClick = {
                                 scope.launch { drawerState.close() }
-                                viewModel.onAction(MainScreenActions.OnNavigateFromMenu(Destination.News.route, sourceItem.url))
+                                navController.navigate(Destination.News.route)
                             }
                         )
+                        uiState.sourceList.forEach { sourceItem ->
+                            NavigationDrawerItem(
+                                label = {
+                                    Row(
+                                        horizontalArrangement = Arrangement.spacedBy(
+                                            dimensionResource(R.dimen.news_item_padding),
+                                        ),
+                                        verticalAlignment = Alignment.CenterVertically,
+                                    ) {
+                                        if (sourceItem.imageUrl != null) {
+                                            AsyncImage(
+                                                model = sourceItem.imageUrl,
+                                                contentDescription = sourceItem.name,
+                                                modifier = Modifier
+                                                    .height(dimensionResource(R.dimen.source_item_image_height))
+                                                    .width(dimensionResource(R.dimen.source_item_image_width))
+                                                    .background(MaterialTheme.colorScheme.surfaceVariant),
+                                                contentScale = ContentScale.Fit,
+                                            )
+                                        }
+                                        Text(sourceItem.name)
+                                    }
+                                },
+                                selected = currentRoute == Destination.NewsSource.route && backStackEntry?.arguments?.getString(
+                                    "link"
+                                ) == sourceItem.url,
+                                shape = RectangleShape,
+                                onClick = {
+                                    scope.launch { drawerState.close() }
+                                    viewModel.onAction(
+                                        MainScreenActions.OnNavigateFromMenu(
+                                            Destination.News.route,
+                                            sourceItem.url
+                                        )
+                                    )
+                                }
+                            )
+                        }
                     }
                     drawerDestinations.forEach { destination ->
                         NavigationDrawerItem(

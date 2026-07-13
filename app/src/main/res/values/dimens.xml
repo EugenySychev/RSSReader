@@ -6,4 +6,5 @@
     <dimen name="source_item_image_height">28dp</dimen>
     <dimen name="source_item_image_width">28dp</dimen>
     <dimen name="add_source_padding">24dp</dimen>
+    <dimen name="icon_expand_size">18dp</dimen>
 </resources>

@@ -12,4 +12,5 @@
     <string name="destination_settings">Настройки</string>
     <string name="destination_article">Статья</string>
     <string name="destination_news_for_source">Новости источника</string>
+    <string name="all">Все</string>
 </resources>
